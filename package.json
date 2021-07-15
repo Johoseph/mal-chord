@@ -1,0 +1,36 @@
+{
+  "private": true,
+  "name": "mal-preact",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "preact build",
+    "serve": "sirv build --port 8080 --cors --single",
+    "dev": "preact watch",
+    "start": "preact watch",
+    "lint": "eslint src",
+    "test": "jest"
+  },
+  "eslintConfig": {
+    "extends": "preact",
+    "ignorePatterns": [
+      "build/"
+    ]
+  },
+  "devDependencies": {
+    "eslint": "^6.0.1",
+    "eslint-config-preact": "^1.1.0",
+    "preact-cli": "^3.0.0",
+    "preact-cli-plugin-env-vars": "^1.2.1",
+    "sirv-cli": "1.0.3"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "crypto-random-string": "^4.0.0",
+    "dayjs": "^1.10.6",
+    "preact": "^10.3.2",
+    "preact-compat": "^3.19.0",
+    "preact-render-to-string": "^5.1.4",
+    "preact-router": "^3.2.1"
+  }
+}
