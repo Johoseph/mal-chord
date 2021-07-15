@@ -42,7 +42,8 @@ export const useQuery = (route) => {
       .post(`${process.env.PREACT_APP_API_URL}/${route}`, {
         userToken,
       })
-      .then((res) => setData(res.data));
+      .then((res) => setData(res.data))
+      .catch((err) => console.error(err));
   }, [route, userToken]);
 
   return data;
