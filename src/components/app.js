@@ -2,6 +2,7 @@ import { h } from "preact";
 
 import { useUser } from "../hooks";
 import { Overview } from "./overview";
+import { Graph } from "./graph";
 
 const App = () => {
   const { loggedIn } = useUser();
@@ -15,6 +16,7 @@ const App = () => {
       {loggedIn ? (
         <>
           <Overview />
+          <Graph />
         </>
       ) : (
         <div>Logging in...</div>
