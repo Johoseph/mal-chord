@@ -14,10 +14,10 @@ const App = () => {
   return (
     <div id="app">
       {loggedIn ? (
-        <>
+        <main>
           <Overview />
           <Graph />
-        </>
+        </main>
       ) : (
         <div>Logging in...</div>
       )}

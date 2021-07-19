@@ -6,5 +6,7 @@ export const Graph = () => {
 
   console.log(data);
 
-  return <>{data ? <div>Graph</div> : <div>Also Loading</div>}</>;
+  return (
+    <div class="graph">{data ? <div>Graph</div> : <div>Also Loading</div>}</div>
+  );
 };
