@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import MALLogo from "../../assets/branding/mal.svg";
 import MALLogoText from "../../assets/branding/mal-text.svg";
+import MALChord from "../../assets/branding/mal-chord.svg";
 
 const Wrapper = styled.div`
   display: flex;
@@ -45,13 +46,19 @@ const Logo = styled.div`
   width: 12em;
   height: 12em;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-right: 30px;
+`;
 
-  & > img {
-    width: 80%;
-  }
+const MAL = styled.img`
+  width: 75%;
+  margin-bottom: 5px;
+`;
+
+const Chord = styled.img`
+  width: 6em;
 `;
 
 const MALText = styled.img`
@@ -67,7 +74,8 @@ export const Overview = () => {
     <Wrapper>
       <LeftWrapper>
         <Logo>
-          <img src={MALLogo} />
+          <MAL src={MALLogo} />
+          <Chord src={MALChord} />
         </Logo>
         <TextWrap>
           <LineOne>graph your</LineOne>
