@@ -1,6 +1,7 @@
 import { h } from "preact";
 import { useQuery } from "../../hooks";
 import styled from "styled-components";
+import dayjs from "dayjs";
 
 import MALLogo from "../../assets/branding/mal.svg";
 import MALLogoText from "../../assets/branding/mal-text.svg";
@@ -19,6 +20,8 @@ const LeftWrapper = styled.div`
 
 const RightWrapper = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 `;
 
 const TextWrap = styled.div`
@@ -27,18 +30,24 @@ const TextWrap = styled.div`
   justify-content: space-between;
 `;
 
-const LineOne = styled.span`
-  font-size: 2rem;
+const Line = styled.span`
+  font-size: ${(props) => (props.fs ? props.fs : 1)}rem;
+  ${(props) =>
+    props.fw &&
+    `
+    font-weight: ${props.fw};
+  `}
+
+  ${(props) =>
+    props.mb &&
+    `
+    margin-bottom: ${props.mb}px;
+  `}
 `;
 
 const LineTwo = styled.span`
   display: flex;
   align-content: center;
-`;
-
-const LineThree = styled.span`
-  font-size: 1.2rem;
-  font-weight: 100;
 `;
 
 const Logo = styled.div`
@@ -50,6 +59,7 @@ const Logo = styled.div`
   align-items: center;
   justify-content: center;
   margin-right: 30px;
+  border-radius: 10px;
 `;
 
 const MAL = styled.img`
@@ -78,18 +88,34 @@ export const Overview = () => {
           <Chord src={MALChord} />
         </Logo>
         <TextWrap>
-          <LineOne>graph your</LineOne>
+          <Line fs={2}>graph your</Line>
           <LineTwo>
             <MALText src={MALLogoText} />
           </LineTwo>
-          <LineThree>
+          <Line fs={1.2} fw={300}>
             A chord diagram introspection of your MyAnimeList library 📈
-          </LineThree>
+          </Line>
         </TextWrap>
       </LeftWrapper>
-      <RightWrapper>
-        {data ? <div>User Details</div> : <div>Loading</div>}
-      </RightWrapper>
+      {data ? (
+        <RightWrapper>
+          <Line fs={2} mb={5}>
+            {data.name}
+          </Line>
+          <Line fs={1} fw={300} mb={20}>
+            Member since on{" "}
+            <Line fw={500}>
+              {dayjs(data["joined_at"]).format("DD/MM/YYYY")}
+            </Line>
+          </Line>
+          <Line fs={1.2}>
+            Time watched
+            <span id="time_portal">{}</span>
+          </Line>
+        </RightWrapper>
+      ) : (
+        <div>Loading</div>
+      )}
     </Wrapper>
   );
 };
