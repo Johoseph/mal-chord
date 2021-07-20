@@ -103,7 +103,7 @@ export const Overview = () => {
             {data.name}
           </Line>
           <Line fs={1} fw={300} mb={20}>
-            Member since on{" "}
+            Member since{" "}
             <Line fw={500}>
               {dayjs(data["joined_at"]).format("DD/MM/YYYY")}
             </Line>
