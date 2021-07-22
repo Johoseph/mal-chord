@@ -8,13 +8,7 @@ import {
   select,
 } from "d3";
 import { sankey as d3Sankey, sankeyLinkHorizontal } from "d3-sankey";
-import {
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-  useMemo,
-} from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 
 const Wrapper = styled.div`
   & .link {
@@ -88,7 +82,7 @@ const getSankeyFormat = (data, startSort, endSort, endCategory) => {
       }
     });
 
-  const dataLinks = startNodes.map((anime, i) => ({
+  const dataLinks = startNodes.map((anime) => ({
     source: anime.node,
     target: endNodes.find((endNode) => anime.linker === endNode.name).node,
     value: 1,
@@ -125,6 +119,7 @@ export const Sankey = ({ data, dimensions: { width, height } }) => {
       .style("height", "auto")
       .append("g");
 
+    // TODO: Delete this when done
     const json = {
       nodes: [
         {
