@@ -8,7 +8,13 @@ import {
   select,
 } from "d3";
 import { sankey as d3Sankey, sankeyLinkHorizontal } from "d3-sankey";
-import { useEffect, useRef } from "preact/hooks";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+} from "preact/hooks";
 
 const Wrapper = styled.div`
   & .link {
@@ -22,8 +28,90 @@ const Wrapper = styled.div`
   }
 `;
 
+const getSankeyFormat = (data, startSort, endSort, endCategory) => {
+  const nodeBuffer = data.length;
+
+  const startNodes = data
+    .map((anime, index) => {
+      let linker;
+
+      switch (endCategory) {
+        case "score":
+          linker = anime.node.my_list_status.score.toString();
+          break;
+      }
+
+      return {
+        node: index,
+        name: anime.node.title,
+        photo: anime.node.main_picture.medium,
+        linker,
+      };
+    })
+    .sort((a, b) => {
+      switch (startSort) {
+        case "A-Z":
+          return a.name.localeCompare(b.name);
+        case "Z-A":
+          return b.name.localeCompare(a.name);
+      }
+    });
+
+  const endNodes = data
+    .map((anime) => {
+      let value;
+
+      switch (endCategory) {
+        case "score":
+          value = anime.node.my_list_status.score.toString();
+          break;
+      }
+
+      return {
+        name: value,
+      };
+    })
+    .reduce(
+      (uniqueArr, anime) =>
+        uniqueArr.find((item) => item.name === anime.name)
+          ? uniqueArr
+          : [...uniqueArr, anime],
+      []
+    )
+    .map((anime, index) => ({ node: index + nodeBuffer, ...anime }))
+    .sort((a, b) => {
+      switch (endSort) {
+        case "A-Z":
+          return a.name.localeCompare(b.name);
+        case "Z-A":
+          return b.name.localeCompare(a.name);
+      }
+    });
+
+  const dataLinks = startNodes.map((anime, i) => ({
+    source: anime.node,
+    target: endNodes.find((endNode) => anime.linker === endNode.name).node,
+    value: 1,
+  }));
+
+  return { dataNodes: [...startNodes, ...endNodes], dataLinks };
+};
+
 export const Sankey = ({ data, dimensions: { width, height } }) => {
   let sankeyRef = useRef();
+
+  const [startSort, setStartSort] = useState("A-Z");
+  const [endSort, setEndSort] = useState("Z-A");
+  const [endCategory, setEndCategory] = useState("score");
+
+  const { dataNodes, dataLinks } = getSankeyFormat(
+    data.data,
+    startSort,
+    endSort,
+    endCategory
+  );
+
+  console.log({ dataNodes, dataLinks });
 
   useEffect(() => {
     select(sankeyRef.current).select("svg").remove();
@@ -63,12 +151,13 @@ export const Sankey = ({ data, dimensions: { width, height } }) => {
     const { nodes, links } = d3Sankey()
       .nodeWidth(40)
       .nodePadding(20)
+      .nodeSort(null)
       .extent([
         [1, 1],
         [width - 1, height],
       ])({
-      nodes: json.nodes.map((d) => Object.assign({}, d)),
-      links: json.links.map((d) => Object.assign({}, d)),
+      nodes: dataNodes.map((d) => Object.assign({}, d)),
+      links: dataLinks.map((d) => Object.assign({}, d)),
     });
 
     const scale = scaleOrdinal(schemeCategory10);
@@ -165,7 +254,7 @@ export const Sankey = ({ data, dimensions: { width, height } }) => {
       .attr("dy", "0.35em")
       .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
       .text((d) => `${d.name} (${format(d.value)})`);
-  }, [width, height]);
+  }, [width, height, dataNodes, dataLinks]);
 
-  return <Wrapper ref={sankeyRef}>Sankey</Wrapper>;
+  return <Wrapper ref={sankeyRef} />;
 };

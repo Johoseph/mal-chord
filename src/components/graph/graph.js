@@ -12,10 +12,9 @@ export const Graph = () => {
 
   const [height, setHeight] = useState(100);
 
-  console.log(data);
-
   useEffect(() => {
     if (data) {
+      console.log(data);
       setHeight((data.data?.length || 0) * HEIGHT_MULTIPLIER);
     }
   }, [data]);
@@ -25,7 +24,7 @@ export const Graph = () => {
       {data ? (
         <Sankey data={data} dimensions={{ width, height }} />
       ) : (
-        <div>Also Loading</div>
+        <div>Sankey Loading</div>
       )}
     </div>
   );
