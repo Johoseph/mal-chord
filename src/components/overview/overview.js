@@ -78,8 +78,6 @@ const MALText = styled.img`
 export const Overview = () => {
   const data = useQuery("user_details");
 
-  console.log(data);
-
   return (
     <Wrapper>
       <LeftWrapper>
