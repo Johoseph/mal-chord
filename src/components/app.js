@@ -1,8 +1,7 @@
 import { h } from "preact";
 
 import { useUser } from "../hooks";
-import { Overview } from "./overview";
-import { Graph } from "./graph";
+import LoggedIn from "./loggedIn";
 
 const App = () => {
   const { loggedIn } = useUser();
@@ -12,16 +11,7 @@ const App = () => {
   });
 
   return (
-    <div id="app">
-      {loggedIn ? (
-        <main>
-          <Overview />
-          <Graph />
-        </main>
-      ) : (
-        <div>Logging in...</div>
-      )}
-    </div>
+    <div id="app">{loggedIn ? <LoggedIn /> : <div>Logging in...</div>}</div>
   );
 };
 

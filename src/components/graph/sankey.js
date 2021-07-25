@@ -105,7 +105,7 @@ export const Sankey = ({ data, dimensions: { width, height } }) => {
     endCategory
   );
 
-  console.log({ dataNodes, dataLinks });
+  // console.log({ dataNodes, dataLinks });
 
   useEffect(() => {
     select(sankeyRef.current).select("svg").remove();

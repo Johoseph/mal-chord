@@ -6,6 +6,8 @@ import dayjs from "dayjs";
 import MALLogo from "../../assets/branding/mal.svg";
 import MALLogoText from "../../assets/branding/mal-text.svg";
 import MALChord from "../../assets/branding/mal-chord.svg";
+import { useEffect, useState } from "preact/hooks";
+import { TimeWatched } from "./timeWatched";
 
 const Wrapper = styled.div`
   display: flex;
@@ -75,8 +77,41 @@ const MALText = styled.img`
   height: 5.5em;
 `;
 
-export const Overview = () => {
-  const data = useQuery("user_details");
+const getTimeWatched = (anime) => {
+  let days, hours, minutes, seconds;
+
+  if (anime) {
+    const secondsWatched = anime
+      .map((anime) => {
+        const info = anime.node;
+        const duration = info.average_episode_duration;
+        let epsWatched = info.my_list_status.num_episodes_watched;
+
+        if (info.my_list_status.is_rewatching)
+          epsWatched +=
+            info.num_episodes * (info.my_list_status.num_times_rewatched + 1);
+
+        return duration * epsWatched;
+      })
+      .reduce((total, anime) => total + anime, 0);
+
+    days = Math.floor(secondsWatched / (60 * 60 * 24));
+    hours = Math.floor((secondsWatched % (60 * 60 * 24)) / (60 * 60));
+    minutes = Math.floor((secondsWatched % (60 * 60)) / 60);
+    seconds = Math.floor(secondsWatched % 60);
+  }
+
+  return { seconds, minutes, hours, days };
+};
+
+export const Overview = ({ data }) => {
+  const userDetails = useQuery("user_details");
+
+  const [timeWatched, setTimeWatched] = useState({});
+
+  useEffect(() => {
+    setTimeWatched(getTimeWatched(data?.data));
+  }, [data]);
 
   return (
     <Wrapper>
@@ -95,20 +130,20 @@ export const Overview = () => {
           </Line>
         </TextWrap>
       </LeftWrapper>
-      {data ? (
+      {userDetails ? (
         <RightWrapper>
           <Line fs={2} mb={5}>
-            {data.name}
+            {userDetails.name}
           </Line>
           <Line fs={1} fw={300} mb={20}>
             Member since{" "}
             <Line fw={500}>
-              {dayjs(data["joined_at"]).format("DD/MM/YYYY")}
+              {dayjs(userDetails["joined_at"]).format("DD/MM/YYYY")}
             </Line>
           </Line>
           <Line fs={1.2}>
             Time watched
-            <span id="time_portal">{}</span>
+            {data ? <TimeWatched time={timeWatched} /> : <div>Loading</div>}
           </Line>
         </RightWrapper>
       ) : (
