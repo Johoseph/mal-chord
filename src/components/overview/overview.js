@@ -24,6 +24,7 @@ const RightWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  justify-content: space-between;
 `;
 
 const TextWrap = styled.div`
@@ -101,7 +102,7 @@ const getTimeWatched = (anime) => {
     seconds = Math.floor(secondsWatched % 60);
   }
 
-  return { seconds, minutes, hours, days };
+  return { days, hours, minutes, seconds };
 };
 
 export const Overview = ({ data }) => {
@@ -132,19 +133,23 @@ export const Overview = ({ data }) => {
       </LeftWrapper>
       {userDetails ? (
         <RightWrapper>
-          <Line fs={2} mb={5}>
-            {userDetails.name}
-          </Line>
-          <Line fs={1} fw={300} mb={20}>
-            Member since{" "}
-            <Line fw={500}>
-              {dayjs(userDetails["joined_at"]).format("DD/MM/YYYY")}
+          <RightWrapper>
+            <Line fs={2} mb={5}>
+              {userDetails.name}
             </Line>
-          </Line>
-          <Line fs={1.2}>
-            Time watched
-            {data ? <TimeWatched time={timeWatched} /> : <div>Loading</div>}
-          </Line>
+            <Line fs={1} fw={300} mb={20}>
+              Member since{" "}
+              <Line fw={500}>
+                {dayjs(userDetails["joined_at"]).format("DD/MM/YYYY")}
+              </Line>
+            </Line>
+          </RightWrapper>
+          <RightWrapper>
+            <Line fs={1.5} mb={5}>
+              Time watched 🕒
+            </Line>
+            <TimeWatched time={timeWatched} />
+          </RightWrapper>
         </RightWrapper>
       ) : (
         <div>Loading</div>

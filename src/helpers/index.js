@@ -74,3 +74,5 @@ export const refreshTokens = async (setLoggedIn) => {
     console.error("Could not refresh user tokens...", err);
   }
 };
+
+export const titleCase = (val) => `${val[0].toUpperCase()}${val.substr(1)}`;
