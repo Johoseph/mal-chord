@@ -25,6 +25,7 @@
 
 html,
 body {
+  color-scheme: dark;
   height: 100%;
   width: 80%;
   padding: 0;
@@ -53,23 +54,23 @@ body {
 }
 
 .shimmer {
-  background-color: rgb(32, 33, 39);
+  background-color: rgb(24, 24, 24);
   background: linear-gradient(
     to right,
-    rgb(32, 33, 39) 0%,
-    rgb(40, 41, 48) 50%,
-    rgb(32, 33, 39) 100%
+    rgb(24, 24, 24) 0%,
+    rgb(30, 30, 30) 50%,
+    rgb(24, 24, 24) 100%
   );
   animation: shimmer 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0s infinite normal
     forwards;
-  background-size: 1000px 100%;
+  background-size: 500px 100%;
 }
 
 @keyframes shimmer {
   0% {
-    background-position: -1000px 0;
+    background-position: -500px 0;
   }
   100% {
-    background-position: 1000px 0;
+    background-position: 500px 0;
   }
 }

@@ -10,7 +10,7 @@ const Wrapper = styled.div`
 const TimeWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 30px;
+  margin-left: 20px;
 `;
 
 const Unit = styled.span`
@@ -25,10 +25,10 @@ const Value = styled.span`
 `;
 
 const Shimmer = styled.div`
-  width: 100px;
-  height: 40px;
-  border-radius: 5px;
-  /* opacity: 0.5; */
+  width: 100%;
+  height: 2.3rem;
+  border-radius: 2.3rem;
+  margin-top: 0.2rem;
 `;
 
 export const TimeWatched = ({ time }) => {
@@ -39,16 +39,18 @@ export const TimeWatched = ({ time }) => {
 
   return (
     <Wrapper>
-      {Object.keys(time).map((unit, i) => (
-        <TimeWrapper key={i}>
-          <Unit>{titleCase(unit)}</Unit>
-          {loading ? (
-            <Shimmer className="shimmer" />
-          ) : (
-            <Value>{time[unit]}</Value>
-          )}
-        </TimeWrapper>
-      ))}
+      {Object.keys(time)
+        .filter((unit) => time[unit] !== 0)
+        .map((unit, i) => (
+          <TimeWrapper key={i}>
+            <Unit>{titleCase(unit)}</Unit>
+            {loading ? (
+              <Shimmer className="shimmer" />
+            ) : (
+              <Value>{time[unit]}</Value>
+            )}
+          </TimeWrapper>
+        ))}
     </Wrapper>
   );
 };

@@ -34,6 +34,8 @@ const TextWrap = styled.div`
 `;
 
 const Line = styled.span`
+  display: flex;
+  white-space: pre-wrap;
   font-size: ${(props) => (props.fs ? props.fs : 1)}rem;
   ${(props) =>
     props.fw &&
@@ -76,6 +78,13 @@ const Chord = styled.img`
 
 const MALText = styled.img`
   height: 5.5em;
+`;
+
+const Shimmer = styled.div`
+  width: ${(props) => (props.w ? props.w : "100")}px;
+  height: ${(props) => (props.h ? props.h : "1")}rem;
+  border-radius: ${(props) => (props.h ? props.h : "1")}rem;
+  margin: 2px 0px 5px 5px;
 `;
 
 const getTimeWatched = (anime) => {
@@ -131,29 +140,33 @@ export const Overview = ({ data }) => {
           </Line>
         </TextWrap>
       </LeftWrapper>
-      {userDetails ? (
+      <RightWrapper>
         <RightWrapper>
-          <RightWrapper>
+          {userDetails ? (
             <Line fs={2} mb={5}>
               {userDetails.name}
             </Line>
-            <Line fs={1} fw={300} mb={20}>
-              Member since{" "}
+          ) : (
+            <Shimmer h={2.2} w={150} className="shimmer" />
+          )}
+          <Line fs={1} fw={300} mb={20}>
+            Member since{" "}
+            {userDetails ? (
               <Line fw={500}>
                 {dayjs(userDetails["joined_at"]).format("DD/MM/YYYY")}
               </Line>
-            </Line>
-          </RightWrapper>
-          <RightWrapper>
-            <Line fs={1.5} mb={5}>
-              Time watched 🕒
-            </Line>
-            <TimeWatched time={timeWatched} />
-          </RightWrapper>
+            ) : (
+              <Shimmer w={80} className="shimmer" />
+            )}
+          </Line>
         </RightWrapper>
-      ) : (
-        <div>Loading</div>
-      )}
+        <RightWrapper>
+          <Line fs={1.5} mb={10}>
+            Time watched 🕒
+          </Line>
+          <TimeWatched time={timeWatched} />
+        </RightWrapper>
+      </RightWrapper>
     </Wrapper>
   );
 };
