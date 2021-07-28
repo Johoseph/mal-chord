@@ -46,10 +46,23 @@ const getSankeyFormat = (data, startSort, endSort, endCategory) => {
 
       switch (endCategory) {
         case "score":
-          linker =
+          linker = [
             anime.node.my_list_status.score === 0
               ? "Not Scored"
-              : anime.node.my_list_status.score.toString();
+              : anime.node.my_list_status.score.toString(),
+          ];
+          break;
+        case "status":
+          linker = [anime.node.my_list_status.status];
+          break;
+        case "rating":
+          linker = [anime.node.rating];
+          break;
+        case "genre":
+          linker = anime.node.genres.map((genre) => genre.name);
+          break;
+        case "studio":
+          linker = anime.node.studios.map((studio) => studio.name);
           break;
       }
 
@@ -71,21 +84,27 @@ const getSankeyFormat = (data, startSort, endSort, endCategory) => {
       }
     })
     .map((anime) => {
-      let value;
-
       switch (endCategory) {
         case "score":
-          value =
-            anime.node.my_list_status.score === 0
-              ? "Not Scored"
-              : anime.node.my_list_status.score.toString();
-          break;
+          return {
+            name:
+              anime.node.my_list_status.score === 0
+                ? "Not Scored"
+                : anime.node.my_list_status.score.toString(),
+          };
+        case "status":
+          return { name: anime.node.my_list_status.status };
+        case "rating":
+          return { name: anime.node.rating };
+        case "genre": {
+          return anime.node.genres.map((genre) => ({ name: genre.name }));
+        }
+        case "studio": {
+          return anime.node.studios.map((studio) => ({ name: studio.name }));
+        }
       }
-
-      return {
-        name: value,
-      };
     })
+    .flat()
     .reduce(
       (uniqueArr, anime) =>
         uniqueArr.find((item) => item.name === anime.name)
@@ -95,13 +114,21 @@ const getSankeyFormat = (data, startSort, endSort, endCategory) => {
     )
     .map((anime, index) => ({ node: index + nodeBuffer, ...anime }));
 
-  const dataLinks = startNodes.map((anime) => ({
-    source: anime.node,
-    target: endNodes.find((endNode) => anime.linker === endNode.name).node,
-    value: 1,
-  }));
+  const dataLinks = startNodes
+    .map((anime) => {
+      return anime.linker.map((link) => ({
+        source: anime.node,
+        target: endNodes.find((endNode) => link === endNode.name).node,
+        value: 1,
+      }));
+    })
+    .flat();
 
-  return { dataNodes: [...startNodes, ...endNodes], dataLinks };
+  return {
+    dataNodes: [...startNodes, ...endNodes],
+    dataLinks,
+    nodeCount: Math.max(startNodes.length, endNodes.length),
+  };
 };
 
 export const Graph = ({ data }) => {
@@ -112,21 +139,16 @@ export const Graph = ({ data }) => {
   const [endSort, setEndSort] = useState("Z-A");
   const [endCategory, setEndCategory] = useState("score");
 
-  const { dataNodes, dataLinks } = getSankeyFormat(
+  const { dataNodes, dataLinks, nodeCount } = getSankeyFormat(
     data?.data || [],
     startSort,
     endSort,
     endCategory
   );
 
-  console.log({ dataNodes, dataLinks });
-
   useEffect(() => {
-    if (data) {
-      console.log(data);
-      setHeight((data.data?.length || 0) * HEIGHT_MULTIPLIER);
-    }
-  }, [data]);
+    setHeight((nodeCount || 0) * HEIGHT_MULTIPLIER);
+  }, [nodeCount]);
 
   return (
     <div ref={ref}>

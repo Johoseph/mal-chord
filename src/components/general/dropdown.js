@@ -13,12 +13,19 @@ const DropdownBase = styled.div`
 const DropdownWrapper = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   white-space: nowrap;
   cursor: pointer;
   border: 1px solid transparent;
   outline: none;
   border-radius: 5px;
   padding: 3px 10px;
+
+  ${(props) =>
+    props.minWidth &&
+    `
+    min-width: ${props.minWidth}px;
+  `}
 
   &:focus-visible {
     border-color: #484848;
@@ -64,7 +71,7 @@ const ChevronDown = styled(FiChevronDown)`
   margin-top: 3px;
 `;
 
-export const Dropdown = ({ value, setValue, options }) => {
+export const Dropdown = ({ value, setValue, options, minWidth }) => {
   const [isOpen, _setIsOpen] = useState(false);
 
   const dropdownRef = useRef();
@@ -171,6 +178,7 @@ export const Dropdown = ({ value, setValue, options }) => {
         aria-label="Select anime category"
         onClick={() => setIsOpen((prev) => !prev)}
         ref={controlRef}
+        minWidth={minWidth}
       >
         <div role="option">{options.find((e) => e.value === value)?.label}</div>
         <ChevronDown />

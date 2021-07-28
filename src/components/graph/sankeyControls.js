@@ -41,6 +41,7 @@ export const SankeyControls = ({
           value={endCategory}
           setValue={setEndCategory}
           options={options}
+          minWidth={150}
         />
       </Header>
     </Wrapper>
