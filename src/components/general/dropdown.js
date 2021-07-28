@@ -25,11 +25,8 @@ const DropdownWrapper = styled.div`
   }
 `;
 
-const DropdownSelected = styled.div``;
-
 const DropdownMenu = styled.div`
   background-color: #1f1f1f;
-  border: 2px solid #484848;
   box-sizing: border-box;
   max-height: 200px;
   overflow-y: auto;
@@ -46,7 +43,9 @@ const DropdownOption = styled.div`
   color: white;
   cursor: pointer;
   display: block;
-  padding: 8px 10px;
+  padding: 5px 10px;
+  margin: 5px 5px;
+  border-radius: 5px;
   user-select: none;
   &:hover {
     background: #2b2b2b;
@@ -173,9 +172,7 @@ export const Dropdown = ({ value, setValue, options }) => {
         onClick={() => setIsOpen((prev) => !prev)}
         ref={controlRef}
       >
-        <DropdownSelected role="option">
-          {options.find((e) => e.value === value)?.label}
-        </DropdownSelected>
+        <div role="option">{options.find((e) => e.value === value)?.label}</div>
         <ChevronDown />
       </DropdownWrapper>
       {isOpen && (
