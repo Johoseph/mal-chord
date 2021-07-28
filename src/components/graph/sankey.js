@@ -8,7 +8,7 @@ import {
   select,
 } from "d3";
 import { sankey as d3Sankey, sankeyLinkHorizontal } from "d3-sankey";
-import { useEffect, useRef, useState } from "preact/hooks";
+import { useEffect, useRef } from "preact/hooks";
 
 const Wrapper = styled.div`
   & .link {
@@ -22,88 +22,12 @@ const Wrapper = styled.div`
   }
 `;
 
-const getSankeyFormat = (data, startSort, endSort, endCategory) => {
-  const nodeBuffer = data.length;
-
-  const startNodes = data
-    .map((anime, index) => {
-      let linker;
-
-      switch (endCategory) {
-        case "score":
-          linker = anime.node.my_list_status.score.toString();
-          break;
-      }
-
-      return {
-        node: index,
-        name: anime.node.title,
-        photo: anime.node.main_picture.medium,
-        linker,
-      };
-    })
-    .sort((a, b) => {
-      switch (startSort) {
-        case "A-Z":
-          return a.name.localeCompare(b.name);
-        case "Z-A":
-          return b.name.localeCompare(a.name);
-      }
-    });
-
-  const endNodes = data
-    .map((anime) => {
-      let value;
-
-      switch (endCategory) {
-        case "score":
-          value = anime.node.my_list_status.score.toString();
-          break;
-      }
-
-      return {
-        name: value,
-      };
-    })
-    .reduce(
-      (uniqueArr, anime) =>
-        uniqueArr.find((item) => item.name === anime.name)
-          ? uniqueArr
-          : [...uniqueArr, anime],
-      []
-    )
-    .map((anime, index) => ({ node: index + nodeBuffer, ...anime }))
-    .sort((a, b) => {
-      switch (endSort) {
-        case "A-Z":
-          return a.name.localeCompare(b.name);
-        case "Z-A":
-          return b.name.localeCompare(a.name);
-      }
-    });
-
-  const dataLinks = startNodes.map((anime) => ({
-    source: anime.node,
-    target: endNodes.find((endNode) => anime.linker === endNode.name).node,
-    value: 1,
-  }));
-
-  return { dataNodes: [...startNodes, ...endNodes], dataLinks };
-};
-
-export const Sankey = ({ data, dimensions: { width, height } }) => {
+export const Sankey = ({
+  dataNodes,
+  dataLinks,
+  dimensions: { width, height },
+}) => {
   let sankeyRef = useRef();
-
-  const [startSort, setStartSort] = useState("A-Z");
-  const [endSort, setEndSort] = useState("Z-A");
-  const [endCategory, setEndCategory] = useState("score");
-
-  const { dataNodes, dataLinks } = getSankeyFormat(
-    data.data,
-    startSort,
-    endSort,
-    endCategory
-  );
 
   // console.log({ dataNodes, dataLinks });
 

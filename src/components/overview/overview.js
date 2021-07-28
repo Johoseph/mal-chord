@@ -12,7 +12,7 @@ import { TimeWatched } from "./timeWatched";
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   height: 12em;
 `;
 
