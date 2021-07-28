@@ -29,8 +29,6 @@ export const Sankey = ({
 }) => {
   let sankeyRef = useRef();
 
-  // console.log({ dataNodes, dataLinks });
-
   useEffect(() => {
     select(sankeyRef.current).select("svg").remove();
 
@@ -38,7 +36,7 @@ export const Sankey = ({
     const svg = select(sankeyRef.current)
       .append("svg")
       .attr("width", width)
-      // .attr("height", height)
+      .attr("height", height)
       .style("width", "100%")
       .style("height", "auto")
       .append("g");

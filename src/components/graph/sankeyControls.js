@@ -25,22 +25,12 @@ const Chord = styled.div`
   margin: 0 20px;
 `;
 
-const optionCategories = [
-  {
-    value: "score",
-    label: "your score",
-  },
-  {
-    value: "popularity",
-    label: "fan popularity",
-  },
-];
-
 export const SankeyControls = ({
   setStartSort,
   setEndSort,
   setEndCategory,
   endCategory,
+  options,
 }) => {
   return (
     <Wrapper>
@@ -50,7 +40,7 @@ export const SankeyControls = ({
         <Dropdown
           value={endCategory}
           setValue={setEndCategory}
-          options={optionCategories}
+          options={options}
         />
       </Header>
     </Wrapper>

@@ -6,16 +6,50 @@ import { SankeyControls } from "./sankeyControls";
 
 const HEIGHT_MULTIPLIER = 40;
 
+const endCategories = [
+  {
+    value: "rating",
+    label: "anime rating",
+  },
+  {
+    value: "genre",
+    label: "genre",
+  },
+  {
+    value: "studio",
+    label: "studio",
+  },
+  {
+    value: "status",
+    label: "your list status",
+  },
+  {
+    value: "score",
+    label: "your score",
+  },
+];
+
 const getSankeyFormat = (data, startSort, endSort, endCategory) => {
   const nodeBuffer = data.length;
 
   const startNodes = data
+    .sort((a, b) => {
+      switch (startSort) {
+        case "A-Z":
+          return a.node.title.localeCompare(b.node.title);
+        case "Z-A":
+          return b.node.title.localeCompare(a.node.title);
+      }
+    })
     .map((anime, index) => {
       let linker;
 
       switch (endCategory) {
         case "score":
-          linker = anime.node.my_list_status.score.toString();
+          linker =
+            anime.node.my_list_status.score === 0
+              ? "Not Scored"
+              : anime.node.my_list_status.score.toString();
           break;
       }
 
@@ -25,23 +59,26 @@ const getSankeyFormat = (data, startSort, endSort, endCategory) => {
         photo: anime.node.main_picture.medium,
         linker,
       };
-    })
-    .sort((a, b) => {
-      switch (startSort) {
-        case "A-Z":
-          return a.name.localeCompare(b.name);
-        case "Z-A":
-          return b.name.localeCompare(a.name);
-      }
     });
 
   const endNodes = data
+    .sort((a, b) => {
+      switch (endSort) {
+        case "A-Z":
+          return a.node.title.localeCompare(b.node.title);
+        case "Z-A":
+          return b.node.title.localeCompare(a.node.title);
+      }
+    })
     .map((anime) => {
       let value;
 
       switch (endCategory) {
         case "score":
-          value = anime.node.my_list_status.score.toString();
+          value =
+            anime.node.my_list_status.score === 0
+              ? "Not Scored"
+              : anime.node.my_list_status.score.toString();
           break;
       }
 
@@ -56,15 +93,7 @@ const getSankeyFormat = (data, startSort, endSort, endCategory) => {
           : [...uniqueArr, anime],
       []
     )
-    .map((anime, index) => ({ node: index + nodeBuffer, ...anime }))
-    .sort((a, b) => {
-      switch (endSort) {
-        case "A-Z":
-          return a.name.localeCompare(b.name);
-        case "Z-A":
-          return b.name.localeCompare(a.name);
-      }
-    });
+    .map((anime, index) => ({ node: index + nodeBuffer, ...anime }));
 
   const dataLinks = startNodes.map((anime) => ({
     source: anime.node,
@@ -90,6 +119,8 @@ export const Graph = ({ data }) => {
     endCategory
   );
 
+  console.log({ dataNodes, dataLinks });
+
   useEffect(() => {
     if (data) {
       console.log(data);
@@ -106,6 +137,7 @@ export const Graph = ({ data }) => {
             setEndSort={setEndSort}
             setEndCategory={setEndCategory}
             endCategory={endCategory}
+            options={endCategories}
           />
           <Sankey
             dataNodes={dataNodes}
