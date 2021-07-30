@@ -57,6 +57,7 @@ const SortButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  outline: none;
 
   &:hover,
   :focus {
@@ -98,6 +99,7 @@ export const SankeyControls = ({
                   direction: prev.direction === "ASC" ? "DESC" : "ASC",
                 }))
               }
+              aria-label="Toggle anime sort direction"
             >
               {startSort.direction === "ASC" ? (
                 <HiArrowNarrowUp />
@@ -124,6 +126,7 @@ export const SankeyControls = ({
                   direction: prev.direction === "ASC" ? "DESC" : "ASC",
                 }))
               }
+              aria-label="Toggle end category sort direction"
             >
               {endSort.direction === "ASC" ? (
                 <HiArrowNarrowUp />
