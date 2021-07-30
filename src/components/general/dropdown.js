@@ -13,19 +13,12 @@ const DropdownBase = styled.div`
 const DropdownWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
   white-space: nowrap;
   cursor: pointer;
   border: 1px solid transparent;
   outline: none;
   border-radius: 5px;
   padding: 3px 0;
-
-  ${(props) =>
-    props.minWidth &&
-    `
-    min-width: ${props.minWidth}px;
-  `}
 
   &:focus-visible {
     border-color: #484848;
@@ -42,6 +35,14 @@ const DropdownMenu = styled.div`
   width: 100%;
   z-index: 100;
   border-radius: 5px;
+
+  ${(props) => (props.alignment === "right" ? `right: 0;` : `left: 0;`)}
+
+  ${(props) =>
+    props.minWidth &&
+    `
+    min-width: ${props.minWidth}px;
+  `}
 `;
 
 const DropdownOption = styled.div`
@@ -70,7 +71,13 @@ const ChevronDown = styled(FiChevronDown)`
   margin-left: 5px;
 `;
 
-export const Dropdown = ({ value, setValue, options, minWidth }) => {
+export const Dropdown = ({
+  value,
+  setValue,
+  options,
+  minWidth,
+  alignment = "left",
+}) => {
   const [isOpen, _setIsOpen] = useState(false);
 
   const dropdownRef = useRef();
@@ -177,13 +184,17 @@ export const Dropdown = ({ value, setValue, options, minWidth }) => {
         aria-label="Select anime category"
         onClick={() => setIsOpen((prev) => !prev)}
         ref={controlRef}
-        minWidth={minWidth}
       >
         <div role="option">{options.find((e) => e.value === value)?.label}</div>
         <ChevronDown />
       </DropdownWrapper>
       {isOpen && (
-        <DropdownMenu id="options" className="dropdownMenu">
+        <DropdownMenu
+          id="options"
+          className="dropdownMenu"
+          minWidth={minWidth}
+          alignment={alignment}
+        >
           {options.map((option, i) => (
             <DropdownOption
               onClick={() => {

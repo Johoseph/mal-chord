@@ -55,6 +55,7 @@ export const SankeyControls = ({
           setValue={setEndCategory}
           options={categoryOptions}
           minWidth={150}
+          alignment="right"
         />
       </Header>
       <Sort>
