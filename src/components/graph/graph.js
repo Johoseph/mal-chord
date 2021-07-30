@@ -153,8 +153,6 @@ const getSankeyFormat = (data, startSort, endSort, endCategory) => {
     })
     .map((anime, index) => ({ node: index + nodeBuffer, ...anime }));
 
-  console.log({ startNodes, endNodes, startSort, endSort });
-
   const dataLinks = startNodes
     .map((anime) => {
       return anime.linker.map((link) => ({
