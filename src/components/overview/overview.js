@@ -2,6 +2,7 @@ import { h } from "preact";
 import { useQuery } from "../../hooks";
 import styled from "styled-components";
 import dayjs from "dayjs";
+import { decode } from "he";
 
 import MALLogo from "../../assets/branding/mal.svg";
 import MALLogoText from "../../assets/branding/mal-text.svg";
@@ -118,10 +119,27 @@ export const Overview = ({ data }) => {
   const userDetails = useQuery("user_details");
 
   const [timeWatched, setTimeWatched] = useState({});
+  const [clock, setClock] = useState("&#128347;");
 
   useEffect(() => {
     setTimeWatched(getTimeWatched(data?.data));
   }, [data]);
+
+  useEffect(() => {
+    let clockInterval = setInterval(
+      () =>
+        setClock(
+          (prev) =>
+            `${prev.substring(0, 6)}${
+              prev.substring(6, 8) === "47"
+                ? "36"
+                : parseInt(prev.substring(6, 8), 10) + 1
+            };`
+        ),
+      150
+    );
+    return () => clearInterval(clockInterval);
+  }, []);
 
   return (
     <Wrapper>
@@ -162,7 +180,7 @@ export const Overview = ({ data }) => {
         </RightWrapper>
         <RightWrapper>
           <Line fs={1.5} mb={10}>
-            Time watched 🕒
+            Time watched {decode(clock)}
           </Line>
           <TimeWatched time={timeWatched} />
         </RightWrapper>
