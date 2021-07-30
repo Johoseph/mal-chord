@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Dropdown } from "../general/dropdown";
 
 const Wrapper = styled.div`
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 `;
 
 const Header = styled.div`
@@ -14,6 +14,7 @@ const Header = styled.div`
   width: 100%;
   padding: 0 5px;
   font-size: 1.5rem;
+  margin-bottom: 10px;
 `;
 
 const Chord = styled.div`
@@ -25,12 +26,24 @@ const Chord = styled.div`
   margin: 0 20px;
 `;
 
+const Sort = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 5px;
+  font-size: 1rem;
+`;
+
 export const SankeyControls = ({
   setStartSort,
   setEndSort,
   setEndCategory,
+  startSort,
+  endSort,
   endCategory,
-  options,
+  categoryOptions,
+  sortOptions,
 }) => {
   return (
     <Wrapper>
@@ -40,10 +53,21 @@ export const SankeyControls = ({
         <Dropdown
           value={endCategory}
           setValue={setEndCategory}
-          options={options}
+          options={categoryOptions}
           minWidth={150}
         />
       </Header>
+      <Sort>
+        <Dropdown
+          value={startSort.type}
+          setValue={(val) =>
+            setStartSort((prev) => ({ type: val, direction: prev.direction }))
+          }
+          options={sortOptions}
+          minWidth={120}
+        />
+        <span>{endSort.type}</span>
+      </Sort>
     </Wrapper>
   );
 };

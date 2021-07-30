@@ -29,16 +29,52 @@ const endCategories = [
   },
 ];
 
+const sortOptions = [
+  {
+    value: "alphabetical",
+    label: "alphabetical",
+  },
+  {
+    value: "date",
+    label: "last updated",
+  },
+  {
+    value: "popularity",
+    label: "popularity",
+  },
+  {
+    value: "ranking",
+    label: "ranking",
+  },
+  {
+    value: "score",
+    label: "your score",
+  },
+];
+
 const getSankeyFormat = (data, startSort, endSort, endCategory) => {
   const nodeBuffer = data.length;
 
   const startNodes = data
     .sort((a, b) => {
-      switch (startSort) {
-        case "A-Z":
-          return a.node.title.localeCompare(b.node.title);
-        case "Z-A":
-          return b.node.title.localeCompare(a.node.title);
+      const comparer = startSort.direction === "ASC" ? a.node : b.node;
+      const comparee = startSort.direction === "ASC" ? b.node : a.node;
+
+      switch (startSort.type) {
+        case "alphabetical":
+          return comparer.title.localeCompare(comparee.title);
+        case "ranking":
+          return comparer.rank > comparee.rank ? 1 : -1;
+        case "popularity":
+          return comparer.popularity > comparee.popularity ? 1 : -1;
+        case "score":
+          return comparer.my_list_status.score > comparee.my_list_status.score
+            ? 1
+            : -1;
+        case "date":
+          return comparer.my_list_status.updated_at.localeCompare(
+            comparee.my_list_status.updated_at
+          );
       }
     })
     .map((anime, index) => {
@@ -75,14 +111,6 @@ const getSankeyFormat = (data, startSort, endSort, endCategory) => {
     });
 
   const endNodes = data
-    .sort((a, b) => {
-      switch (endSort) {
-        case "A-Z":
-          return a.node.title.localeCompare(b.node.title);
-        case "Z-A":
-          return b.node.title.localeCompare(a.node.title);
-      }
-    })
     .map((anime) => {
       switch (endCategory) {
         case "score":
@@ -112,7 +140,20 @@ const getSankeyFormat = (data, startSort, endSort, endCategory) => {
           : [...uniqueArr, anime],
       []
     )
+    .sort((a, b) => {
+      const comparer = endSort.direction === "ASC" ? a.name : b.name;
+      const comparee = endSort.direction === "ASC" ? b.name : a.name;
+
+      switch (endSort.type) {
+        case "alphabetical":
+          if (comparer === "Not Scored") return -1;
+          if (comparee === "Not Scored") return 1;
+          return comparer.localeCompare(comparee);
+      }
+    })
     .map((anime, index) => ({ node: index + nodeBuffer, ...anime }));
+
+  console.log({ startNodes, endNodes, startSort, endSort });
 
   const dataLinks = startNodes
     .map((anime) => {
@@ -135,8 +176,14 @@ export const Graph = ({ data }) => {
   const { ref, width } = useResizeObserver();
   const [height, setHeight] = useState(100);
 
-  const [startSort, setStartSort] = useState("A-Z");
-  const [endSort, setEndSort] = useState("Z-A");
+  const [startSort, setStartSort] = useState({
+    type: "alphabetical",
+    direction: "ASC",
+  });
+  const [endSort, setEndSort] = useState({
+    type: "alphabetical",
+    direction: "DESC",
+  });
   const [endCategory, setEndCategory] = useState("score");
 
   const { dataNodes, dataLinks, nodeCount } = getSankeyFormat(
@@ -158,8 +205,11 @@ export const Graph = ({ data }) => {
             setStartSort={setStartSort}
             setEndSort={setEndSort}
             setEndCategory={setEndCategory}
+            startSort={startSort}
+            endSort={endSort}
             endCategory={endCategory}
-            options={endCategories}
+            categoryOptions={endCategories}
+            sortOptions={sortOptions}
           />
           <Sankey
             dataNodes={dataNodes}

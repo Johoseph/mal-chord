@@ -19,7 +19,7 @@ const DropdownWrapper = styled.div`
   border: 1px solid transparent;
   outline: none;
   border-radius: 5px;
-  padding: 3px 10px;
+  padding: 3px 0;
 
   ${(props) =>
     props.minWidth &&
@@ -67,8 +67,7 @@ const DropdownOption = styled.div`
 `;
 
 const ChevronDown = styled(FiChevronDown)`
-  margin-left: 10px;
-  margin-top: 3px;
+  margin-left: 5px;
 `;
 
 export const Dropdown = ({ value, setValue, options, minWidth }) => {
