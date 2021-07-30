@@ -1,10 +1,16 @@
 import { h } from "preact";
 import styled from "styled-components";
+import { HiArrowNarrowDown, HiArrowNarrowUp } from "react-icons/hi";
 
 import { Dropdown } from "../general/dropdown";
 
 const Wrapper = styled.div`
   margin-bottom: 30px;
+`;
+
+const Flex = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const Header = styled.div`
@@ -35,6 +41,29 @@ const Sort = styled.div`
   font-size: 0.9rem;
 `;
 
+const SortButtonWrapper = styled.div`
+  margin-right: 6px;
+  width: 1.5rem;
+  height: 1.5rem;
+`;
+
+const SortButton = styled.button`
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
+  border: none;
+  background: #1f1f1f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover,
+  :focus {
+    background: #252525;
+  }
+`;
+
 export const SankeyControls = ({
   setStartSort,
   setEndSort,
@@ -60,15 +89,51 @@ export const SankeyControls = ({
         />
       </Header>
       <Sort>
-        <Dropdown
-          value={startSort.type}
-          setValue={(val) =>
-            setStartSort((prev) => ({ type: val, direction: prev.direction }))
-          }
-          options={sortOptions}
-          minWidth={120}
-        />
-        <span>{endSort.type}</span>
+        <Flex>
+          <SortButtonWrapper>
+            <SortButton
+              onClick={() =>
+                setStartSort((prev) => ({
+                  type: prev.type,
+                  direction: prev.direction === "ASC" ? "DESC" : "ASC",
+                }))
+              }
+            >
+              {startSort.direction === "ASC" ? (
+                <HiArrowNarrowUp />
+              ) : (
+                <HiArrowNarrowDown />
+              )}
+            </SortButton>
+          </SortButtonWrapper>
+          <Dropdown
+            value={startSort.type}
+            setValue={(val) =>
+              setStartSort((prev) => ({ type: val, direction: prev.direction }))
+            }
+            options={sortOptions}
+            minWidth={120}
+          />
+        </Flex>
+        <Flex>
+          <SortButtonWrapper>
+            <SortButton
+              onClick={() =>
+                setEndSort((prev) => ({
+                  type: prev.type,
+                  direction: prev.direction === "ASC" ? "DESC" : "ASC",
+                }))
+              }
+            >
+              {endSort.direction === "ASC" ? (
+                <HiArrowNarrowUp />
+              ) : (
+                <HiArrowNarrowDown />
+              )}
+            </SortButton>
+          </SortButtonWrapper>
+          {endSort.type}
+        </Flex>
       </Sort>
     </Wrapper>
   );
