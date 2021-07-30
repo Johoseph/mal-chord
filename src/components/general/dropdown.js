@@ -46,7 +46,6 @@ const DropdownMenu = styled.div`
 `;
 
 const DropdownOption = styled.div`
-  font-size: 1rem;
   box-sizing: border-box;
   color: white;
   cursor: pointer;
@@ -58,6 +57,12 @@ const DropdownOption = styled.div`
   &:hover {
     background: #2b2b2b;
   }
+
+  ${(props) =>
+    props.fs &&
+    `
+    font-size: ${props.fs}rem;
+  `}
 
   ${(props) =>
     props.isSelected &&
@@ -77,6 +82,7 @@ export const Dropdown = ({
   options,
   minWidth,
   alignment = "left",
+  optionFontSize,
 }) => {
   const [isOpen, _setIsOpen] = useState(false);
 
@@ -205,6 +211,7 @@ export const Dropdown = ({
               key={i}
               className="dropdownOption"
               onMouseOver={() => setSelectedRow(i)}
+              fs={optionFontSize}
             >
               {option.label}
             </DropdownOption>

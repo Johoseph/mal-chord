@@ -32,7 +32,7 @@ const Sort = styled.div`
   align-items: center;
   width: 100%;
   padding: 0 5px;
-  font-size: 1rem;
+  font-size: 0.9rem;
 `;
 
 export const SankeyControls = ({
@@ -56,6 +56,7 @@ export const SankeyControls = ({
           options={categoryOptions}
           minWidth={150}
           alignment="right"
+          optionFontSize={1}
         />
       </Header>
       <Sort>
