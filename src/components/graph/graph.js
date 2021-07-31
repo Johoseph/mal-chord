@@ -79,8 +79,6 @@ export const Graph = ({ data }) => {
     setHeight((nodeCount || 0) * HEIGHT_MULTIPLIER);
   }, [nodeCount]);
 
-  console.log({ data, dataNodes, dataLinks, nodeCount });
-
   return (
     <div ref={ref}>
       {data ? (

@@ -1,8 +1,6 @@
 export const getSankeyFormat = (data, startSort, endSort, endCategory) => {
   const nodeBuffer = data.length;
 
-  console.log({ sankeyFormat: data });
-
   const startNodes = data
     .sort((firstEl, secondEl) => {
       const comparer = startSort.direction === "ASC" ? firstEl : secondEl;
