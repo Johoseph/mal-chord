@@ -105,6 +105,7 @@ export const getSankeyFormat = (data, startSort, endSort, endCategory) => {
   return {
     dataNodes: [...startNodes, ...endNodes],
     dataLinks,
-    nodeCount: Math.max(startNodes.length, endNodes.length),
+    nodeCount: startNodes.length,
+    nodeDifference: startNodes.length - endNodes.length || 0,
   };
 };

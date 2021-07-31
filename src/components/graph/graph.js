@@ -6,7 +6,8 @@ import { Sankey } from "./Sankey";
 import { SankeyControls } from "./SankeyControls";
 import { getSankeyFormat } from "./sankeyFunctions";
 
-const HEIGHT_MULTIPLIER = 40;
+const NODE_SIDE = 40;
+const NODE_PADDING = 10;
 
 const endCategories = [
   {
@@ -68,7 +69,7 @@ export const Graph = ({ data }) => {
   });
   const [endCategory, setEndCategory] = useState("score");
 
-  const { dataNodes, dataLinks, nodeCount } = getSankeyFormat(
+  const { dataNodes, dataLinks, nodeCount, nodeDifference } = getSankeyFormat(
     data || [],
     startSort,
     endSort,
@@ -76,29 +77,36 @@ export const Graph = ({ data }) => {
   );
 
   useEffect(() => {
-    setHeight((nodeCount || 0) * HEIGHT_MULTIPLIER);
+    setHeight(
+      Math.max(0, (nodeCount || 0) * (NODE_SIDE + NODE_PADDING) - NODE_PADDING)
+    );
   }, [nodeCount]);
 
   return (
     <div ref={ref}>
       {data ? (
-        <>
-          <SankeyControls
-            setStartSort={setStartSort}
-            setEndSort={setEndSort}
-            setEndCategory={setEndCategory}
-            startSort={startSort}
-            endSort={endSort}
-            endCategory={endCategory}
-            categoryOptions={endCategories}
-            sortOptions={sortOptions}
-          />
-          <Sankey
-            dataNodes={dataNodes}
-            dataLinks={dataLinks}
-            dimensions={{ width, height }}
-          />
-        </>
+        <SankeyControls
+          setStartSort={setStartSort}
+          setEndSort={setEndSort}
+          setEndCategory={setEndCategory}
+          startSort={startSort}
+          endSort={endSort}
+          endCategory={endCategory}
+          categoryOptions={endCategories}
+          sortOptions={sortOptions}
+        />
+      ) : (
+        <div>Controls Loading</div>
+      )}
+      {data ? (
+        <Sankey
+          dataNodes={dataNodes}
+          dataLinks={dataLinks}
+          dimensions={{ width, height }}
+          nodeSide={NODE_SIDE}
+          nodePadding={NODE_PADDING}
+          endNodeModifier={(nodeDifference * NODE_PADDING) / nodeCount}
+        />
       ) : (
         <div>Sankey Loading</div>
       )}
