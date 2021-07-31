@@ -86,7 +86,7 @@ export const getSankeyFormat = (data, startSort, endSort, endCategory) => {
           if (comparer === "Not Scored") return -1;
           if (comparee === "Not Scored") return 1;
           if (parseInt(comparer, 10) && parseInt(comparer, 10))
-            return comparer > comparee;
+            return parseInt(comparer, 10) > parseInt(comparee, 10) ? 1 : -1;
           return comparer.localeCompare(comparee);
       }
     })
