@@ -175,8 +175,8 @@ export const Graph = ({ data }) => {
   const [height, setHeight] = useState(100);
 
   const [startSort, setStartSort] = useState({
-    type: "alphabetical",
-    direction: "ASC",
+    type: "date",
+    direction: "DESC",
   });
   const [endSort, setEndSort] = useState({
     type: "alphabetical",
