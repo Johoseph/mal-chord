@@ -2,7 +2,7 @@ import { h } from "preact";
 import styled from "styled-components";
 import { HiArrowNarrowDown, HiArrowNarrowUp } from "react-icons/hi";
 
-import { Dropdown } from "../general/dropdown";
+import { Dropdown } from "../general/Dropdown";
 
 const Wrapper = styled.div`
   margin-bottom: 30px;

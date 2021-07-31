@@ -8,7 +8,7 @@ import MALLogo from "../../assets/branding/mal.svg";
 import MALLogoText from "../../assets/branding/mal-text.svg";
 import MALChord from "../../assets/branding/mal-chord.svg";
 import { useEffect, useState } from "preact/hooks";
-import { TimeWatched } from "./timeWatched";
+import { TimeWatched } from "./TimeWatched";
 
 const Wrapper = styled.div`
   display: flex;
@@ -92,19 +92,10 @@ const getTimeWatched = (anime) => {
   let days, hours, minutes, seconds;
 
   if (anime) {
-    const secondsWatched = anime
-      .map((anime) => {
-        const info = anime.node;
-        const duration = info.average_episode_duration;
-        let epsWatched = info.my_list_status.num_episodes_watched;
-
-        if (info.my_list_status.is_rewatching)
-          epsWatched +=
-            info.num_episodes * (info.my_list_status.num_times_rewatched + 1);
-
-        return duration * epsWatched;
-      })
-      .reduce((total, anime) => total + anime, 0);
+    const secondsWatched = anime.reduce(
+      (total, anime) => total + anime.secondsWatched,
+      0
+    );
 
     days = Math.floor(secondsWatched / (60 * 60 * 24));
     hours = Math.floor((secondsWatched % (60 * 60 * 24)) / (60 * 60));
@@ -122,7 +113,7 @@ export const Overview = ({ data }) => {
   const [clock, setClock] = useState("&#128347;");
 
   useEffect(() => {
-    setTimeWatched(getTimeWatched(data?.data));
+    setTimeWatched(getTimeWatched(data));
   }, [data]);
 
   useEffect(() => {

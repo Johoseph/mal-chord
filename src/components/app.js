@@ -1,7 +1,7 @@
 import { h } from "preact";
 
 import { useUser } from "../hooks";
-import LoggedIn from "./loggedIn";
+import LoggedIn from "./LoggedIn";
 
 const App = () => {
   const { loggedIn } = useUser();
