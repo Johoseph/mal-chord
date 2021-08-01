@@ -141,7 +141,7 @@ export const Sankey = ({
       .data(nodes.filter((d) => d.targetLinks.length === 0))
       .enter()
       .append("image")
-      .attr("xlink:href", (d) => d.photo)
+      .attr("href", (d) => d.photo)
       // .attr("preserveAspectRatio", "xMaxYMin")
       .attr("x", 0) // Change this for title on left
       .attr("y", (d) => d.y0)
