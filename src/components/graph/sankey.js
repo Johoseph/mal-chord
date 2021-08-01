@@ -56,6 +56,16 @@ export const Sankey = ({
       links: dataLinks.map((d) => Object.assign({}, d)),
     });
 
+    // Transform start nodes
+    nodes
+      .filter((node) => node.targetLinks.length === 0)
+      .forEach((node, index) => {
+        node.y0 = 1 + (nodeSide + nodePadding) * index;
+        node.y1 = 1 + nodeSide + (nodeSide + nodePadding) * index;
+      });
+
+    // console.log(endNodeModifier);
+
     // Transform end nodes
     nodes
       .filter((node) => node.targetLinks.length > 0)
@@ -78,6 +88,7 @@ export const Sankey = ({
         }
       });
 
+    // Transform links
     links.forEach((link) => {
       const targetNode = nodes.find((node) => node.node === link.target.node);
       const targetLinkCount = targetNode.targetLinks.length;
