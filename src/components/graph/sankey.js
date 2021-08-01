@@ -11,6 +11,35 @@ import {
 import { sankey as d3Sankey, sankeyLinkHorizontal } from "d3-sankey";
 import { useEffect, useRef } from "preact/hooks";
 
+//https://gist.github.com/chriswhong/dd794c5ca90769602066
+const customLinkHorizontal = (link) => {
+  const sourceLinkCount = link.source.sourceLinks.length;
+  const targetLinkCount = link.target.targetLinks.length;
+  const widthStart = (link.source.y1 - link.source.y0) / sourceLinkCount;
+  const widthEnd = (link.target.y1 - link.target.y0) / targetLinkCount;
+
+  const curvature = 0.6;
+
+  // Arbitrary number chosen to keep the width of chords consistent -> https://yqnn.github.io/svg-path-editor/
+  const curvatureModifer = 40;
+
+  const x0 = link.source.x1,
+    x1 = link.target.x0,
+    xi = interpolateNumber(x0, x1),
+    x2 = xi(curvature),
+    x3 = xi(1 - curvature),
+    y0 = link.source.y0 + link.source.sourceLinks.indexOf(link) * widthStart,
+    y1 = link.target.y0 + widthEnd * link.target.targetLinks.indexOf(link);
+
+  return `M${x0},${y0}C${
+    y0 < y1 ? x2 + curvatureModifer : x2 - curvatureModifer
+  },${y0} ${x3},${y1} ${x1},${y1}L${x1},${y1 + widthEnd}C${
+    y0 < y1 ? x3 - curvatureModifer : x3 + curvatureModifer
+  },${y1 + widthEnd} ${x2},${y0 + widthStart} ${x0},${
+    y0 + widthStart
+  }L${x0},${y0}`;
+};
+
 const Wrapper = styled.div`
   & .link {
     fill: none;
@@ -63,8 +92,6 @@ export const Sankey = ({
         node.y0 = 1 + (nodeSide + nodePadding) * index;
         node.y1 = 1 + nodeSide + (nodeSide + nodePadding) * index;
       });
-
-    // console.log(endNodeModifier);
 
     // Transform end nodes
     nodes
@@ -177,34 +204,6 @@ export const Sankey = ({
       .append("stop")
       .attr("offset", "100%")
       .attr("stop-color", (d) => color(d.target.name));
-
-    //https://gist.github.com/chriswhong/dd794c5ca90769602066
-    const customLinkHorizontal = (link) => {
-      const targetLinkCount = link.target.targetLinks.length;
-      const widthStart = link.source.y1 - link.source.y0;
-      const widthEnd = (link.target.y1 - link.target.y0) / targetLinkCount;
-
-      const curvature = 0.6;
-
-      // Arbitrary number chosen to keep the width of chords consistent -> https://yqnn.github.io/svg-path-editor/
-      const curvatureModifer = 40;
-
-      const x0 = link.source.x1,
-        x1 = link.target.x0,
-        xi = interpolateNumber(x0, x1),
-        x2 = xi(curvature),
-        x3 = xi(1 - curvature),
-        y0 = link.source.y0,
-        y1 = link.target.y0 + widthEnd * link.target.targetLinks.indexOf(link);
-
-      return `M${x0},${y0}C${
-        y0 < y1 ? x2 + curvatureModifer : x2 - curvatureModifer
-      },${y0} ${x3},${y1} ${x1},${y1}L${x1},${y1 + widthEnd}C${
-        y0 < y1 ? x3 - curvatureModifer : x3 + curvatureModifer
-      },${y1 + widthEnd} ${x2},${y0 + widthStart} ${x0},${
-        y0 + widthStart
-      }L${x0},${y0}`;
-    };
 
     link
       .append("path")
