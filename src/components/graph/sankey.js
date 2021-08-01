@@ -8,8 +8,8 @@ import {
   select,
   interpolateNumber,
 } from "d3";
-import { sankey as d3Sankey, sankeyLinkHorizontal } from "d3-sankey";
-import { useEffect, useRef } from "preact/hooks";
+import { sankey as d3Sankey } from "d3-sankey";
+import { useEffect, useRef, useCallback, useMemo } from "preact/hooks";
 
 //https://gist.github.com/chriswhong/dd794c5ca90769602066
 const customLinkHorizontal = (link) => {
@@ -61,6 +61,9 @@ export const Sankey = ({
   endNodeModifier = 0,
 }) => {
   let sankeyRef = useRef();
+
+  const scale = useMemo(() => scaleOrdinal(schemeCategory10), []);
+  const color = useCallback((name) => scale(name.replace(/ .*/, "")), [scale]);
 
   useEffect(() => {
     select(sankeyRef.current).select("svg").remove();
@@ -128,8 +131,6 @@ export const Sankey = ({
         singleLinkWidth / 2;
     });
 
-    const scale = scaleOrdinal(schemeCategory10);
-    const color = (name) => scale(name.replace(/ .*/, ""));
     const format = (d) => `$${d3Format(",.0f")(d)}`;
 
     // Start nodes
@@ -167,7 +168,7 @@ export const Sankey = ({
       .data(nodes.filter((d) => d.targetLinks.length > 0))
       .enter()
       .append("rect")
-      .attr("width", () => nodeSide)
+      .attr("width", nodeSide)
       .attr("height", (d) => d.y1 - d.y0)
       .attr("x", (d) => d.x0)
       .attr("y", (d) => d.y0)
@@ -183,36 +184,12 @@ export const Sankey = ({
       .data(links)
       .enter()
       .append("g");
-    // .style("mix-blend-mode", "multiply");
-
-    const gradient = link
-      .append("linearGradient")
-      .attr("id", (d) => {
-        d.uid = Math.floor(Math.random() * 100000);
-        return d.uid;
-      })
-      .attr("gradientUnits", "userSpaceOnUse")
-      .attr("x1", (d) => d.source.x1)
-      .attr("x2", (d) => d.target.x0);
-
-    gradient
-      .append("stop")
-      .attr("offset", "0%")
-      .attr("stop-color", (d) => color(d.source.name));
-
-    gradient
-      .append("stop")
-      .attr("offset", "100%")
-      .attr("stop-color", (d) => color(d.target.name));
 
     link
       .append("path")
-      // .attr("d", sankeyLinkHorizontal())
       .attr("d", (d) => customLinkHorizontal(d))
-      .attr("fill", (d) => `url(#${d.uid})`)
+      .attr("fill", (d) => color(d.target.name))
       .attr("opacity", 0.5);
-    // .attr("stroke", (d) => `url(#${d.uid})`)
-    // .attr("stroke-width", (d) => Math.max(1, d.width));
 
     // Text
     svg
@@ -236,6 +213,7 @@ export const Sankey = ({
     nodeSide,
     nodePadding,
     endNodeModifier,
+    color,
   ]);
 
   return <Wrapper ref={sankeyRef} />;
