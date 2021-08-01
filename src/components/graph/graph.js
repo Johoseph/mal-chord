@@ -105,7 +105,12 @@ export const Graph = ({ data }) => {
           dimensions={{ width, height }}
           nodeSide={NODE_SIDE}
           nodePadding={NODE_PADDING}
-          endNodeModifier={(nodeDifference * NODE_PADDING) / nodeCount}
+          endNodeModifier={
+            // Catering for nodePadding
+            (nodeDifference * NODE_PADDING) / dataLinks.length -
+            // Catering for more links than nodes
+            ((dataLinks.length - nodeCount) * NODE_SIDE) / dataLinks.length
+          }
         />
       ) : (
         <div>Sankey Loading</div>
