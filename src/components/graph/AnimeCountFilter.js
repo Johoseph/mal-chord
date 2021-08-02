@@ -52,7 +52,10 @@ const Input = styled.input`
 
 export const AnimeCountFilter = ({ count, limit, setLimit }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const incrementChange = useMemo(() => mathClamp(limit / 20, 1, 20), [limit]);
+  const incrementChange = useMemo(
+    () => Math.round(mathClamp(count / 20, 1, 20)),
+    [count]
+  );
 
   let inputRef = useRef();
 
