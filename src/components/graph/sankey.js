@@ -1,15 +1,8 @@
 import { h } from "preact";
 import styled from "styled-components";
-import {
-  event,
-  scaleOrdinal,
-  schemeCategory10,
-  select,
-  interpolateNumber,
-} from "d3";
+import { scaleOrdinal, schemeCategory10, select, interpolateNumber } from "d3";
 import { sankey as d3Sankey } from "d3-sankey";
 import { useEffect, useRef, useCallback, useMemo } from "preact/hooks";
-import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 
 //https://gist.github.com/chriswhong/dd794c5ca90769602066
 const customLinkHorizontal = (link) => {
@@ -62,7 +55,7 @@ export const Sankey = ({
 }) => {
   let sankeyRef = useRef();
 
-  const widthModifier = useMemo(() => width / 18, [width]);
+  const widthModifier = useMemo(() => width / 20, [width]);
 
   const scale = useMemo(() => scaleOrdinal(schemeCategory10), []);
   const color = useCallback((name) => scale(name.replace(/ .*/, "")), [scale]);
@@ -147,23 +140,18 @@ export const Sankey = ({
       .enter()
       .append("image")
       .attr("href", (d) => d.photo)
-      // .attr("preserveAspectRatio", "xMaxYMin")
       .attr("x", (d) => d.x0) // Change this for title on left
       .attr("y", (d) => d.y0)
       .attr("width", nodeSide)
-      .attr("height", nodeSide);
-    // .on("click", onNodeClick)
-    // .style("cursor", "pointer");
-    // .on("mouseover", (d) => {
-    //   infoPopup.transition().duration(200).style("opacity", 0.9);
-    //   infoPopup
-    //     .html(getPopupContent(d))
-    //     .style("left", `${event.pageX}px`)
-    //     .style("top", `${event.pageY - 28}px`);
-    // })
-    // .on("mouseout", () => {
-    //   infoPopup.transition().duration(500).style("opacity", 0);
-    // });
+      .attr("height", nodeSide)
+      .style("cursor", "pointer")
+      .on("contextmenu", (e) => {
+        e.preventDefault();
+        // Show options menu
+      })
+      .on("click", (e) => {
+        // Show info card
+      });
 
     // End nodes
     svg
@@ -178,12 +166,20 @@ export const Sankey = ({
       .attr("x", (d) => d.x0)
       .attr("y", (d) => d.y0)
       .style("fill", (d) => color(d.name))
-      .style("cursor", "pointer");
+      .style("cursor", "pointer")
+      .on("contextmenu", (e) => {
+        e.preventDefault();
+        // Show options menu
+      })
+      .on("click", (e) => {
+        // Show info card
+      });
 
     // Links
     const link = svg
       .append("g")
       .attr("fill", "none")
+      .attr("id", "links")
       .attr("stroke-opacity", 0.5)
       .selectAll("g")
       .data(links)
@@ -194,7 +190,13 @@ export const Sankey = ({
       .append("path")
       .attr("d", (d) => customLinkHorizontal(d))
       .attr("fill", (d) => color(d.target.name))
-      .attr("opacity", 0.5);
+      .attr("opacity", 0.5)
+      .attr("id", (d) => d.index)
+      .on("mouseover", (e) => {
+        e.target.style.opacity = 1;
+        document.getElementById("links").append(e.target.parentNode);
+      })
+      .on("mouseout", (e) => (e.target.style.opacity = 0.5));
 
     // Start Node Text
     svg
@@ -227,19 +229,6 @@ export const Sankey = ({
       .attr("text-anchor", "end")
       .style("font-size", () => `${Math.max(nodeSide / 3, 10)}`)
       .text((d) => d.name);
-
-    // Start Node Buttons
-    svg
-      .append("g")
-      .selectAll("circle")
-      .data(nodes.filter((d) => d.targetLinks.length === 0))
-      .enter()
-      .append("circle")
-      .attr("cx", (d) => d.x0 - 15)
-      .attr("cy", (d) => (d.y1 + d.y0) / 2)
-      .attr("r", nodeSide / 3)
-      .style("fill", "#1f1f1f")
-      .style("cursor", "pointer");
   }, [
     width,
     height,
