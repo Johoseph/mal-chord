@@ -1,13 +1,11 @@
 import { h } from "preact";
-import { useEffect, useState } from "preact/hooks";
+import { useEffect, useState, useMemo } from "preact/hooks";
 import useResizeObserver from "use-resize-observer";
+import { mathClamp } from "../../helpers";
 
 import { Sankey } from "./Sankey";
 import { SankeyControls } from "./SankeyControls";
 import { getSankeyFormat } from "./sankeyFunctions";
-
-const NODE_SIDE = 40;
-const NODE_PADDING = 10;
 
 const endCategories = [
   {
@@ -76,11 +74,21 @@ export const Graph = ({ data }) => {
     endCategory
   );
 
+  const nodeSide = useMemo(
+    () => Math.round(mathClamp((nodeCount - 75) / -1.4, 10, 40)),
+    [nodeCount]
+  );
+
+  const nodePadding = useMemo(
+    () => Math.round(mathClamp((nodeCount - 100) / -8, 5, 10)),
+    [nodeCount]
+  );
+
   useEffect(() => {
     setHeight(
-      Math.max(0, (nodeCount || 0) * (NODE_SIDE + NODE_PADDING) - NODE_PADDING)
+      Math.max(0, (nodeCount || 0) * (nodeSide + nodePadding) - nodePadding)
     );
-  }, [nodeCount]);
+  }, [nodeCount, nodePadding, nodeSide]);
 
   return (
     <div ref={ref}>
@@ -103,13 +111,13 @@ export const Graph = ({ data }) => {
           dataNodes={dataNodes}
           dataLinks={dataLinks}
           dimensions={{ width, height }}
-          nodeSide={NODE_SIDE}
-          nodePadding={NODE_PADDING}
+          nodeSide={nodeSide}
+          nodePadding={nodePadding}
           endNodeModifier={
             // Catering for nodePadding
-            (nodeDifference * NODE_PADDING) / dataLinks.length -
+            (nodeDifference * nodePadding) / dataLinks.length -
             // Catering for more links than nodes
-            ((dataLinks.length - nodeCount) * NODE_SIDE) / dataLinks.length
+            ((dataLinks.length - nodeCount) * nodeSide) / dataLinks.length
           }
         />
       ) : (

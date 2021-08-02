@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { scaleOrdinal, schemeCategory10, select, interpolateNumber } from "d3";
 import { sankey as d3Sankey } from "d3-sankey";
 import { useEffect, useRef, useCallback, useMemo } from "preact/hooks";
+import { mathClamp } from "../../helpers";
 
 //https://gist.github.com/chriswhong/dd794c5ca90769602066
-const customLinkHorizontal = (link) => {
+const customLinkHorizontal = (link, startNodeCount) => {
   const sourceLinkCount = link.source.sourceLinks.length;
   const targetLinkCount = link.target.targetLinks.length;
   const widthStart = (link.source.y1 - link.source.y0) / sourceLinkCount;
@@ -14,7 +15,7 @@ const customLinkHorizontal = (link) => {
   const curvature = 0.6;
 
   // Arbitrary number chosen to keep the width of chords consistent -> https://yqnn.github.io/svg-path-editor/
-  const curvatureModifer = 20;
+  const curvatureModifer = mathClamp((startNodeCount - 560) / -14, 10, 40);
 
   const x0 = link.source.x1,
     x1 = link.target.x0,
@@ -83,6 +84,9 @@ export const Sankey = ({
       links: dataLinks.map((d) => Object.assign({}, d)),
     });
 
+    const startNodes = nodes.filter((d) => d.targetLinks.length === 0);
+    const endNodes = nodes.filter((d) => d.targetLinks.length > 0);
+
     // Transform start nodes
     nodes
       .filter((node) => node.targetLinks.length === 0)
@@ -136,7 +140,7 @@ export const Sankey = ({
       .append("g")
       .attr("stroke", "#000")
       .selectAll("rect")
-      .data(nodes.filter((d) => d.targetLinks.length === 0))
+      .data(startNodes)
       .enter()
       .append("image")
       .attr("href", (d) => d.photo)
@@ -158,7 +162,7 @@ export const Sankey = ({
       .append("g")
       .attr("stroke", "#000")
       .selectAll("rect")
-      .data(nodes.filter((d) => d.targetLinks.length > 0))
+      .data(endNodes)
       .enter()
       .append("rect")
       .attr("width", nodeSide)
@@ -188,7 +192,7 @@ export const Sankey = ({
 
     link
       .append("path")
-      .attr("d", (d) => customLinkHorizontal(d))
+      .attr("d", (d) => customLinkHorizontal(d, startNodes.length))
       .attr("fill", (d) => color(d.target.name))
       .attr("opacity", 0.5)
       .attr("id", (d) => d.index)
@@ -204,7 +208,7 @@ export const Sankey = ({
       .style("font", "10px sans-serif")
       .style("fill", "#ffffff")
       .selectAll("text")
-      .data(nodes.filter((d) => d.targetLinks.length === 0))
+      .data(startNodes)
       .enter()
       .append("text")
       .attr("x", (d) => d.x1 + 5)
@@ -220,7 +224,7 @@ export const Sankey = ({
       .style("font", "10px sans-serif")
       .style("fill", "#ffffff")
       .selectAll("text")
-      .data(nodes.filter((d) => d.targetLinks.length > 0))
+      .data(endNodes)
       .enter()
       .append("text")
       .attr("x", (d) => d.x0 - 5)
