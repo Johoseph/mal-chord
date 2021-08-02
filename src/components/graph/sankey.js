@@ -14,7 +14,7 @@ const customLinkHorizontal = (link) => {
   const curvature = 0.6;
 
   // Arbitrary number chosen to keep the width of chords consistent -> https://yqnn.github.io/svg-path-editor/
-  const curvatureModifer = 40;
+  const curvatureModifer = 20;
 
   const x0 = link.source.x1,
     x1 = link.target.x0,
