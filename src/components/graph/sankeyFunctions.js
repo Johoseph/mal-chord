@@ -1,4 +1,17 @@
-export const getSankeyFormat = (data, startSort, endSort, endCategory) => {
+export const getSankeyFormat = (
+  data,
+  startSort,
+  endSort,
+  endCategory,
+  limit
+) => {
+  if (data.length !== limit)
+    data = data
+      .sort((firstEl, secondEl) =>
+        secondEl.lastUpdated.localeCompare(firstEl.lastUpdated)
+      )
+      .filter((anime, index) => index < limit);
+
   const nodeBuffer = data.length;
 
   const startNodes = data

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { HiArrowNarrowDown, HiArrowNarrowUp } from "react-icons/hi";
 
 import { Dropdown } from "../general/Dropdown";
+import { AnimeCountFilter } from "./AnimeCountFilter";
 
 const Wrapper = styled.div`
   width: 80%;
@@ -79,11 +80,15 @@ export const SankeyControls = ({
   endCategory,
   categoryOptions,
   sortOptions,
+  count,
+  limit,
+  setLimit,
 }) => {
   return (
     <Wrapper>
       <Header>
         <span>anime</span>
+        <AnimeCountFilter count={count} limit={limit} setLimit={setLimit} />
         <Chord />
         <Dropdown
           value={endCategory}

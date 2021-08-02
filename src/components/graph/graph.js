@@ -66,12 +66,14 @@ export const Graph = ({ data }) => {
     direction: "DESC",
   });
   const [endCategory, setEndCategory] = useState("score");
+  const [limit, setLimit] = useState(100);
 
   const { dataNodes, dataLinks, nodeCount, nodeDifference } = getSankeyFormat(
     data || [],
     startSort,
     endSort,
-    endCategory
+    endCategory,
+    limit
   );
 
   const nodeSide = useMemo(
@@ -83,6 +85,10 @@ export const Graph = ({ data }) => {
     () => Math.round(mathClamp((nodeCount - 100) / -8, 5, 10)),
     [nodeCount]
   );
+
+  useEffect(() => {
+    if (data) setLimit(Math.min(data.length, 100));
+  }, [data]);
 
   useEffect(() => {
     setHeight(
@@ -102,6 +108,9 @@ export const Graph = ({ data }) => {
           endCategory={endCategory}
           categoryOptions={endCategories}
           sortOptions={sortOptions}
+          count={data.length}
+          limit={limit}
+          setLimit={setLimit}
         />
       ) : (
         <div>Controls Loading</div>
