@@ -5,7 +5,12 @@ import { HiArrowNarrowDown, HiArrowNarrowUp } from "react-icons/hi";
 import { Dropdown } from "../general/Dropdown";
 
 const Wrapper = styled.div`
-  margin-bottom: 30px;
+  width: 80%;
+  margin: 0 auto 30px auto;
+
+  @media (max-width: 1000px) {
+    width: 95%;
+  }
 `;
 
 const Flex = styled.div`

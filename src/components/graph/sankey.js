@@ -1,7 +1,6 @@
 import { h } from "preact";
 import styled from "styled-components";
 import {
-  format as d3Format,
   event,
   scaleOrdinal,
   schemeCategory10,
@@ -10,6 +9,7 @@ import {
 } from "d3";
 import { sankey as d3Sankey } from "d3-sankey";
 import { useEffect, useRef, useCallback, useMemo } from "preact/hooks";
+import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 
 //https://gist.github.com/chriswhong/dd794c5ca90769602066
 const customLinkHorizontal = (link) => {
@@ -62,6 +62,8 @@ export const Sankey = ({
 }) => {
   let sankeyRef = useRef();
 
+  const widthModifier = useMemo(() => width / 18, [width]);
+
   const scale = useMemo(() => scaleOrdinal(schemeCategory10), []);
   const color = useCallback((name) => scale(name.replace(/ .*/, "")), [scale]);
 
@@ -92,6 +94,9 @@ export const Sankey = ({
     nodes
       .filter((node) => node.targetLinks.length === 0)
       .forEach((node, index) => {
+        node.x0 += widthModifier;
+        node.x1 += widthModifier;
+
         node.y0 = 1 + (nodeSide + nodePadding) * index;
         node.y1 = 1 + nodeSide + (nodeSide + nodePadding) * index;
       });
@@ -102,6 +107,8 @@ export const Sankey = ({
       .forEach((node, index, arr) => {
         const height =
           (nodeSide + endNodeModifier) * (node.targetLinks.length || 1);
+        node.x0 -= widthModifier;
+        node.x1 -= widthModifier;
 
         if (index > 0) {
           node.y0 = arr
@@ -131,8 +138,6 @@ export const Sankey = ({
         singleLinkWidth / 2;
     });
 
-    const format = (d) => `$${d3Format(",.0f")(d)}`;
-
     // Start nodes
     svg
       .append("g")
@@ -143,7 +148,7 @@ export const Sankey = ({
       .append("image")
       .attr("href", (d) => d.photo)
       // .attr("preserveAspectRatio", "xMaxYMin")
-      .attr("x", 0) // Change this for title on left
+      .attr("x", (d) => d.x0) // Change this for title on left
       .attr("y", (d) => d.y0)
       .attr("width", nodeSide)
       .attr("height", nodeSide);
@@ -191,20 +196,50 @@ export const Sankey = ({
       .attr("fill", (d) => color(d.target.name))
       .attr("opacity", 0.5);
 
-    // Text
+    // Start Node Text
     svg
       .append("g")
       .style("font", "10px sans-serif")
       .style("fill", "#ffffff")
       .selectAll("text")
-      .data(nodes)
+      .data(nodes.filter((d) => d.targetLinks.length === 0))
       .enter()
       .append("text")
-      .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
+      .attr("x", (d) => d.x1 + 5)
       .attr("y", (d) => (d.y1 + d.y0) / 2)
       .attr("dy", "0.35em")
-      .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
-      .text((d) => `${d.name} (${format(d.value)})`);
+      .attr("text-anchor", "start")
+      .style("font-size", () => `${Math.max(nodeSide / 3, 10)}`)
+      .text((d) => d.name);
+
+    // End Node Text
+    svg
+      .append("g")
+      .style("font", "10px sans-serif")
+      .style("fill", "#ffffff")
+      .selectAll("text")
+      .data(nodes.filter((d) => d.targetLinks.length > 0))
+      .enter()
+      .append("text")
+      .attr("x", (d) => d.x0 - 5)
+      .attr("y", (d) => (d.y1 + d.y0) / 2)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", "end")
+      .style("font-size", () => `${Math.max(nodeSide / 3, 10)}`)
+      .text((d) => d.name);
+
+    // Start Node Buttons
+    svg
+      .append("g")
+      .selectAll("circle")
+      .data(nodes.filter((d) => d.targetLinks.length === 0))
+      .enter()
+      .append("circle")
+      .attr("cx", (d) => d.x0 - 15)
+      .attr("cy", (d) => (d.y1 + d.y0) / 2)
+      .attr("r", nodeSide / 3)
+      .style("fill", "#1f1f1f")
+      .style("cursor", "pointer");
   }, [
     width,
     height,
@@ -214,6 +249,7 @@ export const Sankey = ({
     nodePadding,
     endNodeModifier,
     color,
+    widthModifier,
   ]);
 
   return <Wrapper ref={sankeyRef} />;

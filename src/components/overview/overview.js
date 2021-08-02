@@ -13,8 +13,13 @@ import { TimeWatched } from "./TimeWatched";
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 40px;
   height: 12em;
+  width: 80%;
+  margin: 0 auto 40px auto;
+
+  @media (max-width: 1000px) {
+    width: 95%;
+  }
 `;
 
 const LeftWrapper = styled.div`
