@@ -1,3 +1,6 @@
+import { interpolateNumber, scaleOrdinal, schemeCategory10 } from "d3";
+import { mathClamp } from "../../helpers";
+
 export const getSankeyFormat = (
   data,
   startSort,
@@ -56,6 +59,7 @@ export const getSankeyFormat = (
       return {
         node: index,
         name: anime.title,
+        id: anime.id,
         photo: anime.image,
         linker,
       };
@@ -122,3 +126,36 @@ export const getSankeyFormat = (
     nodeDifference: startNodes.length - endNodes.length || 0,
   };
 };
+
+//https://gist.github.com/chriswhong/dd794c5ca90769602066
+export const customLinkHorizontal = (link, startNodeCount) => {
+  const sourceLinkCount = link.source.sourceLinks.length;
+  const targetLinkCount = link.target.targetLinks.length;
+  const widthStart = (link.source.y1 - link.source.y0) / sourceLinkCount;
+  const widthEnd = (link.target.y1 - link.target.y0) / targetLinkCount;
+
+  const curvature = 0.6;
+
+  // Arbitrary number chosen to keep the width of chords consistent -> https://yqnn.github.io/svg-path-editor/
+  const curvatureModifer = mathClamp((startNodeCount - 560) / -14, 10, 40);
+
+  const x0 = link.source.x1,
+    x1 = link.target.x0,
+    xi = interpolateNumber(x0, x1),
+    x2 = xi(curvature),
+    x3 = xi(1 - curvature),
+    y0 = link.source.y0 + link.source.sourceLinks.indexOf(link) * widthStart,
+    y1 = link.target.y0 + widthEnd * link.target.targetLinks.indexOf(link);
+
+  return `M${x0},${y0}C${
+    y0 < y1 ? x2 + curvatureModifer : x2 - curvatureModifer
+  },${y0} ${x3},${y1} ${x1},${y1}L${x1},${y1 + widthEnd}C${
+    y0 < y1 ? x3 - curvatureModifer : x3 + curvatureModifer
+  },${y1 + widthEnd} ${x2},${y0 + widthStart} ${x0},${
+    y0 + widthStart
+  }L${x0},${y0}`;
+};
+
+const scale = scaleOrdinal(schemeCategory10);
+
+export const getNodeColour = (name) => scale(name.replace(/ .*/, ""));

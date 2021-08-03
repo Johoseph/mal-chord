@@ -1,50 +1,17 @@
 import { h } from "preact";
-import styled from "styled-components";
-import { scaleOrdinal, schemeCategory10, select, interpolateNumber } from "d3";
+import { select } from "d3";
 import { sankey as d3Sankey } from "d3-sankey";
-import { useEffect, useRef, useCallback, useMemo } from "preact/hooks";
-import { mathClamp } from "../../helpers";
+import {
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+  useState,
+} from "preact/hooks";
 
-//https://gist.github.com/chriswhong/dd794c5ca90769602066
-const customLinkHorizontal = (link, startNodeCount) => {
-  const sourceLinkCount = link.source.sourceLinks.length;
-  const targetLinkCount = link.target.targetLinks.length;
-  const widthStart = (link.source.y1 - link.source.y0) / sourceLinkCount;
-  const widthEnd = (link.target.y1 - link.target.y0) / targetLinkCount;
-
-  const curvature = 0.6;
-
-  // Arbitrary number chosen to keep the width of chords consistent -> https://yqnn.github.io/svg-path-editor/
-  const curvatureModifer = mathClamp((startNodeCount - 560) / -14, 10, 40);
-
-  const x0 = link.source.x1,
-    x1 = link.target.x0,
-    xi = interpolateNumber(x0, x1),
-    x2 = xi(curvature),
-    x3 = xi(1 - curvature),
-    y0 = link.source.y0 + link.source.sourceLinks.indexOf(link) * widthStart,
-    y1 = link.target.y0 + widthEnd * link.target.targetLinks.indexOf(link);
-
-  return `M${x0},${y0}C${
-    y0 < y1 ? x2 + curvatureModifer : x2 - curvatureModifer
-  },${y0} ${x3},${y1} ${x1},${y1}L${x1},${y1 + widthEnd}C${
-    y0 < y1 ? x3 - curvatureModifer : x3 + curvatureModifer
-  },${y1 + widthEnd} ${x2},${y0 + widthStart} ${x0},${
-    y0 + widthStart
-  }L${x0},${y0}`;
-};
-
-const Wrapper = styled.div`
-  & .link {
-    fill: none;
-    stroke: #ffffff;
-    stroke-opacity: 0.2;
-
-    &:hover {
-      stroke-opacity: 0.5;
-    }
-  }
-`;
+import { Tooltip } from "../general/Tooltip";
+import { customLinkHorizontal, getNodeColour } from "./sankeyFunctions";
+import { NodeCard } from "./cards/NodeCard";
 
 export const Sankey = ({
   dataNodes,
@@ -56,10 +23,22 @@ export const Sankey = ({
 }) => {
   let sankeyRef = useRef();
 
+  const [animeTooltip, setAnimeTooltip] = useState();
   const widthModifier = useMemo(() => width / 20, [width]);
 
-  const scale = useMemo(() => scaleOrdinal(schemeCategory10), []);
-  const color = useCallback((name) => scale(name.replace(/ .*/, "")), [scale]);
+  const handleNodeClick = useCallback((e, node) => {
+    setAnimeTooltip({
+      data: {
+        id: node.id,
+        title: node.name,
+        sourceLinks: node.sourceLinks,
+        targetLinks: node.targetLinks,
+        photo: node.photo,
+      },
+      x: e.clientX,
+      y: e.clientY,
+    });
+  }, []);
 
   useEffect(() => {
     select(sankeyRef.current).select("svg").remove();
@@ -153,9 +132,7 @@ export const Sankey = ({
         e.preventDefault();
         // Show options menu
       })
-      .on("click", (e) => {
-        // Show info card
-      });
+      .on("click", handleNodeClick);
 
     // End nodes
     svg
@@ -169,15 +146,13 @@ export const Sankey = ({
       .attr("height", (d) => d.y1 - d.y0)
       .attr("x", (d) => d.x0)
       .attr("y", (d) => d.y0)
-      .style("fill", (d) => color(d.name))
+      .style("fill", (d) => getNodeColour(d.name))
       .style("cursor", "pointer")
       .on("contextmenu", (e) => {
         e.preventDefault();
         // Show options menu
       })
-      .on("click", (e) => {
-        // Show info card
-      });
+      .on("click", handleNodeClick);
 
     // Links
     const link = svg
@@ -193,7 +168,7 @@ export const Sankey = ({
     link
       .append("path")
       .attr("d", (d) => customLinkHorizontal(d, startNodes.length))
-      .attr("fill", (d) => color(d.target.name))
+      .attr("fill", (d) => getNodeColour(d.target.name))
       .attr("opacity", 0.5)
       .attr("id", (d) => d.index)
       .on("mouseover", (e) => {
@@ -241,9 +216,22 @@ export const Sankey = ({
     nodeSide,
     nodePadding,
     endNodeModifier,
-    color,
     widthModifier,
+    handleNodeClick,
   ]);
 
-  return <Wrapper ref={sankeyRef} />;
+  return (
+    <>
+      <div ref={sankeyRef} />
+      {animeTooltip && (
+        <Tooltip
+          x={animeTooltip.x}
+          y={animeTooltip.y}
+          removeFn={() => setAnimeTooltip(undefined)}
+        >
+          <NodeCard node={animeTooltip.data} />
+        </Tooltip>
+      )}
+    </>
+  );
 };
