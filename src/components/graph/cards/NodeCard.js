@@ -61,8 +61,6 @@ const LinkIcon = styled(HiOutlineExternalLink)`
 `;
 
 export const NodeCard = ({ node }) => {
-  console.log(node);
-
   return (
     <Wrapper>
       {node.photo && <Photo src={node.photo} alt={`${node.title} cover art`} />}
