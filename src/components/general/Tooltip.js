@@ -10,6 +10,12 @@ const Wrapper = styled.div`
   top: ${(props) => props.y || 0}px;
   border-radius: 10px;
   padding: 20px;
+
+  ${(props) => `
+    transform: translate(
+      ${props.transform.x ? -100 : 0}%, 
+      ${props.transform.y ? -100 : 0}%);
+  `}
 `;
 
 export const Tooltip = ({ x, y, removeFn, children }) => {
@@ -18,8 +24,12 @@ export const Tooltip = ({ x, y, removeFn, children }) => {
   const handleClick = useCallback(
     (e) => {
       if (
+        // Clicking on target
         tooltipRef.current !== e.target &&
-        !tooltipRef.current.contains(e.target)
+        // Clicking on element in target
+        !tooltipRef.current.contains(e.target) &&
+        // Clicking on element with class "listener-ignore"
+        e.target.className.baseVal !== "listener-ignore"
       )
         removeFn();
     },
@@ -36,7 +46,15 @@ export const Tooltip = ({ x, y, removeFn, children }) => {
   }, [handleClick, removeFn]);
 
   return (
-    <Wrapper x={x} y={y} ref={tooltipRef}>
+    <Wrapper
+      x={x}
+      y={y}
+      transform={{
+        x: x > document.body.clientWidth / 2,
+        y: y > document.body.clientHeight / 2,
+      }}
+      ref={tooltipRef}
+    >
       {children}
     </Wrapper>
   );

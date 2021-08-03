@@ -127,6 +127,7 @@ export const Sankey = ({
       .attr("y", (d) => d.y0)
       .attr("width", nodeSide)
       .attr("height", nodeSide)
+      .attr("class", "listener-ignore")
       .style("cursor", "pointer")
       .on("contextmenu", (e) => {
         e.preventDefault();
@@ -146,6 +147,7 @@ export const Sankey = ({
       .attr("height", (d) => d.y1 - d.y0)
       .attr("x", (d) => d.x0)
       .attr("y", (d) => d.y0)
+      .attr("class", "listener-ignore")
       .style("fill", (d) => getNodeColour(d.name))
       .style("cursor", "pointer")
       .on("contextmenu", (e) => {

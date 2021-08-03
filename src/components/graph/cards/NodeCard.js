@@ -5,8 +5,8 @@ import { getNodeColour } from "../sankeyFunctions";
 
 const Wrapper = styled.div`
   display: flex;
-  min-width: 250px;
-  max-width: 500px;
+  min-width: 200px;
+  max-width: 420px;
 `;
 
 const NodeItem = styled.div`
@@ -18,9 +18,10 @@ const NodeItem = styled.div`
 
 const Color = styled.div`
   width: 0.8rem;
+  min-width: 0.8rem;
   height: 0.8rem;
   border-radius: 100%;
-  background: ${(props) => props.nodeColour};
+  background: ${(props) => props.nodeColour || "#ffffff"};
   margin-right: 10px;
 `;
 
@@ -32,6 +33,7 @@ const Photo = styled.img`
 const Data = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 const TitleStyle = css`
@@ -52,6 +54,11 @@ const Link = styled.a`
   :focus-visible {
     text-decoration: underline;
   }
+`;
+
+const LinksScroll = styled.div`
+  max-height: calc(10 * (1rem + 2px));
+  overflow: auto;
 `;
 
 const LinkIcon = styled(HiOutlineExternalLink)`
@@ -78,24 +85,38 @@ export const NodeCard = ({ node }) => {
         )}
         {node.sourceLinks.length > 0 && (
           <Data>
-            <span style={{ marginBottom: "10px" }}>Links To</span>
-            {node.sourceLinks.map((source) => (
-              <NodeItem key={source.target.node}>
-                <Color nodeColour={getNodeColour(source.target.name)} />
-                {source.target.name}
-              </NodeItem>
-            ))}
+            <span style={{ marginBottom: "10px" }}>
+              <span style={{ fontWeight: "bold" }}>
+                {node.sourceLinks.length}
+              </span>{" "}
+              link{node.sourceLinks.length > 1 ? "s" : ""} to
+            </span>
+            <LinksScroll>
+              {node.sourceLinks.map((source) => (
+                <NodeItem key={source.target.node}>
+                  <Color nodeColour={getNodeColour(source.target.name)} />
+                  {source.target.name}
+                </NodeItem>
+              ))}
+            </LinksScroll>
           </Data>
         )}
         {node.targetLinks.length > 0 && (
           <Data>
-            <span style={{ marginBottom: "10px" }}>Links From</span>
-            {node.targetLinks.map((target) => (
-              <NodeItem key={target.source.node}>
-                <Color nodeColour={getNodeColour(target.source.name)} />
-                {target.source.name}
-              </NodeItem>
-            ))}
+            <span style={{ marginBottom: "10px" }}>
+              <span style={{ fontWeight: "bold" }}>
+                {node.targetLinks.length}
+              </span>{" "}
+              link{node.targetLinks.length > 1 ? "s" : ""} from
+            </span>
+            <LinksScroll>
+              {node.targetLinks.map((target) => (
+                <NodeItem key={target.source.node}>
+                  <Color />
+                  {target.source.name}
+                </NodeItem>
+              ))}
+            </LinksScroll>
           </Data>
         )}
       </Data>
