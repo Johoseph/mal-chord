@@ -12,8 +12,10 @@ import {
 import { Tooltip } from "../general/Tooltip";
 import { customLinkHorizontal, getNodeColour } from "./sankeyFunctions";
 import { NodeCard } from "./cards/NodeCard";
+import { ContextMenu } from "./cards/ContextMenu";
 
 export const Sankey = ({
+  endCategory,
   dataNodes,
   dataLinks,
   dimensions: { width, height },
@@ -23,10 +25,16 @@ export const Sankey = ({
 }) => {
   let sankeyRef = useRef();
 
+  const [highlightedLinks, setHighlightedLinks] = useState([]);
+  const [hiddenLinks, setHiddenLinks] = useState([]);
+
   const [animeTooltip, setAnimeTooltip] = useState();
+  const [contextTooltip, setContextTooltip] = useState();
   const widthModifier = useMemo(() => width / 20, [width]);
 
   const handleNodeClick = useCallback((e, node) => {
+    setContextTooltip(undefined);
+
     setAnimeTooltip({
       data: {
         id: node.id,
@@ -39,6 +47,29 @@ export const Sankey = ({
       y: e.clientY,
     });
   }, []);
+
+  const handleNodeRightClick = useCallback((e, node) => {
+    e.preventDefault();
+    setAnimeTooltip(undefined);
+
+    setContextTooltip({
+      links: [
+        ...node.sourceLinks.map(
+          (link) => `${link.source.name}|${link.target.name}`
+        ),
+        ...node.targetLinks.map(
+          (link) => `${link.source.name}|${link.target.name}`
+        ),
+      ],
+      x: e.clientX,
+      y: e.clientY,
+    });
+  }, []);
+
+  useEffect(() => {
+    setHighlightedLinks([]);
+    setHiddenLinks([]);
+  }, [endCategory]);
 
   useEffect(() => {
     select(sankeyRef.current).select("svg").remove();
@@ -129,10 +160,7 @@ export const Sankey = ({
       .attr("height", nodeSide)
       .attr("class", "listener-ignore")
       .style("cursor", "pointer")
-      .on("contextmenu", (e) => {
-        e.preventDefault();
-        // Show options menu
-      })
+      .on("contextmenu", handleNodeRightClick)
       .on("click", handleNodeClick);
 
     // End nodes
@@ -150,20 +178,22 @@ export const Sankey = ({
       .attr("class", "listener-ignore")
       .style("fill", (d) => getNodeColour(d.name))
       .style("cursor", "pointer")
-      .on("contextmenu", (e) => {
-        e.preventDefault();
-        // Show options menu
-      })
+      .on("contextmenu", handleNodeRightClick)
       .on("click", handleNodeClick);
 
     // Links
     const link = svg
       .append("g")
-      .attr("fill", "none")
       .attr("id", "links")
-      .attr("stroke-opacity", 0.5)
       .selectAll("g")
-      .data(links)
+      .data(
+        links.filter(
+          (link) =>
+            !highlightedLinks.includes(
+              `${link.source.name}|${link.target.name}`
+            )
+        )
+      )
       .enter()
       .append("g");
 
@@ -178,6 +208,37 @@ export const Sankey = ({
         document.getElementById("links").append(e.target.parentNode);
       })
       .on("mouseout", (e) => (e.target.style.opacity = 0.5));
+
+    // Highlighted Links
+    const highlightedLink = svg
+      .append("g")
+      .attr("id", "highlighted-links")
+      .selectAll("g")
+      .data(
+        links
+          .filter((link) =>
+            highlightedLinks.includes(`${link.source.name}|${link.target.name}`)
+          )
+          // Sort by highlight order
+          .sort(
+            (firstEl, secondEl) =>
+              highlightedLinks.indexOf(
+                `${firstEl.source.name}|${firstEl.target.name}`
+              ) -
+              highlightedLinks.indexOf(
+                `${secondEl.source.name}|${secondEl.target.name}`
+              )
+          )
+      )
+      .enter()
+      .append("g");
+
+    highlightedLink
+      .append("path")
+      .attr("d", (d) => customLinkHorizontal(d, startNodes.length))
+      .attr("fill", (d) => getNodeColour(d.target.name))
+      .attr("opacity", 1)
+      .attr("id", (d) => d.index);
 
     // Start Node Text
     svg
@@ -220,6 +281,8 @@ export const Sankey = ({
     endNodeModifier,
     widthModifier,
     handleNodeClick,
+    handleNodeRightClick,
+    highlightedLinks,
   ]);
 
   return (
@@ -232,6 +295,21 @@ export const Sankey = ({
           removeFn={() => setAnimeTooltip(undefined)}
         >
           <NodeCard node={animeTooltip.data} />
+        </Tooltip>
+      )}
+      {contextTooltip && (
+        <Tooltip
+          x={contextTooltip.x}
+          y={contextTooltip.y}
+          removeFn={() => setContextTooltip(undefined)}
+          pd={2}
+        >
+          <ContextMenu
+            links={contextTooltip.links}
+            highlightedLinks={highlightedLinks}
+            setHighlightedLinks={setHighlightedLinks}
+            removeMenu={() => setContextTooltip(undefined)}
+          />
         </Tooltip>
       )}
     </>

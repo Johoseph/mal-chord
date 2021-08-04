@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   left: ${(props) => props.x || 0}px;
   top: ${(props) => props.y || 0}px;
   border-radius: 10px;
-  padding: 20px;
+  padding: ${(props) => props.pd ?? 20}px;
 
   ${(props) => `
     transform: translate(
@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   `}
 `;
 
-export const Tooltip = ({ x, y, removeFn, children }) => {
+export const Tooltip = ({ x, y, removeFn, pd, children }) => {
   let tooltipRef = useRef();
 
   const handleClick = useCallback(
@@ -49,6 +49,7 @@ export const Tooltip = ({ x, y, removeFn, children }) => {
     <Wrapper
       x={x}
       y={y}
+      pd={pd}
       transform={{
         x: x > document.body.clientWidth / 2,
         y: y > document.body.clientHeight / 2,

@@ -117,6 +117,7 @@ export const Graph = ({ data }) => {
       )}
       {data ? (
         <Sankey
+          endCategory={endCategory}
           dataNodes={dataNodes}
           dataLinks={dataLinks}
           dimensions={{ width, height }}
