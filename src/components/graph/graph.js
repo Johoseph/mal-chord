@@ -53,7 +53,7 @@ const sortOptions = [
   },
 ];
 
-export const Graph = ({ data }) => {
+export const Graph = ({ data, status }) => {
   const { ref, width } = useResizeObserver();
   const [height, setHeight] = useState(100);
 
@@ -98,41 +98,44 @@ export const Graph = ({ data }) => {
 
   return (
     <div ref={ref}>
-      {data ? (
-        <SankeyControls
-          setStartSort={setStartSort}
-          setEndSort={setEndSort}
-          setEndCategory={setEndCategory}
-          startSort={startSort}
-          endSort={endSort}
-          endCategory={endCategory}
-          categoryOptions={endCategories}
-          sortOptions={sortOptions}
-          count={data.length}
-          limit={limit}
-          setLimit={setLimit}
-        />
-      ) : (
-        <div>Controls Loading</div>
+      {status === "success" && (
+        <>
+          <SankeyControls
+            setStartSort={setStartSort}
+            setEndSort={setEndSort}
+            setEndCategory={setEndCategory}
+            startSort={startSort}
+            endSort={endSort}
+            endCategory={endCategory}
+            categoryOptions={endCategories}
+            sortOptions={sortOptions}
+            count={data.length}
+            limit={limit}
+            setLimit={setLimit}
+          />
+          <Sankey
+            endCategory={endCategory}
+            dataNodes={dataNodes}
+            dataLinks={dataLinks}
+            dimensions={{ width, height }}
+            nodeSide={nodeSide}
+            nodePadding={nodePadding}
+            endNodeModifier={
+              // Catering for nodePadding
+              (nodeDifference * nodePadding) / dataLinks.length -
+              // Catering for more links than nodes
+              ((dataLinks.length - nodeCount) * nodeSide) / dataLinks.length
+            }
+          />
+        </>
       )}
-      {data ? (
-        <Sankey
-          endCategory={endCategory}
-          dataNodes={dataNodes}
-          dataLinks={dataLinks}
-          dimensions={{ width, height }}
-          nodeSide={nodeSide}
-          nodePadding={nodePadding}
-          endNodeModifier={
-            // Catering for nodePadding
-            (nodeDifference * nodePadding) / dataLinks.length -
-            // Catering for more links than nodes
-            ((dataLinks.length - nodeCount) * nodeSide) / dataLinks.length
-          }
-        />
-      ) : (
-        <div>Sankey Loading</div>
+      {status === "loading" && (
+        <>
+          <div>TODO: Controls Loading</div>
+          <div>TODO: Sankey Loading</div>
+        </>
       )}
+      {status === "error" && <div>TODO: Error</div>}
     </div>
   );
 };

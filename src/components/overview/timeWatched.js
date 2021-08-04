@@ -20,7 +20,7 @@ const Unit = styled.span`
 `;
 
 const Value = styled.span`
-  font-size: 2.5rem;
+  font-size: 2.1rem;
   text-align: end;
 `;
 

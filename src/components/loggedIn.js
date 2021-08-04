@@ -5,12 +5,12 @@ import { Overview } from "./overview/Overview";
 import { Graph } from "./graph/Graph";
 
 export const LoggedIn = () => {
-  const data = useQuery("user_anime_list");
+  const { data, status } = useQuery("user_anime_list");
 
   return (
     <main>
-      <Overview data={data} />
-      <Graph data={data} />
+      <Overview data={data} status={status} />
+      <Graph data={data} status={status} />
     </main>
   );
 };

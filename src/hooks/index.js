@@ -36,15 +36,23 @@ export const useUser = () => {
 export const useQuery = (route) => {
   const userToken = useMemo(() => localStorage.getItem("USER_TOKEN"), []);
   const [data, setData] = useState();
+  const [status, setStatus] = useState("loading");
+  const [error, setError] = useState();
 
   useEffect(() => {
     axios
       .post(`${process.env.PREACT_APP_API_URL}/${route}`, {
         userToken,
       })
-      .then((res) => setData(res.data))
-      .catch((err) => console.error(err));
+      .then((res) => {
+        setData(res.data);
+        setStatus("success");
+      })
+      .catch((err) => {
+        setError(err);
+        setStatus("error");
+      });
   }, [route, userToken]);
 
-  return data;
+  return { data, status, error };
 };

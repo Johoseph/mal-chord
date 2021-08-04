@@ -111,15 +111,20 @@ const getTimeWatched = (anime) => {
   return { days, hours, minutes, seconds };
 };
 
-export const Overview = ({ data }) => {
-  const userDetails = useQuery("user_details");
+export const Overview = ({ data, status }) => {
+  const { data: userDetails, status: userDetailsStatus } =
+    useQuery("user_details");
 
   const [timeWatched, setTimeWatched] = useState({});
   const [clock, setClock] = useState("&#128347;");
 
   useEffect(() => {
-    setTimeWatched(getTimeWatched(data));
-  }, [data]);
+    if (status !== "error") {
+      setTimeWatched(getTimeWatched(data));
+    } else {
+      setTimeWatched({ days: "😫", hours: "😭", minutes: "😴", seconds: "😖" });
+    }
+  }, [data, status]);
 
   useEffect(() => {
     let clockInterval = setInterval(
@@ -155,25 +160,29 @@ export const Overview = ({ data }) => {
         </TextWrap>
       </LeftWrapper>
       <RightWrapper>
-        <RightWrapper>
-          {userDetails ? (
-            <Line fs={2} mb={5}>
-              {userDetails.name}
-            </Line>
-          ) : (
-            <Shimmer h={2.2} w={150} className="shimmer" />
-          )}
-          <Line fs={1} fw={300} mb={20}>
-            Member since{" "}
+        {userDetailsStatus !== "error" ? (
+          <RightWrapper>
             {userDetails ? (
-              <Line fw={500}>
-                {dayjs(userDetails["joined_at"]).format("DD/MM/YYYY")}
+              <Line fs={2} mb={5}>
+                {userDetails.name}
               </Line>
             ) : (
-              <Shimmer w={80} className="shimmer" />
+              <Shimmer h={2.2} w={150} className="shimmer" />
             )}
-          </Line>
-        </RightWrapper>
+            <Line fs={1} fw={300} mb={20}>
+              Member since{" "}
+              {userDetails ? (
+                <Line fw={500}>
+                  {dayjs(userDetails["joined_at"]).format("DD/MM/YYYY")}
+                </Line>
+              ) : (
+                <Shimmer w={80} className="shimmer" />
+              )}
+            </Line>
+          </RightWrapper>
+        ) : (
+          <div>TODO: User Details Error</div>
+        )}
         <RightWrapper>
           <Line fs={1.5} mb={10}>
             Time watched {decode(clock)}
