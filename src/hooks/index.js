@@ -38,6 +38,14 @@ export const useQuery = (route) => {
   const [data, setData] = useState();
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState();
+  const [shouldRefetch, setShouldRefetch] = useState(true);
+
+  const refetch = () => {
+    setData(undefined);
+    setStatus("loading");
+    setError(undefined);
+    setShouldRefetch(!shouldRefetch);
+  };
 
   useEffect(() => {
     axios
@@ -52,7 +60,7 @@ export const useQuery = (route) => {
         setError(err);
         setStatus("error");
       });
-  }, [route, userToken]);
+  }, [route, userToken, shouldRefetch]);
 
-  return { data, status, error };
+  return { data, status, error, refetch };
 };
