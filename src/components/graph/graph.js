@@ -2,6 +2,7 @@ import { h } from "preact";
 import { useEffect, useState, useMemo } from "preact/hooks";
 import useResizeObserver from "use-resize-observer";
 import { mathClamp } from "../../helpers";
+import { GraphError } from "../error/GraphError";
 
 import { Sankey } from "./Sankey";
 import { SankeyControls } from "./SankeyControls";
@@ -53,7 +54,7 @@ const sortOptions = [
   },
 ];
 
-export const Graph = ({ data, status }) => {
+export const Graph = ({ data, status, refetch }) => {
   const { ref, width } = useResizeObserver();
   const [height, setHeight] = useState(100);
 
@@ -135,7 +136,7 @@ export const Graph = ({ data, status }) => {
           <div>TODO: Sankey Loading</div>
         </>
       )}
-      {status === "error" && <div>TODO: Error</div>}
+      {status === "error" && <GraphError refetch={refetch} />}
     </div>
   );
 };

@@ -7,6 +7,7 @@ import { decode } from "he";
 import MALLogo from "../../assets/branding/mal.svg";
 import MALLogoText from "../../assets/branding/mal-text.svg";
 import MALChord from "../../assets/branding/mal-chord.svg";
+import { UserDetailsError } from "../error/UserDetailsError";
 import { useEffect, useState } from "preact/hooks";
 import { TimeWatched } from "./TimeWatched";
 
@@ -112,8 +113,11 @@ const getTimeWatched = (anime) => {
 };
 
 export const Overview = ({ data, status }) => {
-  const { data: userDetails, status: userDetailsStatus } =
-    useQuery("user_details");
+  const {
+    data: userDetails,
+    status: userDetailsStatus,
+    refetch,
+  } = useQuery("user_details");
 
   const [timeWatched, setTimeWatched] = useState({});
   const [clock, setClock] = useState("&#128347;");
@@ -181,7 +185,7 @@ export const Overview = ({ data, status }) => {
             </Line>
           </RightWrapper>
         ) : (
-          <div>TODO: User Details Error</div>
+          <UserDetailsError refetch={refetch} />
         )}
         <RightWrapper>
           <Line fs={1.5} mb={10}>
