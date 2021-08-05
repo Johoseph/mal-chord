@@ -1,10 +1,15 @@
 import { h } from "preact";
-import { useMemo } from "preact/hooks";
+import { useMemo, useEffect, useState } from "preact/hooks";
 import styled from "styled-components";
+import { decode } from "he";
+
 import { titleCase } from "../../helpers";
 
 const Wrapper = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
 `;
 
 const TimeWrapper = styled.div`
@@ -24,6 +29,13 @@ const Value = styled.span`
   text-align: end;
 `;
 
+const Line = styled.span`
+  display: flex;
+  white-space: pre-wrap;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+`;
+
 const Shimmer = styled.div`
   width: 100%;
   height: 2.3rem;
@@ -37,20 +49,41 @@ export const TimeWatched = ({ time }) => {
     [time]
   );
 
+  const [clock, setClock] = useState("&#128347;");
+
+  useEffect(() => {
+    let clockInterval = setInterval(
+      () =>
+        setClock(
+          (prev) =>
+            `${prev.substring(0, 6)}${
+              prev.substring(6, 8) === "47"
+                ? "36"
+                : parseInt(prev.substring(6, 8), 10) + 1
+            };`
+        ),
+      150
+    );
+    return () => clearInterval(clockInterval);
+  }, []);
+
   return (
     <Wrapper>
-      {Object.keys(time)
-        .filter((unit) => time[unit] !== 0)
-        .map((unit, i) => (
-          <TimeWrapper key={i}>
-            <Unit>{titleCase(unit)}</Unit>
-            {loading ? (
-              <Shimmer className="shimmer" />
-            ) : (
-              <Value>{time[unit]}</Value>
-            )}
-          </TimeWrapper>
-        ))}
+      <Line>Time watched {decode(clock)}</Line>
+      <div style={{ display: "flex" }}>
+        {Object.keys(time)
+          .filter((unit) => time[unit] !== 0)
+          .map((unit, i) => (
+            <TimeWrapper key={i}>
+              <Unit>{titleCase(unit)}</Unit>
+              {loading ? (
+                <Shimmer className="shimmer" />
+              ) : (
+                <Value>{time[unit]}</Value>
+              )}
+            </TimeWrapper>
+          ))}
+      </div>
     </Wrapper>
   );
 };

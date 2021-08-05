@@ -1,15 +1,11 @@
 import { h } from "preact";
-import { useQuery } from "../../hooks";
 import styled from "styled-components";
-import dayjs from "dayjs";
-import { decode } from "he";
 
 import MALLogo from "../../assets/branding/mal.svg";
 import MALLogoText from "../../assets/branding/mal-text.svg";
 import MALChord from "../../assets/branding/mal-chord.svg";
-import { UserDetailsError } from "../error/UserDetailsError";
 import { useEffect, useState } from "preact/hooks";
-import { TimeWatched } from "./TimeWatched";
+import { UserDetails } from "./UserDetails";
 
 const Wrapper = styled.div`
   display: flex;
@@ -49,12 +45,6 @@ const Line = styled.span`
     `
     font-weight: ${props.fw};
   `}
-
-  ${(props) =>
-    props.mb &&
-    `
-    margin-bottom: ${props.mb}px;
-  `}
 `;
 
 const LineTwo = styled.span`
@@ -87,13 +77,6 @@ const MALText = styled.img`
   height: 5.5em;
 `;
 
-const Shimmer = styled.div`
-  width: ${(props) => (props.w ? props.w : "100")}px;
-  height: ${(props) => (props.h ? props.h : "1")}rem;
-  border-radius: ${(props) => (props.h ? props.h : "1")}rem;
-  margin: 2px 0px 5px 5px;
-`;
-
 const getTimeWatched = (anime) => {
   let days, hours, minutes, seconds;
 
@@ -113,14 +96,7 @@ const getTimeWatched = (anime) => {
 };
 
 export const Overview = ({ data, status }) => {
-  const {
-    data: userDetails,
-    status: userDetailsStatus,
-    refetch,
-  } = useQuery("user_details");
-
   const [timeWatched, setTimeWatched] = useState({});
-  const [clock, setClock] = useState("&#128347;");
 
   useEffect(() => {
     if (status !== "error") {
@@ -129,22 +105,6 @@ export const Overview = ({ data, status }) => {
       setTimeWatched({ days: "😫", hours: "😭", minutes: "😴", seconds: "😖" });
     }
   }, [data, status]);
-
-  useEffect(() => {
-    let clockInterval = setInterval(
-      () =>
-        setClock(
-          (prev) =>
-            `${prev.substring(0, 6)}${
-              prev.substring(6, 8) === "47"
-                ? "36"
-                : parseInt(prev.substring(6, 8), 10) + 1
-            };`
-        ),
-      150
-    );
-    return () => clearInterval(clockInterval);
-  }, []);
 
   return (
     <Wrapper>
@@ -164,35 +124,7 @@ export const Overview = ({ data, status }) => {
         </TextWrap>
       </LeftWrapper>
       <RightWrapper>
-        {userDetailsStatus !== "error" ? (
-          <RightWrapper>
-            {userDetails ? (
-              <Line fs={2} mb={5}>
-                {userDetails.name}
-              </Line>
-            ) : (
-              <Shimmer h={2.2} w={150} className="shimmer" />
-            )}
-            <Line fs={1} fw={300} mb={20}>
-              Member since{" "}
-              {userDetails ? (
-                <Line fw={500}>
-                  {dayjs(userDetails["joined_at"]).format("DD/MM/YYYY")}
-                </Line>
-              ) : (
-                <Shimmer w={80} className="shimmer" />
-              )}
-            </Line>
-          </RightWrapper>
-        ) : (
-          <UserDetailsError refetch={refetch} />
-        )}
-        <RightWrapper>
-          <Line fs={1.5} mb={10}>
-            Time watched {decode(clock)}
-          </Line>
-          <TimeWatched time={timeWatched} />
-        </RightWrapper>
+        <UserDetails timeWatched={timeWatched} />
       </RightWrapper>
     </Wrapper>
   );
