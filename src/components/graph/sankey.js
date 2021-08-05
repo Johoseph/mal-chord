@@ -191,7 +191,8 @@ export const Sankey = ({
           (link) =>
             !highlightedLinks.includes(
               `${link.source.name}|${link.target.name}`
-            )
+            ) &&
+            !hiddenLinks.includes(`${link.source.name}|${link.target.name}`)
         )
       )
       .enter()
@@ -283,6 +284,7 @@ export const Sankey = ({
     handleNodeClick,
     handleNodeRightClick,
     highlightedLinks,
+    hiddenLinks,
   ]);
 
   return (
@@ -308,6 +310,8 @@ export const Sankey = ({
             links={contextTooltip.links}
             highlightedLinks={highlightedLinks}
             setHighlightedLinks={setHighlightedLinks}
+            hiddenLinks={hiddenLinks}
+            setHiddenLinks={setHiddenLinks}
             removeMenu={() => setContextTooltip(undefined)}
           />
         </Tooltip>

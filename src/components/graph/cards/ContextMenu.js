@@ -39,9 +39,9 @@ const Icon = styled.div`
   margin-right: 10px;
 `;
 
-const getLinkStates = (links, highlightedLinks) => {
+const getLinkStates = (links, highlightedLinks, hiddenLinks) => {
   return {
-    isHidden: false,
+    isHidden: links.every((link) => hiddenLinks.includes(link)),
     isHighlighted: links.every((link) => highlightedLinks.includes(link)),
   };
 };
@@ -50,9 +50,15 @@ export const ContextMenu = ({
   links,
   highlightedLinks,
   setHighlightedLinks,
+  hiddenLinks,
+  setHiddenLinks,
   removeMenu,
 }) => {
-  const { isHidden, isHighlighted } = getLinkStates(links, highlightedLinks);
+  const { isHidden, isHighlighted } = getLinkStates(
+    links,
+    highlightedLinks,
+    hiddenLinks
+  );
 
   const handleHighlight = useCallback(
     (highLightState) => {
@@ -62,10 +68,26 @@ export const ContextMenu = ({
         );
       } else {
         setHighlightedLinks((prev) => [...prev, ...links]);
+        setHiddenLinks((prev) => prev.filter((item) => !links.includes(item)));
       }
       removeMenu();
     },
-    [links, removeMenu, setHighlightedLinks]
+    [links, removeMenu, setHiddenLinks, setHighlightedLinks]
+  );
+
+  const handleHide = useCallback(
+    (hiddenState) => {
+      if (hiddenState) {
+        setHiddenLinks((prev) => prev.filter((item) => !links.includes(item)));
+      } else {
+        setHiddenLinks((prev) => [...prev, ...links]);
+        setHighlightedLinks((prev) =>
+          prev.filter((item) => !links.includes(item))
+        );
+      }
+      removeMenu();
+    },
+    [links, removeMenu, setHiddenLinks, setHighlightedLinks]
   );
 
   return (
@@ -76,11 +98,17 @@ export const ContextMenu = ({
           {isHighlighted ? "Unhighlight" : "Highlight"} links
         </span>
       </Option>
-      <Option>
+      <Option onClick={() => handleHide(isHidden)}>
         <Icon>
-          <FiEyeOff viewBox="-2 -2 28 28" />
+          {isHidden ? (
+            <FiEye viewBox="-2 -2 28 28" />
+          ) : (
+            <FiEyeOff viewBox="-2 -2 28 28" />
+          )}
         </Icon>
-        <span style={{ paddingTop: "2px" }}>Hide links</span>
+        <span style={{ paddingTop: "2px" }}>
+          {isHidden ? "Show" : "Hide"} links
+        </span>
       </Option>
     </Wrapper>
   );
