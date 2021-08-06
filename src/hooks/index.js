@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 
 export const useUser = () => {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [loginError, setLoginError] = useState(false);
 
   useEffect(() => {
     let userToken = localStorage.getItem("USER_TOKEN");
@@ -26,11 +27,19 @@ export const useUser = () => {
         setLoggedIn(true);
       }
     } else {
-      loginUser(setLoggedIn);
+      const params = new URLSearchParams(window.location.search);
+      const error = params.get("error");
+
+      if (error) {
+        setLoginError(true);
+        window.history.replaceState(null, "", process.env.PREACT_APP_BASE_URL);
+      } else {
+        loginUser(setLoggedIn);
+      }
     }
   }, []);
 
-  return { loggedIn };
+  return { loggedIn, loginError };
 };
 
 export const useQuery = (route) => {
