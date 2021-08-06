@@ -7,7 +7,7 @@ const STROKE_WIDTH = 40;
 
 const Wrapper = styled.div`
   width: 75%;
-  height: 60vh;
+  height: ${(props) => props.hght ?? 50}vh;
   margin: 0 auto;
 
   & .loading-chord {
@@ -50,8 +50,61 @@ const generatePath = (x, y) => {
     : `M${x1},${y1}C${x3},${y1} ${x2},${y0} ${x0},${y0}`;
 };
 
-export const SankeyLoading = () => {
+export const SankeyLoading = ({ hght }) => {
   let svgRef = useRef();
+
+  useEffect(() => {
+    for (let i = 0; i < 5; i++) {
+      const id = generatePathId();
+
+      let g = select(svgRef.current).append("g").attr("class", "loaded-chord");
+      let linearGradient = g.append("linearGradient").attr("id", id);
+
+      linearGradient
+        .append("stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "rgb(24, 24, 24)")
+        .append("animate")
+        .attr("attributeName", "stop-color")
+        .attr("values", "rgb(24, 24, 24); rgb(30, 30, 30); rgb(24, 24, 24);")
+        .attr("dur", "1s")
+        .attr("repeatCount", "indefinite");
+
+      linearGradient
+        .append("stop")
+        .attr("offset", "100%")
+        .attr("stop-color", "rgb(30, 30, 30)")
+        .append("animate")
+        .attr("attributeName", "stop-color")
+        .attr("values", "rgb(30, 30, 30); rgb(24, 24, 24); rgb(30, 30, 30);")
+        .attr("dur", "1s")
+        .attr("repeatCount", "indefinite");
+
+      g.append("path")
+        .attr(
+          "d",
+          generatePath(svgRef.current.clientWidth, svgRef.current.clientHeight)
+        )
+        .attr("stroke", `url('#${id}')`)
+        .attr("stroke-width", STROKE_WIDTH)
+        .attr("stroke-linecap", "round")
+        .attr("fill", "none")
+        .attr("opacity", "1")
+        .append("animate")
+        .attr("attributeName", "opacity")
+        .attr("id", generatePathId())
+        .attr("dur", `${700 * (i + 1)}ms`)
+        .attr("values", `1; ${"1; ".repeat(i)}0;`)
+        .attr("fill", "freeze");
+    }
+
+    let loadedTimeout = setTimeout(() => {
+      Array.from(document.querySelectorAll(".loaded-chord")).forEach((el) =>
+        el.remove()
+      );
+    }, [3500]);
+    return () => clearTimeout(loadedTimeout);
+  }, []);
 
   useEffect(() => {
     let counter = 0;
@@ -88,11 +141,7 @@ export const SankeyLoading = () => {
         .append("path")
         .attr(
           "d",
-          generatePath(
-            svgRef.current.clientWidth,
-            svgRef.current.clientHeight,
-            1
-          )
+          generatePath(svgRef.current.clientWidth, svgRef.current.clientHeight)
         )
         .attr("class", "loading-chord")
         .attr("stroke", `url('#${id}')`)
@@ -122,7 +171,7 @@ export const SankeyLoading = () => {
   }, []);
 
   return (
-    <Wrapper>
+    <Wrapper hght={hght}>
       <Svg ref={svgRef} />
     </Wrapper>
   );

@@ -2,6 +2,7 @@ import { h } from "preact";
 
 import { useUser } from "../hooks";
 import LoggedIn from "./LoggedIn";
+import LoggingIn from "./LoggingIn";
 
 const App = () => {
   const { loggedIn } = useUser();
@@ -10,9 +11,7 @@ const App = () => {
     if (![].includes(e.key)) window.location.reload();
   });
 
-  return (
-    <div id="app">{loggedIn ? <LoggedIn /> : <div>Logging in...</div>}</div>
-  );
+  return <div id="app">{loggedIn ? <LoggedIn /> : <LoggingIn />}</div>;
 };
 
 export default App;

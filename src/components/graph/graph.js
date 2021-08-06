@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo } from "preact/hooks";
 import useResizeObserver from "use-resize-observer";
 import { mathClamp } from "../../helpers";
 import { GraphError } from "../error/GraphError";
+import { SankeyControlsLoading } from "./loading/SankeyControlsLoading";
 import { SankeyLoading } from "./loading/SankeyLoading";
 
 import { Sankey } from "./Sankey";
@@ -133,7 +134,7 @@ export const Graph = ({ data, status, refetch }) => {
       )}
       {status === "loading" && (
         <>
-          <div>TODO: Controls Loading</div>
+          <SankeyControlsLoading />
           <SankeyLoading />
         </>
       )}
