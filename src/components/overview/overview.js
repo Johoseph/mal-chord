@@ -1,7 +1,6 @@
 import { h } from "preact";
 import styled from "styled-components";
 
-import MALLogo from "../../assets/branding/mal.svg";
 import MALLogoText from "../../assets/branding/mal-text.svg";
 import MALChord from "../../assets/branding/mal-chord.svg";
 import { useEffect, useState } from "preact/hooks";
@@ -64,15 +63,6 @@ const Logo = styled.div`
   border-radius: 10px;
 `;
 
-const MAL = styled.img`
-  width: 75%;
-  margin-bottom: 5px;
-`;
-
-const Chord = styled.img`
-  width: 6em;
-`;
-
 const MALText = styled.img`
   height: 5.5em;
 `;
@@ -110,8 +100,7 @@ export const Overview = ({ data, status }) => {
     <Wrapper>
       <LeftWrapper>
         <Logo>
-          <MAL src={MALLogo} />
-          <Chord src={MALChord} />
+          <img src={MALChord} style={{ width: "9rem" }} />
         </Logo>
         <TextWrap>
           <Line fs={2}>graph your</Line>

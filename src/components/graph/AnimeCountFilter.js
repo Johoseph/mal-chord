@@ -69,7 +69,7 @@ export const AnimeCountFilter = ({ count, limit, setLimit }) => {
   const handleWheel = useCallback(
     (e) => {
       e.preventDefault();
-      const numberOfScrolls = (-1 * e.deltaY) / 100;
+      const numberOfScrolls = Math.ceil((-1 * e.deltaY) / 100);
 
       setLimit((prev) =>
         mathClamp(prev + numberOfScrolls * incrementChange, 1, count)
