@@ -4,7 +4,8 @@ import styled from "styled-components";
 import { AiOutlineHighlight } from "react-icons/ai";
 import { CgErase } from "react-icons/cg";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { useCallback } from "preact/hooks";
+import { useCallback, useContext } from "preact/hooks";
+import { HistoryContext } from "../../../contexts";
 
 const Wrapper = styled.div`
   display: flex;
@@ -54,6 +55,8 @@ export const ContextMenu = ({
   setHiddenLinks,
   removeMenu,
 }) => {
+  const { writeToHistory } = useContext(HistoryContext);
+
   const { isHidden, isHighlighted } = getLinkStates(
     links,
     highlightedLinks,
@@ -63,31 +66,101 @@ export const ContextMenu = ({
   const handleHighlight = useCallback(
     (highLightState) => {
       if (highLightState) {
-        setHighlightedLinks((prev) =>
-          prev.filter((item) => !links.includes(item))
-        );
+        setHighlightedLinks((prev) => {
+          const newLinks = prev.filter((item) => !links.includes(item));
+
+          writeToHistory([
+            {
+              fn: setHighlightedLinks,
+              undo: prev,
+              redo: newLinks,
+            },
+          ]);
+
+          return newLinks;
+        });
       } else {
-        setHighlightedLinks((prev) => [...prev, ...links]);
-        setHiddenLinks((prev) => prev.filter((item) => !links.includes(item)));
+        let toWrite = [];
+
+        setHighlightedLinks((prev) => {
+          const newLinks = [...prev, ...links];
+
+          toWrite.push({
+            fn: setHighlightedLinks,
+            undo: prev,
+            redo: newLinks,
+          });
+
+          return newLinks;
+        });
+
+        setHiddenLinks((prev) => {
+          const newLinks = prev.filter((item) => !links.includes(item));
+
+          toWrite.push({
+            fn: setHiddenLinks,
+            undo: prev,
+            redo: newLinks,
+          });
+
+          return newLinks;
+        });
+
+        writeToHistory(toWrite);
       }
       removeMenu();
     },
-    [links, removeMenu, setHiddenLinks, setHighlightedLinks]
+    [links, removeMenu, setHiddenLinks, setHighlightedLinks, writeToHistory]
   );
 
   const handleHide = useCallback(
     (hiddenState) => {
       if (hiddenState) {
-        setHiddenLinks((prev) => prev.filter((item) => !links.includes(item)));
+        setHiddenLinks((prev) => {
+          const newLinks = prev.filter((item) => !links.includes(item));
+
+          writeToHistory([
+            {
+              fn: setHiddenLinks,
+              undo: prev,
+              redo: newLinks,
+            },
+          ]);
+
+          return newLinks;
+        });
       } else {
-        setHiddenLinks((prev) => [...prev, ...links]);
-        setHighlightedLinks((prev) =>
-          prev.filter((item) => !links.includes(item))
-        );
+        let toWrite = [];
+
+        setHiddenLinks((prev) => {
+          const newLinks = [...prev, ...links];
+
+          toWrite.push({
+            fn: setHiddenLinks,
+            undo: prev,
+            redo: newLinks,
+          });
+
+          return newLinks;
+        });
+
+        setHighlightedLinks((prev) => {
+          const newLinks = prev.filter((item) => !links.includes(item));
+
+          toWrite.push({
+            fn: setHighlightedLinks,
+            undo: prev,
+            redo: newLinks,
+          });
+
+          return newLinks;
+        });
+
+        writeToHistory(toWrite);
       }
       removeMenu();
     },
-    [links, removeMenu, setHiddenLinks, setHighlightedLinks]
+    [links, removeMenu, setHiddenLinks, setHighlightedLinks, writeToHistory]
   );
 
   return (

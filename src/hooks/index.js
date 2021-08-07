@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { useState, useEffect, useMemo } from "preact/hooks";
+import { useState, useEffect, useMemo, useCallback } from "preact/hooks";
 import { loginUser, refreshTokens } from "../helpers";
 
 import dayjs from "dayjs";
@@ -72,4 +72,28 @@ export const useQuery = (route) => {
   }, [route, userToken, shouldRefetch]);
 
   return { data, status, error, refetch };
+};
+
+export const useSankeyHistory = () => {
+  const MAX_HISTORY = 50;
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [sankeyHistory, setSankeyHistory] = useState([]);
+
+  const writeToHistory = useCallback(
+    (itemToWrite) => {
+      const localHistory = sankeyHistory;
+
+      if (sankeyHistory.length >= MAX_HISTORY) localHistory.shift();
+
+      setSankeyHistory([
+        ...localHistory.filter((e, i) => i < currentIndex),
+        itemToWrite,
+      ]);
+      setCurrentIndex(Math.min(currentIndex + 1, MAX_HISTORY));
+    },
+    [currentIndex, sankeyHistory]
+  );
+
+  return { currentIndex, setCurrentIndex, sankeyHistory, writeToHistory };
 };

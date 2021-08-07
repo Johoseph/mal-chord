@@ -1,7 +1,9 @@
 import { h } from "preact";
 import { useEffect, useState, useMemo } from "preact/hooks";
 import useResizeObserver from "use-resize-observer";
+import { HistoryContext } from "../../contexts";
 import { mathClamp } from "../../helpers";
+import { useSankeyHistory } from "../../hooks";
 import { GraphError } from "../error/GraphError";
 import { SankeyControlsLoading } from "./loading/SankeyControlsLoading";
 import { SankeyLoading } from "./loading/SankeyLoading";
@@ -57,6 +59,19 @@ const sortOptions = [
 ];
 
 export const Graph = ({ data, status, refetch }) => {
+  const { currentIndex, setCurrentIndex, sankeyHistory, writeToHistory } =
+    useSankeyHistory();
+
+  const historyContext = useMemo(
+    () => ({
+      currentIndex,
+      setCurrentIndex,
+      sankeyHistory,
+      writeToHistory,
+    }),
+    [currentIndex, setCurrentIndex, sankeyHistory, writeToHistory]
+  );
+
   const { ref, width } = useResizeObserver();
   const [height, setHeight] = useState(100);
 
@@ -102,7 +117,7 @@ export const Graph = ({ data, status, refetch }) => {
   return (
     <div ref={ref}>
       {status === "success" && (
-        <>
+        <HistoryContext.Provider value={historyContext}>
           <SankeyControls
             setStartSort={setStartSort}
             setEndSort={setEndSort}
@@ -130,7 +145,7 @@ export const Graph = ({ data, status, refetch }) => {
               ((dataLinks.length - nodeCount) * nodeSide) / dataLinks.length
             }
           />
-        </>
+        </HistoryContext.Provider>
       )}
       {status === "loading" && (
         <>

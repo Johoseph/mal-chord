@@ -4,6 +4,9 @@ import { HiArrowNarrowDown, HiArrowNarrowUp } from "react-icons/hi";
 
 import { Dropdown } from "../general/Dropdown";
 import { AnimeCountFilter } from "./AnimeCountFilter";
+import { SankeyStateTraversal } from "./SankeyStateTraversal";
+import { useCallback, useContext } from "preact/hooks";
+import { HistoryContext } from "../../contexts";
 
 const Wrapper = styled.div`
   width: 80%;
@@ -84,15 +87,93 @@ export const SankeyControls = ({
   limit,
   setLimit,
 }) => {
+  const { writeToHistory } = useContext(HistoryContext);
+
+  const handleStartSortDirection = useCallback(() => {
+    setStartSort((prev) => {
+      const newSort = {
+        type: prev.type,
+        direction: prev.direction === "ASC" ? "DESC" : "ASC",
+      };
+
+      writeToHistory([
+        {
+          fn: setStartSort,
+          undo: prev,
+          redo: newSort,
+        },
+      ]);
+
+      return newSort;
+    });
+  }, [setStartSort, writeToHistory]);
+
+  const handleStartSortType = useCallback(
+    (val) => {
+      setStartSort((prev) => {
+        const newSort = { type: val, direction: prev.direction };
+
+        writeToHistory([
+          {
+            fn: setStartSort,
+            undo: prev,
+            redo: newSort,
+          },
+        ]);
+
+        return newSort;
+      });
+    },
+    [setStartSort, writeToHistory]
+  );
+
+  const handleEndSortCategory = useCallback(
+    (val) => {
+      setEndCategory((prev) => {
+        writeToHistory([
+          {
+            fn: setEndCategory,
+            undo: prev,
+            redo: val,
+          },
+        ]);
+
+        return val;
+      });
+    },
+    [setEndCategory, writeToHistory]
+  );
+
+  const handleEndSortDirection = useCallback(() => {
+    setEndSort((prev) => {
+      const newSort = {
+        type: prev.type,
+        direction: prev.direction === "ASC" ? "DESC" : "ASC",
+      };
+
+      writeToHistory([
+        {
+          fn: setEndSort,
+          undo: prev,
+          redo: newSort,
+        },
+      ]);
+
+      return newSort;
+    });
+  }, [setEndSort, writeToHistory]);
+
   return (
     <Wrapper>
       <Header>
         <span>anime</span>
         <AnimeCountFilter count={count} limit={limit} setLimit={setLimit} />
         <Chord />
+        <SankeyStateTraversal />
+        <Chord />
         <Dropdown
           value={endCategory}
-          setValue={setEndCategory}
+          setValue={handleEndSortCategory}
           options={categoryOptions}
           minWidth={150}
           alignment="right"
@@ -103,12 +184,7 @@ export const SankeyControls = ({
         <Flex>
           <SortButtonWrapper>
             <SortButton
-              onClick={() =>
-                setStartSort((prev) => ({
-                  type: prev.type,
-                  direction: prev.direction === "ASC" ? "DESC" : "ASC",
-                }))
-              }
+              onClick={handleStartSortDirection}
               aria-label="Toggle anime sort direction"
             >
               {startSort.direction === "ASC" ? (
@@ -120,9 +196,7 @@ export const SankeyControls = ({
           </SortButtonWrapper>
           <Dropdown
             value={startSort.type}
-            setValue={(val) =>
-              setStartSort((prev) => ({ type: val, direction: prev.direction }))
-            }
+            setValue={handleStartSortType}
             options={sortOptions}
             minWidth={120}
           />
@@ -130,12 +204,7 @@ export const SankeyControls = ({
         <Flex>
           <SortButtonWrapper>
             <SortButton
-              onClick={() =>
-                setEndSort((prev) => ({
-                  type: prev.type,
-                  direction: prev.direction === "ASC" ? "DESC" : "ASC",
-                }))
-              }
+              onClick={handleEndSortDirection}
               aria-label="Toggle end category sort direction"
             >
               {endSort.direction === "ASC" ? (

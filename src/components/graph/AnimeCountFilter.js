@@ -5,8 +5,10 @@ import {
   useRef,
   useEffect,
   useMemo,
+  useContext,
 } from "preact/hooks";
 import styled from "styled-components";
+import { HistoryContext } from "../../contexts";
 import { mathClamp } from "../../helpers";
 
 const Wrapper = styled.div`
@@ -51,7 +53,10 @@ const Input = styled.input`
 `;
 
 export const AnimeCountFilter = ({ count, limit, setLimit }) => {
+  const { writeToHistory } = useContext(HistoryContext);
+
   const [isEditing, setIsEditing] = useState(false);
+
   const incrementChange = useMemo(
     () => Math.round(mathClamp(count / 20, 1, 20)),
     [count]
@@ -62,20 +67,46 @@ export const AnimeCountFilter = ({ count, limit, setLimit }) => {
   const handleSetLimit = useCallback(() => {
     const submittedValue = parseInt(inputRef.current?.value, 10);
 
-    if (submittedValue && 0 < submittedValue <= limit) setLimit(submittedValue);
+    if (submittedValue && 0 < submittedValue && submittedValue <= count)
+      setLimit((prev) => {
+        writeToHistory([
+          {
+            fn: setLimit,
+            undo: prev,
+            redo: submittedValue,
+          },
+        ]);
+
+        return submittedValue;
+      });
     setIsEditing(false);
-  }, [limit, setLimit]);
+  }, [count, setLimit, writeToHistory]);
 
   const handleWheel = useCallback(
     (e) => {
       e.preventDefault();
       const numberOfScrolls = Math.ceil((-1 * e.deltaY) / 100);
 
-      setLimit((prev) =>
-        mathClamp(prev + numberOfScrolls * incrementChange, 1, count)
-      );
+      setLimit((prev) => {
+        const newLimit = mathClamp(
+          prev + numberOfScrolls * incrementChange,
+          1,
+          count
+        );
+
+        if (newLimit !== prev)
+          writeToHistory([
+            {
+              fn: setLimit,
+              undo: prev,
+              redo: newLimit,
+            },
+          ]);
+
+        return newLimit;
+      });
     },
-    [incrementChange, count, setLimit]
+    [setLimit, incrementChange, count, writeToHistory]
   );
 
   const handleKeyDown = useCallback(
@@ -86,15 +117,41 @@ export const AnimeCountFilter = ({ count, limit, setLimit }) => {
           break;
         case "ArrowUp":
           e.preventDefault();
-          setLimit((prev) => mathClamp(prev + incrementChange, 1, count));
+          setLimit((prev) => {
+            const newLimit = mathClamp(prev + incrementChange, 1, count);
+
+            if (newLimit !== prev)
+              writeToHistory([
+                {
+                  fn: setLimit,
+                  undo: prev,
+                  redo: newLimit,
+                },
+              ]);
+
+            return newLimit;
+          });
           break;
         case "ArrowDown":
           e.preventDefault();
-          setLimit((prev) => mathClamp(prev - incrementChange, 1, count));
+          setLimit((prev) => {
+            const newLimit = mathClamp(prev - incrementChange, 1, count);
+
+            if (newLimit !== prev)
+              writeToHistory([
+                {
+                  fn: setLimit,
+                  undo: prev,
+                  redo: newLimit,
+                },
+              ]);
+
+            return newLimit;
+          });
           break;
       }
     },
-    [incrementChange, count, setLimit]
+    [setLimit, incrementChange, count, writeToHistory]
   );
 
   useEffect(() => {
