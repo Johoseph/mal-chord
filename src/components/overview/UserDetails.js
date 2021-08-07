@@ -70,7 +70,7 @@ const Line = styled.span`
 const AnimeSvg = styled.img`
   border-radius: 5px;
   width: ${(props) => (props.compressed ? 3 : 4)}rem;
-  margin-left: 10px;
+  margin-left: 15px;
 `;
 
 const ImgShimmer = styled.div`

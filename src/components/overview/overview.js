@@ -2,7 +2,7 @@ import { h } from "preact";
 import styled from "styled-components";
 
 import MALLogoText from "../../assets/branding/mal-text.svg";
-import MALChord from "../../assets/branding/mal-chord.svg";
+import MALChord from "../../assets/branding/mal-chord-small.svg";
 import { useEffect, useState } from "preact/hooks";
 import { UserDetails } from "./UserDetails";
 import { ScrollOverview } from "./ScrollOverview";
@@ -61,7 +61,7 @@ const Logo = styled.div`
   align-items: center;
   justify-content: center;
   margin-right: 30px;
-  border-radius: 10px;
+  border-radius: 15px;
 `;
 
 const MALText = styled.img`
