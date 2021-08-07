@@ -10,6 +10,12 @@ import SailorMoon from "../../assets/ornamental/sailor-moon.svg";
 
 const Wrapper = styled.div`
   display: flex;
+
+  ${(props) =>
+    props.compressed &&
+    `
+    align-items: center;
+  `}
 `;
 
 const Flex = styled.div`
@@ -62,13 +68,13 @@ const Line = styled.span`
 `;
 
 const AnimeSvg = styled.img`
-  width: 4rem;
+  width: ${(props) => (props.compressed ? 3 : 4)}rem;
   margin-left: 10px;
 `;
 
 const ImgShimmer = styled.div`
-  width: 4rem;
-  height: 4rem;
+  width: ${(props) => (props.compressed ? 3 : 4)}rem;
+  height: ${(props) => (props.compressed ? 3 : 4)}rem;
   border-radius: 100%;
   margin-left: 10px;
 `;
@@ -79,13 +85,13 @@ const getImage = (gender, name) => {
   return name.length % 2 === 0 ? SailorMoon : SailorMoon;
 };
 
-export const UserDetails = ({ timeWatched }) => {
+export const UserDetails = ({ compressed = false, timeWatched = {} }) => {
   const { data, status, refetch } = useQuery("user_details");
 
   return (
     <>
       {status !== "error" ? (
-        <Wrapper>
+        <Wrapper compressed={compressed}>
           <Flex>
             {data ? (
               <Line fs={2} mb={5}>
@@ -100,27 +106,32 @@ export const UserDetails = ({ timeWatched }) => {
             ) : (
               <Shimmer h={2.2} w={150} className="shimmer" />
             )}
-            <Line fs={1} fw={300}>
-              Member since{" "}
-              {data ? (
-                <Line fw={500}>
-                  {dayjs(data.memberSince).format("DD/MM/YYYY")}
-                </Line>
-              ) : (
-                <Shimmer w={80} className="shimmer" />
-              )}
-            </Line>
+            {!compressed && (
+              <Line fs={1} fw={300}>
+                Member since{" "}
+                {data ? (
+                  <Line fw={500}>
+                    {dayjs(data.memberSince).format("DD/MM/YYYY")}
+                  </Line>
+                ) : (
+                  <Shimmer w={80} className="shimmer" />
+                )}
+              </Line>
+            )}
           </Flex>
           {data ? (
-            <AnimeSvg src={getImage(data.gender, data.name)} />
+            <AnimeSvg
+              src={getImage(data.gender, data.name)}
+              compressed={compressed}
+            />
           ) : (
-            <ImgShimmer className="shimmer" />
+            <ImgShimmer className="shimmer" compressed={compressed} />
           )}
         </Wrapper>
       ) : (
         <UserDetailsError refetch={refetch} />
       )}
-      <TimeWatched time={timeWatched} />
+      {!compressed && <TimeWatched time={timeWatched} />}
     </>
   );
 };

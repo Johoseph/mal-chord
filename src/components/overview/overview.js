@@ -5,6 +5,7 @@ import MALLogoText from "../../assets/branding/mal-text.svg";
 import MALChord from "../../assets/branding/mal-chord.svg";
 import { useEffect, useState } from "preact/hooks";
 import { UserDetails } from "./UserDetails";
+import { ScrollOverview } from "./ScrollOverview";
 
 const Wrapper = styled.div`
   display: flex;
@@ -98,6 +99,7 @@ export const Overview = ({ data, status }) => {
 
   return (
     <Wrapper>
+      <ScrollOverview />
       <LeftWrapper>
         <Logo>
           <img src={MALChord} style={{ width: "9rem" }} />
