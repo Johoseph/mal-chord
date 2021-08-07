@@ -68,6 +68,7 @@ const Line = styled.span`
 `;
 
 const AnimeSvg = styled.img`
+  border-radius: 5px;
   width: ${(props) => (props.compressed ? 3 : 4)}rem;
   margin-left: 10px;
 `;
@@ -78,12 +79,6 @@ const ImgShimmer = styled.div`
   border-radius: 100%;
   margin-left: 10px;
 `;
-
-const getImage = (gender, name) => {
-  if (gender === "male") return SailorMoon;
-  if (gender === "female") return SailorMoon;
-  return name.length % 2 === 0 ? SailorMoon : SailorMoon;
-};
 
 export const UserDetails = ({ compressed = false, timeWatched = {} }) => {
   const { data, status, refetch } = useQuery("user_details");
@@ -121,7 +116,7 @@ export const UserDetails = ({ compressed = false, timeWatched = {} }) => {
           </Flex>
           {data ? (
             <AnimeSvg
-              src={getImage(data.gender, data.name)}
+              src={data.userImage ?? SailorMoon}
               compressed={compressed}
             />
           ) : (
