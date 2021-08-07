@@ -1,6 +1,7 @@
 import { h } from "preact";
 import styled, { keyframes } from "styled-components";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { GraphError } from "./error/GraphError";
 
 const Wrapper = styled.div`
   height: calc(100vh - 100px);
@@ -26,8 +27,12 @@ const Spinner = styled.div`
   }
 `;
 
-const LoggingIn = () => {
-  return (
+const LoggingIn = ({ loginError }) => {
+  return loginError ? (
+    <GraphError
+      refetch={() => (window.location.href = process.env.PREACT_APP_BASE_URL)}
+    />
+  ) : (
     <Wrapper>
       <Spinner>
         <AiOutlineLoading3Quarters />
