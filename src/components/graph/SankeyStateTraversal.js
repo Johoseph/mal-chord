@@ -51,16 +51,16 @@ export const SankeyStateTraversal = () => {
       if (e.ctrlKey) {
         switch (e.key) {
           case "z":
-            if (canUndo) handleUndo();
+            if (canUndo) handleUndo(currentIndex);
             break;
           case "y":
-            if (canRedo) handleRedo();
+            if (canRedo) handleRedo(currentIndex);
             break;
           default:
         }
       }
     },
-    [canRedo, canUndo, handleRedo, handleUndo]
+    [canRedo, canUndo, currentIndex, handleRedo, handleUndo]
   );
 
   useEffect(() => {
@@ -68,30 +68,35 @@ export const SankeyStateTraversal = () => {
     return () => window.removeEventListener("keydown", keyListener);
   }, [keyListener]);
 
-  const handleUndo = useCallback(() => {
-    const currentHistory = sankeyHistory[currentIndex - 1];
+  const handleUndo = useCallback(
+    (curIndex) => {
+      const currentHistory = sankeyHistory[curIndex - 1];
 
-    currentHistory.forEach((item) => item.fn(item.undo));
+      currentHistory.forEach((item) => item.fn(item.undo));
+      setCurrentIndex((prev) => prev - 1);
+    },
+    [sankeyHistory, setCurrentIndex]
+  );
 
-    setCurrentIndex((prev) => prev - 1);
-  }, [currentIndex, sankeyHistory, setCurrentIndex]);
+  const handleRedo = useCallback(
+    (curIndex) => {
+      const currentHistory = sankeyHistory[curIndex];
 
-  const handleRedo = useCallback(() => {
-    const currentHistory = sankeyHistory[currentIndex];
-
-    currentHistory.forEach((item) => item.fn(item.redo));
-    setCurrentIndex((prev) => prev + 1);
-  }, [currentIndex, sankeyHistory, setCurrentIndex]);
+      currentHistory.forEach((item) => item.fn(item.redo));
+      setCurrentIndex((prev) => prev + 1);
+    },
+    [sankeyHistory, setCurrentIndex]
+  );
 
   return (
     <Wrapper>
-      <Icon onClick={handleUndo} disabled={!canUndo}>
+      <Icon onClick={() => handleUndo(currentIndex)} disabled={!canUndo}>
         <FaUndo viewBox="-80 -80 612 612" />
       </Icon>
       <Icon>
         <IoMdHelp />
       </Icon>
-      <Icon onClick={handleRedo} disabled={!canRedo}>
+      <Icon onClick={() => handleRedo(currentIndex)} disabled={!canRedo}>
         <FaRedo viewBox="-60 -80 612 612" />
       </Icon>
     </Wrapper>
