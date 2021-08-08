@@ -24,7 +24,7 @@ export const Tooltip = ({
   y,
   removeFn = () => {},
   pd,
-  atPoint,
+  forceTranslate = { x: false, y: false },
   children,
 }) => {
   let tooltipRef = useRef();
@@ -58,12 +58,10 @@ export const Tooltip = ({
       x={x}
       y={y}
       pd={pd}
-      transform={
-        !atPoint && {
-          x: x > document.body.clientWidth / 2,
-          y: y > document.body.clientHeight / 2,
-        }
-      }
+      transform={{
+        x: forceTranslate.x || x > document.body.clientWidth / 2,
+        y: forceTranslate.y || y > document.body.clientHeight / 2,
+      }}
       ref={tooltipRef}
     >
       {children}

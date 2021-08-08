@@ -161,10 +161,26 @@ export const useHelp = (triggerHelp) => {
         newEl.forEach((el) => (el.style.zIndex = "3"));
 
         const boundingRect = newEl[0].getBoundingClientRect();
+        const classList = Array.from(newEl[0].classList);
+
+        const isLeft = classList.find((cls) => cls.includes("left"));
+        const isRight = classList.find((cls) => cls.includes("right"));
+        const isTop = classList.find((cls) => cls.includes("top"));
+        const isBottom = classList.find((cls) => cls.includes("bottom"));
 
         setTooltipCoords({
-          x: boundingRect.right + 10,
-          y: boundingRect.bottom + 10,
+          x: isLeft
+            ? boundingRect.left - isLeft.split("-")[1]
+            : boundingRect.right +
+              (isRight ? parseInt(isRight.split("-")[1], 10) : 10),
+          y: isTop
+            ? boundingRect.top - isTop.split("-")[1]
+            : boundingRect.bottom +
+              (isBottom ? parseInt(isBottom.split("-")[1], 10) : 10),
+          forceTranslate: {
+            x: classList.includes("forceX"),
+            y: classList.includes("forceY"),
+          },
         });
       }
     } else {

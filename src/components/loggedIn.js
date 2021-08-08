@@ -61,7 +61,7 @@ export const LoggedIn = () => {
               x={tooltipCoords.x}
               y={tooltipCoords.y}
               pd={15}
-              // atPoint={true}
+              forceTranslate={tooltipCoords.forceTranslate}
             >
               <Help
                 helpIndex={helpIndex}
