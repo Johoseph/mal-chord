@@ -40,7 +40,7 @@ const Icon = styled.button`
 `;
 
 export const SankeyStateTraversal = () => {
-  const { currentIndex, setCurrentIndex, sankeyHistory } =
+  const { currentIndex, setCurrentIndex, sankeyHistory, setHelpRequired } =
     useContext(HistoryContext);
 
   const canUndo = !(currentIndex === 0);
@@ -97,7 +97,7 @@ export const SankeyStateTraversal = () => {
       >
         <FaUndo viewBox="-80 -80 612 612" />
       </Icon>
-      <Icon className="hlp-9">
+      <Icon onClick={() => setHelpRequired(true)} className="hlp-9">
         <IoMdHelp />
       </Icon>
       <Icon

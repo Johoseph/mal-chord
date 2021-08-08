@@ -1,7 +1,7 @@
 import { h } from "preact";
 import styled from "styled-components";
 
-import { BsArrowRightShort, BsCheck } from "react-icons/bs";
+import { BsArrowRightShort, BsCheck, BsX } from "react-icons/bs";
 
 const Wrapper = styled.div`
   display: flex;
@@ -126,9 +126,14 @@ const getControls = (index, isLast, progressHelp, setHelpRequired) => {
   }
 
   return (
-    <Button icon={true} onClick={progressHelp}>
-      <BsArrowRightShort />
-    </Button>
+    <>
+      <Button icon={true} onClick={() => setHelpRequired(false)}>
+        <BsX />
+      </Button>
+      <Button icon={true} onClick={progressHelp}>
+        <BsArrowRightShort />
+      </Button>
+    </>
   );
 };
 

@@ -139,32 +139,45 @@ export const useHelp = (triggerHelp) => {
     // Remove z-index on old help element(s)
     if (oldEl.length > 0) oldEl.forEach((el) => (el.style.zIndex = ""));
 
-    // Cater for SVG help element
-    if (newEl[0].nodeName === "image" || newEl[0].nodeName === "rect") {
-      const bound = newEl[0].getBoundingClientRect();
+    if (helpRequired) {
+      window.scrollTo(0, 0);
 
-      setSvgProps({
-        width: bound.width,
-        height: bound.height,
-        x: bound.x,
-        y: bound.y,
-      });
+      // Cater for SVG help element
+      if (newEl[0].nodeName === "image" || newEl[0].nodeName === "rect") {
+        const bound = newEl[0].getBoundingClientRect();
+
+        setSvgProps({
+          width: bound.width,
+          height: bound.height,
+          x: bound.x,
+          y: bound.y,
+        });
+      } else {
+        setSvgProps();
+      }
+
+      // Add z-index to new help element(s)
+      if (newEl) {
+        newEl.forEach((el) => (el.style.zIndex = "3"));
+
+        const boundingRect = newEl[0].getBoundingClientRect();
+
+        setTooltipCoords({
+          x: boundingRect.right + 10,
+          y: boundingRect.bottom + 10,
+        });
+      }
     } else {
-      setSvgProps();
+      localStorage.setItem("chord-help", "done");
+
+      // Remove z-index on new help element(s)
+      if (newEl.length > 0) newEl.forEach((el) => (el.style.zIndex = ""));
+
+      // Skip intro help items for next time
+      setHelpIndex(3);
+      setTooltipCoords({ x: undefined, y: undefined });
     }
-
-    // Add z-index to new help element(s)
-    if (newEl) {
-      newEl.forEach((el) => (el.style.zIndex = "3"));
-
-      const boundingRect = newEl[0].getBoundingClientRect();
-
-      setTooltipCoords({
-        x: boundingRect.right + 10,
-        y: boundingRect.bottom + 10,
-      });
-    }
-  }, [helpIndex]);
+  }, [helpIndex, helpRequired]);
 
   const readyToRun = triggerHelp && helpRequired;
   useLockBodyScroll(readyToRun);

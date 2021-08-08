@@ -58,7 +58,7 @@ const sortOptions = [
   },
 ];
 
-export const Graph = ({ data, status, refetch }) => {
+export const Graph = ({ data, status, refetch, setHelpRequired }) => {
   const { currentIndex, setCurrentIndex, sankeyHistory, writeToHistory } =
     useSankeyHistory();
 
@@ -68,8 +68,15 @@ export const Graph = ({ data, status, refetch }) => {
       setCurrentIndex,
       sankeyHistory,
       writeToHistory,
+      setHelpRequired,
     }),
-    [currentIndex, setCurrentIndex, sankeyHistory, writeToHistory]
+    [
+      currentIndex,
+      setCurrentIndex,
+      sankeyHistory,
+      writeToHistory,
+      setHelpRequired,
+    ]
   );
 
   const { ref, width } = useResizeObserver();

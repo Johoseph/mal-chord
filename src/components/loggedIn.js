@@ -83,7 +83,12 @@ export const LoggedIn = () => {
         </>
       )}
       <Overview data={data} status={status} />
-      <Graph data={data} status={status} refetch={refetch} />
+      <Graph
+        data={data}
+        status={status}
+        refetch={refetch}
+        setHelpRequired={setHelpRequired}
+      />
     </main>
   );
 };
