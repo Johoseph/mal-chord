@@ -161,7 +161,12 @@ export const AnimeCountFilter = ({ count, limit, setLimit }) => {
   }, [isEditing]);
 
   return (
-    <Wrapper tabIndex={0} onKeyDown={handleKeyDown} onWheel={handleWheel}>
+    <Wrapper
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      onWheel={handleWheel}
+      className="hlp-3"
+    >
       {!isEditing ? (
         <Viewing onClick={() => setIsEditing(true)}>
           {limit} of {count}

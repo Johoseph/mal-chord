@@ -10,6 +10,7 @@ const Wrapper = styled.div`
   top: ${(props) => props.y || 0}px;
   border-radius: 10px;
   padding: ${(props) => props.pd ?? 20}px;
+  z-index: 4;
 
   ${(props) => `
     transform: translate(
@@ -18,7 +19,14 @@ const Wrapper = styled.div`
   `}
 `;
 
-export const Tooltip = ({ x, y, removeFn, pd, children }) => {
+export const Tooltip = ({
+  x,
+  y,
+  removeFn = () => {},
+  pd,
+  atPoint,
+  children,
+}) => {
   let tooltipRef = useRef();
 
   const handleClick = useCallback(
@@ -50,10 +58,12 @@ export const Tooltip = ({ x, y, removeFn, pd, children }) => {
       x={x}
       y={y}
       pd={pd}
-      transform={{
-        x: x > document.body.clientWidth / 2,
-        y: y > document.body.clientHeight / 2,
-      }}
+      transform={
+        !atPoint && {
+          x: x > document.body.clientWidth / 2,
+          y: y > document.body.clientHeight / 2,
+        }
+      }
       ref={tooltipRef}
     >
       {children}

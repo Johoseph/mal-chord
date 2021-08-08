@@ -88,6 +88,7 @@ export const HeaderControls = ({
             minWidth={150}
             alignment="right"
             optionFontSize={1}
+            className="hlp-5"
           />
         </BoundWrap>
       </Bound>

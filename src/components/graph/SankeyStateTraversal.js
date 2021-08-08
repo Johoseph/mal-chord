@@ -90,13 +90,21 @@ export const SankeyStateTraversal = () => {
 
   return (
     <Wrapper>
-      <Icon onClick={() => handleUndo(currentIndex)} disabled={!canUndo}>
+      <Icon
+        onClick={() => handleUndo(currentIndex)}
+        disabled={!canUndo}
+        className="hlp-4"
+      >
         <FaUndo viewBox="-80 -80 612 612" />
       </Icon>
       <Icon>
         <IoMdHelp />
       </Icon>
-      <Icon onClick={() => handleRedo(currentIndex)} disabled={!canRedo}>
+      <Icon
+        onClick={() => handleRedo(currentIndex)}
+        disabled={!canRedo}
+        className="hlp-4"
+      >
         <FaRedo viewBox="-60 -80 612 612" />
       </Icon>
     </Wrapper>

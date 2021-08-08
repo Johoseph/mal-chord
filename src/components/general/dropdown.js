@@ -83,6 +83,7 @@ export const Dropdown = ({
   minWidth,
   alignment = "left",
   optionFontSize,
+  className,
 }) => {
   const [isOpen, _setIsOpen] = useState(false);
 
@@ -182,7 +183,7 @@ export const Dropdown = ({
   );
 
   return (
-    <DropdownBase ref={dropdownRef}>
+    <DropdownBase ref={dropdownRef} className={className}>
       <DropdownWrapper
         tabIndex={0}
         role="listbox"

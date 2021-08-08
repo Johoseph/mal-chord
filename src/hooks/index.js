@@ -1,6 +1,12 @@
 import axios from "axios";
 
-import { useState, useEffect, useMemo, useCallback } from "preact/hooks";
+import {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useLayoutEffect,
+} from "preact/hooks";
 import { loginUser, refreshTokens } from "../helpers";
 
 import dayjs from "dayjs";
@@ -96,4 +102,61 @@ export const useSankeyHistory = () => {
   );
 
   return { currentIndex, setCurrentIndex, sankeyHistory, writeToHistory };
+};
+
+export const useLockBodyScroll = (isLocked = true) => {
+  useLayoutEffect(() => {
+    if (isLocked) {
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      document.body.style.overflow = "hidden";
+      return () => (document.body.style.overflow = originalStyle);
+    }
+  }, [isLocked]);
+};
+
+export const useHelp = (triggerHelp) => {
+  const [helpRequired, setHelpRequired] = useState(
+    !localStorage.getItem("chord-help")
+  );
+  const [helpIndex, setHelpIndex] = useState(1);
+  const [tooltipCoords, setTooltipCoords] = useState({
+    x: undefined,
+    y: undefined,
+  });
+
+  const progressHelp = useCallback(() => {
+    setTooltipCoords({ x: undefined, y: undefined });
+    setHelpIndex((prev) => prev + 1);
+  }, []);
+
+  useEffect(() => {
+    const oldEl = Array.from(
+      document.querySelectorAll(`.hlp-${helpIndex - 1}`)
+    );
+    const newEl = Array.from(document.querySelectorAll(`.hlp-${helpIndex}`));
+
+    if (oldEl.length > 0) oldEl.forEach((el) => (el.style.zIndex = ""));
+
+    if (newEl) {
+      newEl.forEach((el) => (el.style.zIndex = "3"));
+
+      const boundingRect = newEl[0].getBoundingClientRect();
+
+      setTooltipCoords({
+        x: boundingRect.right + 20,
+        y: boundingRect.bottom + 20,
+      });
+    }
+  }, [helpIndex]);
+
+  const readyToRun = triggerHelp && helpRequired;
+  useLockBodyScroll(readyToRun);
+
+  return {
+    readyToRun,
+    setHelpRequired,
+    helpIndex,
+    tooltipCoords,
+    progressHelp,
+  };
 };

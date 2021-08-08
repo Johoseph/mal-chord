@@ -1,14 +1,64 @@
 import { h } from "preact";
+import styled, { keyframes } from "styled-components";
 
-import { useQuery } from "../hooks";
+import { useHelp, useQuery } from "../hooks";
 import { Overview } from "./overview/Overview";
 import { Graph } from "./graph/Graph";
+import { Tooltip } from "./general/Tooltip";
+import { HelpContent } from "./HelpContent";
+
+const fadeIn = keyframes`
+  from {
+    background: rgba(0, 0, 0, 0);
+  }
+  to {
+    top: rgba(0, 0, 0, 0.5);;
+  }
+`;
+
+const HelpOverlay = styled.div`
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  inset: 0px;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.5);
+
+  animation: ${fadeIn} 300ms linear;
+`;
 
 export const LoggedIn = () => {
   const { data, status, refetch } = useQuery("user_anime_list");
 
+  const {
+    readyToRun,
+    helpIndex,
+    setHelpRequired,
+    tooltipCoords,
+    progressHelp,
+  } = useHelp(status === "success");
+
   return (
     <main>
+      {readyToRun && (
+        <>
+          {tooltipCoords.x && tooltipCoords.y && (
+            <Tooltip
+              x={tooltipCoords.x}
+              y={tooltipCoords.y}
+              pd={15}
+              // atPoint={true}
+            >
+              <HelpContent
+                helpIndex={helpIndex}
+                progressHelp={progressHelp}
+                setHelpRequired={setHelpRequired}
+              />
+            </Tooltip>
+          )}
+          <HelpOverlay />
+        </>
+      )}
       <Overview data={data} status={status} />
       <Graph data={data} status={status} refetch={refetch} />
     </main>

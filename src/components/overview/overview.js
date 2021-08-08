@@ -101,7 +101,7 @@ export const Overview = ({ data, status }) => {
     <Wrapper>
       <ScrollOverview />
       <LeftWrapper>
-        <Logo>
+        <Logo className="hlp-1">
           <img src={MALChord} style={{ width: "9rem" }} />
         </Logo>
         <TextWrap>
@@ -114,7 +114,7 @@ export const Overview = ({ data, status }) => {
           </Line>
         </TextWrap>
       </LeftWrapper>
-      <RightWrapper>
+      <RightWrapper className="hlp-2">
         <UserDetails timeWatched={timeWatched} />
       </RightWrapper>
     </Wrapper>
