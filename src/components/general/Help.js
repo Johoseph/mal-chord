@@ -1,5 +1,6 @@
 import { h } from "preact";
 import styled from "styled-components";
+import helpContent from "./helpContent.json";
 
 import { BsArrowRightShort, BsCheck, BsX } from "react-icons/bs";
 
@@ -61,49 +62,13 @@ const P = styled.p`
   &:not(:last-of-type) {
     margin-bottom: 10px;
   }
-`;
 
-const helpContent = [
-  {
-    header: "Welcome to MAL Chord 📈",
-    body: [
-      "MAL Chord is an interactive chord diagram that allows you to view your anime history in a unique way.",
-      "Would you like a tour of the app?",
-    ],
-  },
-  {
-    header: "So who are you?",
-    body: ["User Details"],
-  },
-  {
-    header: "Readability first",
-    body: ["Old filter"],
-  },
-  {
-    header: "Everyone makes mistakes",
-    body: ["Undo/Redo"],
-  },
-  {
-    header: "Time to categorise",
-    body: ["End Category"],
-  },
-  {
-    header: "Keep it in order",
-    body: ["Start/End Sort"],
-  },
-  {
-    header: "What am I looking at?",
-    body: ["Node Left Click"],
-  },
-  {
-    header: "Hide and Highlight 🙉 🙈",
-    body: ["Node Right Click"],
-  },
-  {
-    header: "...and that's all folks!",
-    body: ["Help"],
-  },
-];
+  ${(props) =>
+    props.fw &&
+    `
+    font-weight: ${props.fw};
+  `}
+`;
 
 const getControls = (index, isLast, progressHelp, setHelpRequired) => {
   if (index === 1) {
@@ -137,7 +102,7 @@ const getControls = (index, isLast, progressHelp, setHelpRequired) => {
   );
 };
 
-export const HelpContent = ({ helpIndex, progressHelp, setHelpRequired }) => {
+export const Help = ({ helpIndex, progressHelp, setHelpRequired }) => {
   const content = helpContent[helpIndex - 1];
   const isLast = helpIndex === helpContent.length;
 
@@ -146,7 +111,9 @@ export const HelpContent = ({ helpIndex, progressHelp, setHelpRequired }) => {
       <Header>{content.header}</Header>
       <Body>
         {content.body.map((paragraph, i) => (
-          <P key={i}>{paragraph}</P>
+          <P key={i} fw={i > 0 && 300}>
+            {paragraph}
+          </P>
         ))}
       </Body>
       <Controls>

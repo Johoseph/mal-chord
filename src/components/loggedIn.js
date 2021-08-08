@@ -5,7 +5,7 @@ import { useHelp, useQuery } from "../hooks";
 import { Overview } from "./overview/Overview";
 import { Graph } from "./graph/Graph";
 import { Tooltip } from "./general/Tooltip";
-import { HelpContent } from "./HelpContent";
+import { Help } from "./general/Help";
 
 const fadeIn = keyframes`
   from {
@@ -63,7 +63,7 @@ export const LoggedIn = () => {
               pd={15}
               // atPoint={true}
             >
-              <HelpContent
+              <Help
                 helpIndex={helpIndex}
                 progressHelp={progressHelp}
                 setHelpRequired={setHelpRequired}

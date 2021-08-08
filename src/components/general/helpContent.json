@@ -1,0 +1,65 @@
+[
+  {
+    "header": "Welcome to MAL Chord 📈",
+    "body": [
+      "MAL Chord is an interactive chord diagram that allows you to view your anime history in a unique way.",
+      "Would you like a tour of the app?"
+    ]
+  },
+  {
+    "header": "So who are you? 🤔",
+    "body": [
+      "General user-related information lives here - wow you've watched a lot of anime!",
+      "Try clicking your username to navigate to your MAL profile."
+    ]
+  },
+  {
+    "header": "Readability first 📘",
+    "body": [
+      "The chord diagram can get VERY busy when you've watched a lot of anime. Use this filter to increase/decrease the total number of anime shown.",
+      "Try scrolling or clicking and typing on the text."
+    ]
+  },
+  {
+    "header": "Everyone makes mistakes 😶",
+    "body": [
+      "Have you accidently clicked something? No worries - use the undo/redo buttons to fix that!",
+      "Try clicking the buttons or using tradition undo/redo shortcut keys (CTRL-Y/Z)."
+    ]
+  },
+  {
+    "header": "Time to categorise 📊",
+    "body": [
+      "Here you can select different categories to group your anime - our favourite is by studio!",
+      "Try clicking and selecting a category or use the arrow keys when focused on the dropdown."
+    ]
+  },
+  {
+    "header": "Keep it in order ⬆️",
+    "body": [
+      "By default, the chord diagram sorts your anime by the ones you have last updated. Use the highlighted options to change the sort type and direction.",
+      "Try selecting a new sort and changing the sort direction."
+    ]
+  },
+  {
+    "header": "I want to know! Tell me more 🧐",
+    "body": [
+      "Want to know more about a specific node? You can interact with each node to bring up more information.",
+      "Try left clicking on the node to bring up more details."
+    ]
+  },
+  {
+    "header": "Hide and Highlight 🙈 🙉",
+    "body": [
+      "Links between nodes can be highlighted or hidden to help you read your chart more effectively.",
+      "Try right clicking on the node to bring up the hide/highlight menu."
+    ]
+  },
+  {
+    "header": "...and that's all folks! 👋",
+    "body": [
+      "I hope you enjoy using MAL Chord!",
+      "This help can be accessed again at any time through the highlighted button."
+    ]
+  }
+]
