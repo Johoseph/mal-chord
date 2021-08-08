@@ -69,13 +69,14 @@ export const AnimeCountFilter = ({ count, limit, setLimit }) => {
 
     if (submittedValue && 0 < submittedValue && submittedValue <= count)
       setLimit((prev) => {
-        writeToHistory([
-          {
-            fn: setLimit,
-            undo: prev,
-            redo: submittedValue,
-          },
-        ]);
+        if (submittedValue !== prev)
+          writeToHistory([
+            {
+              fn: setLimit,
+              undo: prev,
+              redo: submittedValue,
+            },
+          ]);
 
         return submittedValue;
       });
