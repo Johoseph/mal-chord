@@ -119,6 +119,7 @@ export const useHelp = (triggerHelp) => {
     !localStorage.getItem("chord-help")
   );
   const [helpIndex, setHelpIndex] = useState(1);
+  const [svgProps, setSvgProps] = useState();
   const [tooltipCoords, setTooltipCoords] = useState({
     x: undefined,
     y: undefined,
@@ -135,16 +136,32 @@ export const useHelp = (triggerHelp) => {
     );
     const newEl = Array.from(document.querySelectorAll(`.hlp-${helpIndex}`));
 
+    // Remove z-index on old help element(s)
     if (oldEl.length > 0) oldEl.forEach((el) => (el.style.zIndex = ""));
 
+    // Cater for SVG help element
+    if (newEl[0].nodeName === "image" || newEl[0].nodeName === "rect") {
+      const bound = newEl[0].getBoundingClientRect();
+
+      setSvgProps({
+        width: bound.width,
+        height: bound.height,
+        x: bound.x,
+        y: bound.y,
+      });
+    } else {
+      setSvgProps();
+    }
+
+    // Add z-index to new help element(s)
     if (newEl) {
       newEl.forEach((el) => (el.style.zIndex = "3"));
 
       const boundingRect = newEl[0].getBoundingClientRect();
 
       setTooltipCoords({
-        x: boundingRect.right + 20,
-        y: boundingRect.bottom + 20,
+        x: boundingRect.right + 10,
+        y: boundingRect.bottom + 10,
       });
     }
   }, [helpIndex]);
@@ -158,5 +175,6 @@ export const useHelp = (triggerHelp) => {
     helpIndex,
     tooltipCoords,
     progressHelp,
+    svgProps,
   };
 };

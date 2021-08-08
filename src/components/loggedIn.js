@@ -27,6 +27,19 @@ const HelpOverlay = styled.div`
   animation: ${fadeIn} 300ms linear;
 `;
 
+const HelpSvg = styled.svg`
+  z-index: 3;
+  position: fixed;
+  left: ${(props) => props.x ?? 0}px;
+  top: ${(props) => props.y ?? 0}px;
+
+  ${(props) =>
+    !props.x &&
+    `
+    display: none;
+  `}
+`;
+
 export const LoggedIn = () => {
   const { data, status, refetch } = useQuery("user_anime_list");
 
@@ -36,6 +49,7 @@ export const LoggedIn = () => {
     setHelpRequired,
     tooltipCoords,
     progressHelp,
+    svgProps,
   } = useHelp(status === "success");
 
   return (
@@ -57,6 +71,15 @@ export const LoggedIn = () => {
             </Tooltip>
           )}
           <HelpOverlay />
+          {svgProps && (
+            <HelpSvg {...svgProps}>
+              <use
+                id="help-use"
+                href={svgProps && `#hlp-${helpIndex}`}
+                x={-svgProps.x}
+              />
+            </HelpSvg>
+          )}
         </>
       )}
       <Overview data={data} status={status} />

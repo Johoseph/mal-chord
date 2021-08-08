@@ -97,7 +97,7 @@ export const SankeyStateTraversal = () => {
       >
         <FaUndo viewBox="-80 -80 612 612" />
       </Icon>
-      <Icon>
+      <Icon className="hlp-9">
         <IoMdHelp />
       </Icon>
       <Icon

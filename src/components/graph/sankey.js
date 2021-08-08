@@ -148,7 +148,7 @@ export const Sankey = ({
     // Start nodes
     svg
       .append("g")
-      .attr("stroke", "#000")
+      .attr("id", "start-nodes")
       .selectAll("rect")
       .data(startNodes)
       .enter()
@@ -166,7 +166,7 @@ export const Sankey = ({
     // End nodes
     svg
       .append("g")
-      .attr("stroke", "#000")
+      .attr("id", "end-nodes")
       .selectAll("rect")
       .data(endNodes)
       .enter()
@@ -272,6 +272,16 @@ export const Sankey = ({
       .attr("text-anchor", "end")
       .style("font-size", () => `${Math.max(nodeSide / 3, 10)}`)
       .text((d) => d.name);
+
+    // Help Classes
+    svg
+      .select("#start-nodes .listener-ignore")
+      .attr("id", "hlp-7")
+      .classed("hlp-7", true);
+    svg
+      .select("#end-nodes .listener-ignore")
+      .attr("id", "hlp-8")
+      .classed("hlp-8", true);
   }, [
     width,
     height,
