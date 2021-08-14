@@ -5,8 +5,7 @@ import { HistoryContext } from "../../contexts";
 import { mathClamp } from "../../helpers";
 import { useSankeyHistory } from "../../hooks";
 import { GraphError } from "../error/GraphError";
-import { SankeyControlsLoading } from "./loading/SankeyControlsLoading";
-import { SankeyLoading } from "./loading/SankeyLoading";
+import { GraphLoading } from "./loading/GraphLoading";
 import { MoreData } from "./MoreData";
 
 import { Sankey } from "./Sankey";
@@ -165,12 +164,7 @@ export const Graph = ({
           />
         </HistoryContext.Provider>
       )}
-      {status === "loading" && (
-        <>
-          <SankeyControlsLoading />
-          <SankeyLoading />
-        </>
-      )}
+      {status === "loading" && <GraphLoading />}
       {status === "error" && <GraphError refetch={refetch} />}
     </div>
   );

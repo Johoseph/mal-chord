@@ -2,11 +2,11 @@ import { h } from "preact";
 import styled, { keyframes } from "styled-components";
 
 import { useMemo } from "preact/hooks";
-import { useHelp, useQuery } from "../hooks";
-import { Overview } from "./overview/Overview";
-import { Graph } from "./graph/Graph";
-import { Tooltip } from "./general/Tooltip";
-import { Help } from "./general/Help";
+import { useHelp, useQuery } from "../../../hooks";
+import { Tooltip } from "../../general/Tooltip";
+import { Graph } from "../../graph/Graph";
+import { Overview } from "../../overview/Overview";
+import { Help } from "../../general/Help";
 
 const fadeIn = keyframes`
   from {
@@ -41,7 +41,7 @@ const HelpSvg = styled.svg`
   `}
 `;
 
-export const LoggedIn = () => {
+export const LoggedIn = ({ useMock }) => {
   const { data, status, refetch } = useQuery("user_anime_list");
 
   const pathToData = useMemo(() => data?.data, [data]);
@@ -98,5 +98,3 @@ export const LoggedIn = () => {
     </main>
   );
 };
-
-export default LoggedIn;

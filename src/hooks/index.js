@@ -11,6 +11,26 @@ import { loginUser, refreshTokens } from "../helpers";
 
 import dayjs from "dayjs";
 
+export const useLoginType = () => {
+  const [loginType, _setLoginType] = useState(() => {
+    if (sessionStorage.getItem("LOGIN_TYPE"))
+      return sessionStorage.getItem("LOGIN_TYPE");
+    if (localStorage.getItem("USER_TOKEN")) return "user";
+    return "home";
+  });
+
+  const setLoginType = useCallback((type) => {
+    if (type) {
+      sessionStorage.setItem("LOGIN_TYPE", type);
+    } else {
+      sessionStorage.removeItem("LOGIN_TYPE");
+    }
+    _setLoginType(type);
+  }, []);
+
+  return { loginType, setLoginType };
+};
+
 export const useUser = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loginError, setLoginError] = useState(false);
@@ -119,7 +139,7 @@ export const useLockBodyScroll = (isLocked = true) => {
 
 export const useHelp = (triggerHelp) => {
   const [helpRequired, setHelpRequired] = useState(
-    !localStorage.getItem("chord-help")
+    !localStorage.getItem("CHORD_HELP")
   );
   const [helpIndex, setHelpIndex] = useState(1);
   const [svgProps, setSvgProps] = useState();
@@ -187,7 +207,7 @@ export const useHelp = (triggerHelp) => {
         });
       }
     } else {
-      localStorage.setItem("chord-help", "done");
+      localStorage.setItem("CHORD_HELP", "true");
 
       // Remove z-index on new help element(s)
       if (newEl.length > 0) newEl.forEach((el) => (el.style.zIndex = ""));
@@ -209,4 +229,22 @@ export const useHelp = (triggerHelp) => {
     progressHelp,
     svgProps,
   };
+};
+
+export const useTabVisible = () => {
+  const [tabVisible, setTabVisible] = useState(true);
+
+  const visibilityListener = useCallback(
+    () => setTabVisible((prev) => !prev),
+    []
+  );
+
+  // Restart loading when tab visibility changes
+  useEffect(() => {
+    document.addEventListener("visibilitychange", visibilityListener);
+    return () =>
+      document.removeEventListener("visibilitychange", visibilityListener);
+  }, [visibilityListener]);
+
+  return { tabVisible };
 };

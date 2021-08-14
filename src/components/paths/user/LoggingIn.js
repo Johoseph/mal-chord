@@ -1,7 +1,10 @@
 import { h } from "preact";
+import { useContext } from "preact/hooks";
 import styled, { keyframes } from "styled-components";
+
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { GraphError } from "./error/GraphError";
+import { UserContext } from "../../../contexts";
+import { GraphError } from "../../error/GraphError";
 
 const Wrapper = styled.div`
   height: calc(100vh - 100px);
@@ -27,10 +30,15 @@ const Spinner = styled.div`
   }
 `;
 
-const LoggingIn = ({ loginError }) => {
+export const LoggingIn = ({ loginError }) => {
+  const { setLoginType } = useContext(UserContext);
+
   return loginError ? (
     <GraphError
-      refetch={() => (window.location.href = process.env.PREACT_APP_BASE_URL)}
+      refetch={() => {
+        setLoginType();
+        window.location.href = process.env.PREACT_APP_BASE_URL;
+      }}
     />
   ) : (
     <Wrapper>
@@ -40,5 +48,3 @@ const LoggingIn = ({ loginError }) => {
     </Wrapper>
   );
 };
-
-export default LoggingIn;

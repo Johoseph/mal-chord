@@ -1,13 +1,14 @@
 import { h } from "preact";
-import { useEffect, useRef } from "preact/hooks";
+import { useEffect, useMemo, useRef } from "preact/hooks";
 import styled from "styled-components";
 import { select, interpolateNumber } from "d3";
+import { getNodeColour } from "../sankeyFunctions";
 
 const STROKE_WIDTH = 40;
 
 const Wrapper = styled.div`
-  width: 75%;
-  height: ${(props) => props.hght ?? 50}vh;
+  width: ${(props) => props.w ?? 90}%;
+  height: ${(props) => props.h ?? 50}vh;
   margin: 0 auto;
 
   & .loading-chord {
@@ -37,8 +38,8 @@ const generatePath = (x, y) => {
   const curvature = 0.6;
   const padding = STROKE_WIDTH / 2;
 
-  const x0 = 0 + padding,
-    x1 = x - padding,
+  const x0 = 0,
+    x1 = x,
     xi = interpolateNumber(x0, x1),
     x2 = xi(curvature),
     x3 = xi(1 - curvature),
@@ -50,67 +51,88 @@ const generatePath = (x, y) => {
     : `M${x1},${y1}C${x3},${y1} ${x2},${y0} ${x0},${y0}`;
 };
 
-export const SankeyLoading = ({ hght }) => {
+export const SankeyLoading = ({
+  customDimensions,
+  hasColor = false,
+  startFresh = false,
+}) => {
   let svgRef = useRef();
 
+  const opacityStart = useMemo(() => (hasColor ? "0.7" : "1"), [hasColor]);
+
   useEffect(() => {
-    for (let i = 0; i < 5; i++) {
-      const id = generatePathId();
+    let loadedTimeout;
 
-      let g = select(svgRef.current).append("g").attr("class", "loaded-chord");
-      let linearGradient = g.append("linearGradient").attr("id", id);
+    if (!startFresh) {
+      for (let i = 0; i < 5; i++) {
+        const id = generatePathId();
 
-      linearGradient
-        .append("stop")
-        .attr("offset", "0%")
-        .attr("stop-color", "rgb(24, 24, 24)")
-        .append("animate")
-        .attr("attributeName", "stop-color")
-        .attr("values", "rgb(24, 24, 24); rgb(30, 30, 30); rgb(24, 24, 24);")
-        .attr("dur", "1s")
-        .attr("repeatCount", "indefinite");
+        let g = select(svgRef.current)
+          .append("g")
+          .attr("class", "loaded-chord");
+        let linearGradient = g.append("linearGradient").attr("id", id);
 
-      linearGradient
-        .append("stop")
-        .attr("offset", "100%")
-        .attr("stop-color", "rgb(30, 30, 30)")
-        .append("animate")
-        .attr("attributeName", "stop-color")
-        .attr("values", "rgb(30, 30, 30); rgb(24, 24, 24); rgb(30, 30, 30);")
-        .attr("dur", "1s")
-        .attr("repeatCount", "indefinite");
+        linearGradient
+          .append("stop")
+          .attr("offset", "0%")
+          .attr("stop-color", "rgb(24, 24, 24)")
+          .append("animate")
+          .attr("attributeName", "stop-color")
+          .attr("values", "rgb(24, 24, 24); rgb(30, 30, 30); rgb(24, 24, 24);")
+          .attr("dur", "1s")
+          .attr("repeatCount", "indefinite");
 
-      g.append("path")
-        .attr(
-          "d",
-          generatePath(svgRef.current.clientWidth, svgRef.current.clientHeight)
-        )
-        .attr("stroke", `url('#${id}')`)
-        .attr("stroke-width", STROKE_WIDTH)
-        .attr("stroke-linecap", "round")
-        .attr("fill", "none")
-        .attr("opacity", "1")
-        .append("animate")
-        .attr("attributeName", "opacity")
-        .attr("id", generatePathId())
-        .attr("dur", `${700 * (i + 1)}ms`)
-        .attr("values", `1; ${"1; ".repeat(i)}0;`)
-        .attr("fill", "freeze");
+        linearGradient
+          .append("stop")
+          .attr("offset", "100%")
+          .attr("stop-color", "rgb(30, 30, 30)")
+          .append("animate")
+          .attr("attributeName", "stop-color")
+          .attr("values", "rgb(30, 30, 30); rgb(24, 24, 24); rgb(30, 30, 30);")
+          .attr("dur", "1s")
+          .attr("repeatCount", "indefinite");
+
+        g.append("path")
+          .attr(
+            "d",
+            generatePath(
+              svgRef.current.clientWidth,
+              svgRef.current.clientHeight
+            )
+          )
+          .attr(
+            "stroke",
+            hasColor
+              ? getNodeColour(Math.floor(Math.random() * 10000000).toString())
+              : `url('#${id}')`
+          )
+          .attr("stroke-width", STROKE_WIDTH)
+          .attr("fill", "none")
+          .attr("opacity", opacityStart)
+          .append("animate")
+          .attr("attributeName", "opacity")
+          .attr("id", generatePathId())
+          .attr("dur", `${700 * (i + 1)}ms`)
+          .attr("values", `${opacityStart}; ${`${opacityStart}; `.repeat(i)}0;`)
+          .attr("fill", "freeze");
+      }
+
+      loadedTimeout = setTimeout(() => {
+        Array.from(document.querySelectorAll(".loaded-chord")).forEach((el) =>
+          el.remove()
+        );
+      }, [3500]);
     }
 
-    let loadedTimeout = setTimeout(() => {
-      Array.from(document.querySelectorAll(".loaded-chord")).forEach((el) =>
-        el.remove()
-      );
-    }, [3500]);
     return () => clearTimeout(loadedTimeout);
-  }, []);
+  }, [startFresh, hasColor, opacityStart]);
 
   useEffect(() => {
+    let pathAnimation;
+    let pathRemovals = [];
     let counter = 0;
 
-    let pathRemoval;
-    let pathAnimation = setInterval(() => {
+    pathAnimation = setInterval(() => {
       const id = generatePathId();
 
       let linearGradient = select(svgRef.current)
@@ -144,34 +166,46 @@ export const SankeyLoading = ({ hght }) => {
           generatePath(svgRef.current.clientWidth, svgRef.current.clientHeight)
         )
         .attr("class", "loading-chord")
-        .attr("stroke", `url('#${id}')`)
+        .attr(
+          "stroke",
+          hasColor
+            ? getNodeColour(Math.floor(Math.random() * 10000000).toString())
+            : `url('#${id}')`
+        )
         .attr("stroke-width", STROKE_WIDTH)
-        .attr("stroke-linecap", "round")
         .attr("fill", "none")
-        .attr("opacity", "1")
+        .attr("opacity", opacityStart)
         .append("animate")
         .attr("attributeName", "opacity")
         .attr("id", generatePathId())
         .attr("dur", `${4200 + 700 * counter}ms`)
-        .attr("values", `1; 1; 1; 1; ${"1; ".repeat(counter)} 0;`)
+        .attr(
+          "values",
+          `${`${opacityStart}; `.repeat(4)}${`${opacityStart}; `.repeat(
+            counter
+          )}0;`
+        )
         .attr("fill", "freeze");
 
       counter++;
 
-      pathRemoval = setTimeout(() => {
-        document.querySelectorAll(".loading-chord")[0]?.remove();
-        document.getElementById(id)?.remove();
-      }, 3500);
+      pathRemovals.push(
+        setTimeout(() => {
+          pathRemovals.shift();
+          document.querySelectorAll(".loading-chord")[0]?.remove();
+          document.getElementById(id)?.remove();
+        }, 3500)
+      );
     }, 700);
 
     return () => {
       clearInterval(pathAnimation);
-      clearTimeout(pathRemoval);
+      pathRemovals.forEach((pathRemoval) => clearTimeout(pathRemoval));
     };
-  }, []);
+  }, [hasColor, opacityStart]);
 
   return (
-    <Wrapper hght={hght}>
+    <Wrapper w={customDimensions?.width} h={customDimensions?.height}>
       <Svg ref={svgRef} />
     </Wrapper>
   );
