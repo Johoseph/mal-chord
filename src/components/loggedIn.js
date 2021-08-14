@@ -1,6 +1,7 @@
 import { h } from "preact";
 import styled, { keyframes } from "styled-components";
 
+import { useMemo } from "preact/hooks";
 import { useHelp, useQuery } from "../hooks";
 import { Overview } from "./overview/Overview";
 import { Graph } from "./graph/Graph";
@@ -12,7 +13,7 @@ const fadeIn = keyframes`
     background: rgba(0, 0, 0, 0);
   }
   to {
-    top: rgba(0, 0, 0, 0.5);;
+    top: rgba(0, 0, 0, 0.5);
   }
 `;
 
@@ -42,6 +43,9 @@ const HelpSvg = styled.svg`
 
 export const LoggedIn = () => {
   const { data, status, refetch } = useQuery("user_anime_list");
+
+  const pathToData = useMemo(() => data?.data, [data]);
+  const hasNextPage = useMemo(() => data?.hasNextPage, [data]);
 
   const {
     readyToRun,
@@ -82,11 +86,13 @@ export const LoggedIn = () => {
           )}
         </>
       )}
-      <Overview data={data} status={status} />
+      <Overview data={pathToData} status={status} />
       <Graph
-        data={data}
+        data={pathToData}
+        hasNextPage={hasNextPage}
         status={status}
         refetch={refetch}
+        helpActive={readyToRun}
         setHelpRequired={setHelpRequired}
       />
     </main>

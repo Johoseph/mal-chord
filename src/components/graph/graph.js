@@ -7,6 +7,7 @@ import { useSankeyHistory } from "../../hooks";
 import { GraphError } from "../error/GraphError";
 import { SankeyControlsLoading } from "./loading/SankeyControlsLoading";
 import { SankeyLoading } from "./loading/SankeyLoading";
+import { MoreData } from "./MoreData";
 
 import { Sankey } from "./Sankey";
 import { SankeyControls } from "./SankeyControls";
@@ -58,7 +59,14 @@ const sortOptions = [
   },
 ];
 
-export const Graph = ({ data, status, refetch, setHelpRequired }) => {
+export const Graph = ({
+  data,
+  status,
+  refetch,
+  hasNextPage,
+  helpActive,
+  setHelpRequired,
+}) => {
   const { currentIndex, setCurrentIndex, sankeyHistory, writeToHistory } =
     useSankeyHistory();
 
@@ -125,6 +133,9 @@ export const Graph = ({ data, status, refetch, setHelpRequired }) => {
     <div ref={ref}>
       {status === "success" && (
         <HistoryContext.Provider value={historyContext}>
+          {hasNextPage && !helpActive && (
+            <MoreData fetchMore={() => refetch({ getNextPage: true })} />
+          )}
           <SankeyControls
             setStartSort={setStartSort}
             setEndSort={setEndSort}

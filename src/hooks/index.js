@@ -54,18 +54,21 @@ export const useQuery = (route) => {
   const [status, setStatus] = useState("loading");
   const [error, setError] = useState();
   const [shouldRefetch, setShouldRefetch] = useState(true);
+  const [page, setPage] = useState(1);
 
-  const refetch = () => {
+  const refetch = ({ getNextPage }) => {
     setData(undefined);
     setStatus("loading");
     setError(undefined);
     setShouldRefetch(!shouldRefetch);
+    if (getNextPage) setPage((prev) => prev + 1);
   };
 
   useEffect(() => {
     axios
       .post(`${process.env.PREACT_APP_API_URL}/${route}`, {
         userToken,
+        page,
       })
       .then((res) => {
         setData(res.data);
@@ -75,7 +78,7 @@ export const useQuery = (route) => {
         setError(err);
         setStatus("error");
       });
-  }, [route, userToken, shouldRefetch]);
+  }, [route, userToken, shouldRefetch, page]);
 
   return { data, status, error, refetch };
 };
