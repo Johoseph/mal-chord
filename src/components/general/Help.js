@@ -129,11 +129,19 @@ export const Help = ({ helpIndex, progressHelp, setHelpRequired }) => {
     }
   }, []);
 
-  const focusoutListener = useCallback((e) => {
-    if (!controlsRef.current?.contains(e.relatedTarget)) {
-      controlsRef.current.querySelector("button")?.focus();
-    }
-  }, []);
+  const focusoutListener = useCallback(
+    (e) => {
+      if (
+        !(
+          controlsRef.current?.contains(e.relatedTarget) ||
+          document.querySelector(`.hlp-${helpIndex}`).contains(e.relatedTarget)
+        )
+      ) {
+        controlsRef.current.querySelector("button")?.focus();
+      }
+    },
+    [helpIndex]
+  );
 
   useEffect(() => {
     window.addEventListener("focusout", focusoutListener);

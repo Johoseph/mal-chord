@@ -6,7 +6,7 @@ import { getNodeColour } from "../sankeyFunctions";
 const Wrapper = styled.div`
   display: flex;
   min-width: 200px;
-  max-width: 420px;
+  max-width: 435px;
 `;
 
 const NodeItem = styled.div`
