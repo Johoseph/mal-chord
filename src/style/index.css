@@ -37,6 +37,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+a {
+  outline: none;
+}
+
 * {
   box-sizing: border-box;
 }
