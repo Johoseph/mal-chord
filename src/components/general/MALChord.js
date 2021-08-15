@@ -42,8 +42,10 @@ const Logo = styled.div`
   margin-right: 30px;
   border-radius: 15px;
   cursor: ${(props) => (props.isLink ? "pointer" : "auto")};
+  outline: none;
 
-  &:hover {
+  &:hover,
+  :focus-visible {
     & img {
       transform: scale(1.1);
     }
@@ -81,7 +83,7 @@ export const MALChord = ({ isLink = false }) => {
   }, [windowWidth]);
 
   if (windowWidth < mobileWidth) {
-    return <MALChordMobile isLink={isLink} logout={logout} />;
+    return <MALChordMobile logout={logout} />;
   }
 
   return (
@@ -91,8 +93,10 @@ export const MALChord = ({ isLink = false }) => {
         onClick={logout}
         role={isLink && "button"}
         isLink={isLink}
+        aria-label={isLink ? "Return home" : undefined}
+        tabIndex={isLink ? "0" : undefined}
       >
-        <MALChordLogoImg src={MALChordLogo} />
+        <MALChordLogoImg src={MALChordLogo} role="presentation" />
       </Logo>
       <TextWrap>
         <Line fs={2}>graph your</Line>
@@ -100,6 +104,7 @@ export const MALChord = ({ isLink = false }) => {
           <MALTextImg
             src={useAcronym ? MALAcronym : MALLogoText}
             useAcronym={useAcronym}
+            alt="MyAnimeList"
           />
         </div>
         <Line fs={1.2} fw={300}>

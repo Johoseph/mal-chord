@@ -134,6 +134,7 @@ export const UserDetails = ({
             <AnimeSvg
               src={data.userImage ?? SailorMoon}
               compressed={compressed}
+              alt="User profile picture"
             />
           ) : (
             <ImgShimmer className="shimmer" compressed={compressed} />

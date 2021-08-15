@@ -94,16 +94,22 @@ export const SankeyStateTraversal = () => {
         onClick={() => handleUndo(currentIndex)}
         disabled={!canUndo}
         className="hlp-4"
+        aria-label="Undo last action"
       >
         <FaUndo viewBox="-80 -80 612 612" />
       </Icon>
-      <Icon onClick={() => setHelpRequired(true)} className="hlp-9">
+      <Icon
+        onClick={() => setHelpRequired(true)}
+        className="hlp-9"
+        aria-label="Get help"
+      >
         <IoMdHelp />
       </Icon>
       <Icon
         onClick={() => handleRedo(currentIndex)}
         disabled={!canRedo}
         className="hlp-4"
+        aria-label="Redo last action"
       >
         <FaRedo viewBox="-60 -80 612 612" />
       </Icon>

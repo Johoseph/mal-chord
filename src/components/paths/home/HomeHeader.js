@@ -106,10 +106,16 @@ export const HomeHeader = ({ setLoginType, mobileWidth }) => {
         </InfoMessage>
       ) : (
         <Flex>
-          <Button onClick={() => setLoginType("user")}>
-            Login with <MALLogoImg src={MALLogo} />
+          <Button
+            onClick={() => setLoginType("user")}
+            aria-label="Login with MAL Account"
+          >
+            Login with <MALLogoImg src={MALLogo} alt="MAL" />
           </Button>
-          <Button onClick={() => setLoginType("guest")}>
+          <Button
+            onClick={() => setLoginType("guest")}
+            aria-label="Login as a Guest"
+          >
             <span>Try as a Guest</span>
           </Button>
         </Flex>

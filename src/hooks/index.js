@@ -153,6 +153,10 @@ export const useHelp = (triggerHelp) => {
     setHelpIndex((prev) => prev + 1);
   }, []);
 
+  const keydownListener = useCallback((e) => {
+    if (e.key === "Escape") setHelpRequired(false);
+  }, []);
+
   useEffect(() => {
     const oldEl = Array.from(
       document.querySelectorAll(`.hlp-${helpIndex - 1}`)
@@ -164,6 +168,7 @@ export const useHelp = (triggerHelp) => {
 
     if (helpRequired) {
       window.scrollTo(0, 0);
+      window.addEventListener("keydown", keydownListener);
 
       // Cater for SVG help element
       if (newEl[0].nodeName === "image" || newEl[0].nodeName === "rect") {
@@ -216,7 +221,9 @@ export const useHelp = (triggerHelp) => {
       setHelpIndex(3);
       setTooltipCoords({ x: undefined, y: undefined });
     }
-  }, [helpIndex, helpRequired]);
+
+    return () => window.removeEventListener("keydown", keydownListener);
+  }, [helpIndex, helpRequired, keydownListener]);
 
   const readyToRun = triggerHelp && helpRequired;
   useLockBodyScroll(readyToRun);

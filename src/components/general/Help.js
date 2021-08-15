@@ -1,4 +1,5 @@
 import { h } from "preact";
+import { useCallback, useEffect, useRef } from "preact/hooks";
 import styled from "styled-components";
 import helpContent from "./helpContent.json";
 
@@ -74,17 +75,23 @@ const getControls = (index, isLast, progressHelp, setHelpRequired) => {
   if (index === 1) {
     return (
       <>
-        <Button onClick={() => setHelpRequired(false)}>
+        <Button onClick={() => setHelpRequired(false)} aria-label="Exit help">
           I&apos;m all good
         </Button>
-        <Button onClick={progressHelp}>Let&apos;s go!</Button>
+        <Button onClick={progressHelp} aria-label="Begin help">
+          Let&apos;s go!
+        </Button>
       </>
     );
   }
 
   if (isLast) {
     return (
-      <Button icon={true} onClick={() => setHelpRequired(false)}>
+      <Button
+        icon={true}
+        onClick={() => setHelpRequired(false)}
+        aria-label="Exit help"
+      >
         <BsCheck viewBox="0 -2 16 18" />
       </Button>
     );
@@ -92,10 +99,18 @@ const getControls = (index, isLast, progressHelp, setHelpRequired) => {
 
   return (
     <>
-      <Button icon={true} onClick={() => setHelpRequired(false)}>
+      <Button
+        icon={true}
+        onClick={() => setHelpRequired(false)}
+        aria-label="Quit help"
+      >
         <BsX />
       </Button>
-      <Button icon={true} onClick={progressHelp}>
+      <Button
+        icon={true}
+        onClick={progressHelp}
+        aria-label="Progress to next help item"
+      >
         <BsArrowRightShort />
       </Button>
     </>
@@ -105,6 +120,25 @@ const getControls = (index, isLast, progressHelp, setHelpRequired) => {
 export const Help = ({ helpIndex, progressHelp, setHelpRequired }) => {
   const content = helpContent[helpIndex - 1];
   const isLast = helpIndex === helpContent.length;
+
+  let controlsRef = useRef();
+
+  useEffect(() => {
+    if (controlsRef.current) {
+      controlsRef.current.querySelector("button")?.focus();
+    }
+  }, []);
+
+  const focusoutListener = useCallback((e) => {
+    if (!controlsRef.current?.contains(e.relatedTarget)) {
+      controlsRef.current.querySelector("button")?.focus();
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("focusout", focusoutListener);
+    return () => window.removeEventListener("focusout", focusoutListener);
+  }, [focusoutListener]);
 
   return (
     <Wrapper>
@@ -116,7 +150,7 @@ export const Help = ({ helpIndex, progressHelp, setHelpRequired }) => {
           </P>
         ))}
       </Body>
-      <Controls>
+      <Controls ref={controlsRef}>
         {getControls(helpIndex, isLast, progressHelp, setHelpRequired)}
       </Controls>
     </Wrapper>

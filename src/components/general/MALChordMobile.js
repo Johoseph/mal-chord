@@ -39,7 +39,6 @@ const Logo = styled.div`
   justify-content: center;
   margin-right: 30px;
   border-radius: 15px;
-  cursor: ${(props) => (props.isLink ? "pointer" : "auto")};
 
   &:hover {
     & img {
@@ -63,22 +62,17 @@ const MALTextImg = styled.img`
   }
 `;
 
-export const MALChordMobile = ({ isLink, logout }) => {
+export const MALChordMobile = ({ logout }) => {
   return (
     <Wrapper>
       <div style={{ display: "flex", marginBottom: "15px" }}>
-        <Logo
-          className="hlp-1"
-          onClick={logout}
-          role={isLink && "button"}
-          isLink={isLink}
-        >
-          <MALChordLogoImg src={MALChordLogo} />
+        <Logo className="hlp-1" onClick={logout}>
+          <MALChordLogoImg src={MALChordLogo} role="presentation" />
         </Logo>
         <TextWrap>
           <Line fs={1.8}>graph your</Line>
           <div style={{ display: "flex", alignContent: "center" }}>
-            <MALTextImg src={MALAcronym} />
+            <MALTextImg src={MALAcronym} alt="MyAnimeList" />
           </div>
         </TextWrap>
       </div>
