@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 `;
 
 export const HomePath = () => {
-  const { setLoginType } = useContext(UserContext);
+  const { setLoginType, mobileWidth } = useContext(UserContext);
   const { tabVisible } = useTabVisible();
 
   window.addEventListener("storage", (e) => {
@@ -23,7 +23,7 @@ export const HomePath = () => {
 
   return (
     <Wrapper>
-      <HomeHeader setLoginType={setLoginType} />
+      <HomeHeader setLoginType={setLoginType} mobileWidth={mobileWidth} />
       {tabVisible && (
         <SankeyLoading
           customDimesions={{ height: 55, width: 75 }}

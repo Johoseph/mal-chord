@@ -1,16 +1,28 @@
 import { h } from "preact";
-import { useMemo } from "preact/hooks";
+import { useEffect, useMemo } from "preact/hooks";
 
 import { UserPath } from "./paths/UserPath";
 import { GuestPath } from "./paths/GuestPath";
 import { HomePath } from "./paths/HomePath";
-import { useLoginType } from "../hooks";
+import { useLoginType, useWindowDimensions } from "../hooks";
 import { UserContext } from "../contexts";
 
+const mobileWidth = 840;
+
 const App = () => {
+  const { windowWidth } = useWindowDimensions();
   const { loginType, setLoginType } = useLoginType();
 
-  const userContext = useMemo(() => ({ setLoginType }), [setLoginType]);
+  const userContext = useMemo(
+    () => ({ setLoginType, mobileWidth }),
+    [setLoginType]
+  );
+
+  useEffect(() => {
+    if (windowWidth < mobileWidth) {
+      setLoginType("home");
+    }
+  }, [setLoginType, windowWidth]);
 
   window.addEventListener("storage", (e) => {
     if (![].includes(e.key)) window.location.reload();

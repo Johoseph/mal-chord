@@ -52,7 +52,7 @@ const Shimmer = styled.div`
 
 const Line = styled.span`
   display: flex;
-  white-space: pre-wrap;
+  white-space: nowrap;
   font-size: ${(props) => (props.fs ? props.fs : 1)}rem;
   ${(props) =>
     props.fw &&
@@ -64,6 +64,12 @@ const Line = styled.span`
     props.mb &&
     `
     margin-bottom: ${props.mb}px;
+  `}
+
+${(props) =>
+    props.ml &&
+    `
+    margin-left: ${props.ml}px;
   `}
 `;
 
@@ -113,9 +119,9 @@ export const UserDetails = ({
             )}
             {!compressed && (
               <Line fs={1} fw={300}>
-                Member since{" "}
+                Member since
                 {data ? (
-                  <Line fw={500}>
+                  <Line fw={500} ml={5}>
                     {dayjs(data.memberSince).format("DD/MM/YYYY")}
                   </Line>
                 ) : (

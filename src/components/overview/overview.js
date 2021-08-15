@@ -9,12 +9,11 @@ import { MALChord } from "../general/MALChord";
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  height: 12em;
   width: 80%;
   margin: 0 auto 40px auto;
 
-  @media (max-width: 1000px) {
-    width: 95%;
+  @media (max-width: 1350px) {
+    width: 90%;
   }
 `;
 

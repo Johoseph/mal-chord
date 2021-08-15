@@ -3,13 +3,19 @@ import styled from "styled-components";
 
 import MALLogoText from "../../assets/branding/mal-text.svg";
 import MALChordLogo from "../../assets/branding/mal-chord-small.svg";
-import { useContext } from "preact/hooks";
+import MALAcronym from "../../assets/branding/mal.svg";
+import { useContext, useEffect, useState } from "preact/hooks";
 import { UserContext } from "../../contexts";
+import { useWindowDimensions } from "../../hooks";
+import { MALChordMobile } from "./MALChordMobile";
+
+const ACRONYM_WIDTH = 1200;
 
 const TextWrap = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding-right: 50px;
 `;
 
 const Line = styled.span`
@@ -27,6 +33,8 @@ const Logo = styled.div`
   background-color: #2e51a2;
   width: 12em;
   height: 12em;
+  min-width: 12em;
+  min-height: 12em;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -48,12 +56,33 @@ const MALChordLogoImg = styled.img`
   transition: transform 50ms linear;
 `;
 
+const MALTextImg = styled.img`
+  height: ${(props) => (props.useAcronym ? "4.5" : "5.5")}rem;
+
+  @media (max-width: 940px) {
+    height: 3.5rem;
+  }
+`;
+
 export const MALChord = ({ isLink = false }) => {
-  const { setLoginType } = useContext(UserContext);
+  const { windowWidth } = useWindowDimensions();
+  const [useAcronym, setUseAcronym] = useState(windowWidth < ACRONYM_WIDTH);
+
+  const { setLoginType, mobileWidth } = useContext(UserContext);
 
   const logout = () => {
     if (isLink) setLoginType("home");
   };
+
+  useEffect(() => {
+    if (windowWidth) {
+      setUseAcronym(windowWidth < ACRONYM_WIDTH);
+    }
+  }, [windowWidth]);
+
+  if (windowWidth < mobileWidth) {
+    return <MALChordMobile isLink={isLink} logout={logout} />;
+  }
 
   return (
     <div style={{ display: "flex" }}>
@@ -68,7 +97,10 @@ export const MALChord = ({ isLink = false }) => {
       <TextWrap>
         <Line fs={2}>graph your</Line>
         <div style={{ display: "flex", alignContent: "center" }}>
-          <img src={MALLogoText} style={{ height: "5.5rem" }} />
+          <MALTextImg
+            src={useAcronym ? MALAcronym : MALLogoText}
+            useAcronym={useAcronym}
+          />
         </div>
         <Line fs={1.2} fw={300}>
           Explore an interactive chord diagram of your MyAnimeList library 📈

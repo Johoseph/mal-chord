@@ -2,17 +2,24 @@ import { h } from "preact";
 import styled from "styled-components";
 
 import MALLogo from "../../../assets/branding/mal.svg";
+import { useWindowDimensions } from "../../../hooks";
 import { MALChord } from "../../general/MALChord";
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  height: 12em;
   width: 75%;
   margin: 50px auto;
 
-  @media (max-width: 1000px) {
-    width: 95%;
+  ${(props) =>
+    props.isMobile &&
+    `
+    flex-direction: column;
+    margin: 0 auto 50px auto;
+  `}
+
+  @media (max-width: 1350px) {
+    width: 90%;
   }
 `;
 
@@ -27,6 +34,7 @@ const Button = styled.button`
   min-width: 80px;
   border-radius: 9999px;
   cursor: pointer;
+  white-space: nowrap;
 
   display: flex;
   align-items: center;
@@ -54,18 +62,58 @@ const MALLogoImg = styled.img`
   height: 1.4rem;
 `;
 
-export const HomeHeader = ({ setLoginType }) => {
+const InfoMessage = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-top: 30px;
+
+  background: #1f1f1f;
+  border: 2px solid #2e51a2;
+  border-radius: 10px;
+  padding: 10px 20px;
+`;
+
+const Title = styled.div`
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+`;
+
+const Info = styled.div`
+  font-weight: 300;
+`;
+
+export const HomeHeader = ({ setLoginType, mobileWidth }) => {
+  const { windowWidth } = useWindowDimensions();
+
+  const isMobile = windowWidth < mobileWidth;
+
   return (
-    <Wrapper>
+    <Wrapper isMobile={isMobile}>
       <MALChord />
-      <Flex>
-        <Button onClick={() => setLoginType("user")}>
-          Login with <MALLogoImg src={MALLogo} />
-        </Button>
-        <Button onClick={() => setLoginType("guest")}>
-          <span>Try as a Guest</span>
-        </Button>
-      </Flex>
+      {isMobile ? (
+        <InfoMessage>
+          <Title>
+            Sorry, but your device does not meet the minimum screen width
+            required to use MAL Chord.
+          </Title>
+          <Info>
+            To access the site, try using a device with a larger screen width or
+            zooming out in your browser of choice.
+          </Info>
+        </InfoMessage>
+      ) : (
+        <Flex>
+          <Button onClick={() => setLoginType("user")}>
+            Login with <MALLogoImg src={MALLogo} />
+          </Button>
+          <Button onClick={() => setLoginType("guest")}>
+            <span>Try as a Guest</span>
+          </Button>
+        </Flex>
+      )}
     </Wrapper>
   );
 };
