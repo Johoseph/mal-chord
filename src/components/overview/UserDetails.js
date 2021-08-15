@@ -101,7 +101,7 @@ export const UserDetails = ({
         <Wrapper compressed={compressed}>
           <Flex>
             {data ? (
-              <Line fs={2} mb={5}>
+              <Line fs={2} mb={compressed ? 0 : 5}>
                 {!useMock ? (
                   <Link
                     href={`https://myanimelist.net/profile/${data.name}`}
