@@ -80,8 +80,14 @@ const ImgShimmer = styled.div`
   margin-left: 10px;
 `;
 
-export const UserDetails = ({ compressed = false, timeWatched = {} }) => {
-  const { data, status, refetch } = useQuery("user_details");
+export const UserDetails = ({
+  compressed = false,
+  timeWatched = {},
+  useMock,
+}) => {
+  const { data, status, refetch } = useQuery(
+    useMock ? "mock_details" : "user_details"
+  );
 
   return (
     <>
@@ -90,13 +96,17 @@ export const UserDetails = ({ compressed = false, timeWatched = {} }) => {
           <Flex>
             {data ? (
               <Line fs={2} mb={5}>
-                <Link
-                  href={`https://myanimelist.net/profile/${data.name}`}
-                  target="_blank"
-                >
-                  {data.name}
-                  <LinkIcon />
-                </Link>
+                {!useMock ? (
+                  <Link
+                    href={`https://myanimelist.net/profile/${data.name}`}
+                    target="_blank"
+                  >
+                    {data.name}
+                    <LinkIcon />
+                  </Link>
+                ) : (
+                  data.name
+                )}
               </Line>
             ) : (
               <Shimmer h={2.2} w={150} className="shimmer" />

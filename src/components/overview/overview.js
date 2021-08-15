@@ -1,11 +1,10 @@
 import { h } from "preact";
 import styled from "styled-components";
-
-import MALLogoText from "../../assets/branding/mal-text.svg";
-import MALChord from "../../assets/branding/mal-chord-small.svg";
 import { useEffect, useState } from "preact/hooks";
+
 import { UserDetails } from "./UserDetails";
 import { ScrollOverview } from "./ScrollOverview";
+import { MALChord } from "../general/MALChord";
 
 const Wrapper = styled.div`
   display: flex;
@@ -19,53 +18,11 @@ const Wrapper = styled.div`
   }
 `;
 
-const LeftWrapper = styled.div`
-  display: flex;
-`;
-
 const RightWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: space-between;
-`;
-
-const TextWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const Line = styled.span`
-  display: flex;
-  white-space: pre-wrap;
-  font-size: ${(props) => (props.fs ? props.fs : 1)}rem;
-  ${(props) =>
-    props.fw &&
-    `
-    font-weight: ${props.fw};
-  `}
-`;
-
-const LineTwo = styled.span`
-  display: flex;
-  align-content: center;
-`;
-
-const Logo = styled.div`
-  background-color: #2e51a2;
-  width: 12em;
-  height: 12em;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-right: 30px;
-  border-radius: 15px;
-`;
-
-const MALText = styled.img`
-  height: 5.5em;
 `;
 
 const getTimeWatched = (anime) => {
@@ -86,7 +43,7 @@ const getTimeWatched = (anime) => {
   return { days, hours, minutes, seconds };
 };
 
-export const Overview = ({ data, status }) => {
+export const Overview = ({ data, status, useMock = false }) => {
   const [timeWatched, setTimeWatched] = useState({});
 
   useEffect(() => {
@@ -99,23 +56,10 @@ export const Overview = ({ data, status }) => {
 
   return (
     <Wrapper>
-      <ScrollOverview />
-      <LeftWrapper>
-        <Logo className="hlp-1">
-          <img src={MALChord} style={{ width: "9rem" }} />
-        </Logo>
-        <TextWrap>
-          <Line fs={2}>graph your</Line>
-          <LineTwo>
-            <MALText src={MALLogoText} />
-          </LineTwo>
-          <Line fs={1.2} fw={300}>
-            A chord diagram introspection of your MyAnimeList library 📈
-          </Line>
-        </TextWrap>
-      </LeftWrapper>
+      <ScrollOverview useMock={useMock} />
+      <MALChord isLink={true} />
       <RightWrapper className="hlp-2">
-        <UserDetails timeWatched={timeWatched} />
+        <UserDetails timeWatched={timeWatched} useMock={useMock} />
       </RightWrapper>
     </Wrapper>
   );

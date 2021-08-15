@@ -58,7 +58,7 @@ const MALLogoImg = styled.img`
   margin-right: 15px;
 `;
 
-export const ScrollOverview = () => {
+export const ScrollOverview = ({ useMock }) => {
   let overviewRef = useRef();
 
   const [isVisible, setIsVisible] = useState(window.scrollY > 190);
@@ -97,7 +97,7 @@ export const ScrollOverview = () => {
               />
             </Logo>
           </Flex>
-          <UserDetails compressed={true} />
+          <UserDetails compressed={true} useMock={useMock} />
         </Overview>
       </Wrapper>
     );

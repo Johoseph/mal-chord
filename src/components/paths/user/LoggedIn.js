@@ -42,7 +42,9 @@ const HelpSvg = styled.svg`
 `;
 
 export const LoggedIn = ({ useMock }) => {
-  const { data, status, refetch } = useQuery("user_anime_list");
+  const { data, status, refetch } = useQuery(
+    useMock ? "mock_anime_list" : "user_anime_list"
+  );
 
   const pathToData = useMemo(() => data?.data, [data]);
   const hasNextPage = useMemo(() => data?.hasNextPage, [data]);
@@ -86,7 +88,7 @@ export const LoggedIn = ({ useMock }) => {
           )}
         </>
       )}
-      <Overview data={pathToData} status={status} />
+      <Overview data={pathToData} status={status} useMock={useMock} />
       <Graph
         data={pathToData}
         hasNextPage={hasNextPage}

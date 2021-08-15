@@ -234,10 +234,9 @@ export const useHelp = (triggerHelp) => {
 export const useTabVisible = () => {
   const [tabVisible, setTabVisible] = useState(true);
 
-  const visibilityListener = useCallback(
-    () => setTabVisible((prev) => !prev),
-    []
-  );
+  const visibilityListener = useCallback(() => {
+    setTabVisible(document.visibilityState === "visible");
+  }, []);
 
   // Restart loading when tab visibility changes
   useEffect(() => {
