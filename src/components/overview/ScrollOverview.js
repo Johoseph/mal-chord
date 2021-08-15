@@ -1,9 +1,16 @@
 import { h } from "preact";
-import { useEffect, useState, useCallback, useRef } from "preact/hooks";
+import {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useContext,
+} from "preact/hooks";
 import styled, { keyframes } from "styled-components";
 
 import MALChord from "../../assets/branding/mal-chord-small.svg";
 import MALLogo from "../../assets/branding/mal.svg";
+import { UserContext } from "../../contexts";
 import { UserDetails } from "./UserDetails";
 
 const slide = keyframes`
@@ -27,8 +34,9 @@ const Wrapper = styled.div`
   transition: top 200ms linear;
 `;
 
-const Flex = styled.div`
+const Button = styled.div`
   display: flex;
+  cursor: pointer;
 `;
 
 const Overview = styled.div`
@@ -61,6 +69,7 @@ const MALLogoImg = styled.img`
 export const ScrollOverview = ({ useMock }) => {
   let overviewRef = useRef();
 
+  const { setLoginType } = useContext(UserContext);
   const [isVisible, setIsVisible] = useState(window.scrollY > 190);
 
   const scrollListener = useCallback(() => {
@@ -87,7 +96,7 @@ export const ScrollOverview = ({ useMock }) => {
     return (
       <Wrapper ref={overviewRef}>
         <Overview>
-          <Flex>
+          <Button role="button" onClick={() => setLoginType("home")}>
             <MALLogoImg src={MALLogo} alt="MAL Logo" />
             <Logo>
               <img
@@ -96,7 +105,7 @@ export const ScrollOverview = ({ useMock }) => {
                 style={{ padding: "3px" }}
               />
             </Logo>
-          </Flex>
+          </Button>
           <UserDetails compressed={true} useMock={useMock} />
         </Overview>
       </Wrapper>
