@@ -14,8 +14,6 @@ const Wrapper = styled.div`
 const TextWrap = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding-right: 50px;
 `;
 
 const Line = styled.span`
@@ -58,6 +56,11 @@ const MALChordLogoImg = styled.img`
 
 const MALTextImg = styled.img`
   height: 5rem;
+  margin-top: 15px;
+
+  @media (max-width: 400px) {
+    height: 4rem;
+  }
 `;
 
 export const MALChordMobile = ({ isLink, logout }) => {
