@@ -12,6 +12,8 @@ import { Sankey } from "./Sankey";
 import { SankeyControls } from "./SankeyControls";
 import { getSankeyFormat } from "./sankeyFunctions";
 
+const DEFAULT_LIMIT = 25;
+
 const endCategories = [
   {
     value: "rating",
@@ -98,7 +100,7 @@ export const Graph = ({
     direction: "DESC",
   });
   const [endCategory, setEndCategory] = useState("score");
-  const [limit, setLimit] = useState(100);
+  const [limit, setLimit] = useState(DEFAULT_LIMIT);
 
   const { dataNodes, dataLinks, nodeCount, nodeDifference } = getSankeyFormat(
     data || [],
@@ -119,7 +121,7 @@ export const Graph = ({
   );
 
   useEffect(() => {
-    if (data) setLimit(Math.min(data.length, 100));
+    if (data) setLimit(Math.min(data.length, DEFAULT_LIMIT));
   }, [data]);
 
   useEffect(() => {
