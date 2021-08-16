@@ -46,6 +46,26 @@ export const SankeyStateTraversal = () => {
   const canUndo = !(currentIndex === 0);
   const canRedo = !(currentIndex + 1 > sankeyHistory.length);
 
+  const handleUndo = useCallback(
+    (curIndex) => {
+      const currentHistory = sankeyHistory[curIndex - 1];
+
+      currentHistory.forEach((item) => item.fn(item.undo));
+      setCurrentIndex((prev) => prev - 1);
+    },
+    [sankeyHistory, setCurrentIndex]
+  );
+
+  const handleRedo = useCallback(
+    (curIndex) => {
+      const currentHistory = sankeyHistory[curIndex];
+
+      currentHistory.forEach((item) => item.fn(item.redo));
+      setCurrentIndex((prev) => prev + 1);
+    },
+    [sankeyHistory, setCurrentIndex]
+  );
+
   const keyListener = useCallback(
     (e) => {
       if (e.ctrlKey) {
@@ -67,26 +87,6 @@ export const SankeyStateTraversal = () => {
     window.addEventListener("keydown", keyListener);
     return () => window.removeEventListener("keydown", keyListener);
   }, [keyListener]);
-
-  const handleUndo = useCallback(
-    (curIndex) => {
-      const currentHistory = sankeyHistory[curIndex - 1];
-
-      currentHistory.forEach((item) => item.fn(item.undo));
-      setCurrentIndex((prev) => prev - 1);
-    },
-    [sankeyHistory, setCurrentIndex]
-  );
-
-  const handleRedo = useCallback(
-    (curIndex) => {
-      const currentHistory = sankeyHistory[curIndex];
-
-      currentHistory.forEach((item) => item.fn(item.redo));
-      setCurrentIndex((prev) => prev + 1);
-    },
-    [sankeyHistory, setCurrentIndex]
-  );
 
   return (
     <Wrapper>
