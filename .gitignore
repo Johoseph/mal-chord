@@ -1,5 +1,8 @@
 node_modules
 /build
 /*.log
+size-plugin.json
 
 .env
+.env.development
+.env.production
