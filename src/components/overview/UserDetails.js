@@ -76,7 +76,10 @@ ${(props) =>
 const AnimeSvg = styled.img`
   border-radius: 5px;
   width: ${(props) => (props.compressed ? 3 : 4)}rem;
+  height: ${(props) => (props.compressed ? 3 : 4)}rem;
   margin-left: 15px;
+  object-fit: cover;
+  object-position: top;
 `;
 
 const ImgShimmer = styled.div`
