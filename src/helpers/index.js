@@ -19,6 +19,8 @@ export const loginUser = async (setLoggedIn) => {
   const params = new URLSearchParams(window.location.search);
   const code = params.get("code");
 
+  const baseURL = localStorage.getItem("BASE_URL");
+
   if (code) localStorage.setItem("AUTHORISATION_TOKEN", code);
 
   const authorisationCode = localStorage.getItem("AUTHORISATION_TOKEN");
@@ -30,7 +32,7 @@ export const loginUser = async (setLoggedIn) => {
     window.location.href = `https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id=${
       process.env.PREACT_APP_CLIENT_ID
     }&code_challenge=${newCodeVerifier}&redirect_uri=${encodeURIComponent(
-      process.env.PREACT_APP_BASE_URL
+      baseURL
     )}`;
   } else {
     try {
@@ -41,7 +43,7 @@ export const loginUser = async (setLoggedIn) => {
         {
           code: authorisationCode,
           codeVerifier,
-          redirectUri: process.env.PREACT_APP_BASE_URL,
+          redirectUri: baseURL,
         }
       );
 
@@ -64,7 +66,7 @@ export const refreshTokens = async (setLoggedIn) => {
       `${process.env.PREACT_APP_API_URL}/refresh_token`,
       {
         refreshToken,
-        redirectUri: process.env.PREACT_APP_BASE_URL,
+        redirectUri: localStorage.getItem("BASE_URL"),
       }
     );
 

@@ -12,11 +12,7 @@ import { loginUser, refreshTokens } from "../helpers";
 import dayjs from "dayjs";
 
 export const useLoginType = () => {
-  const params = new URLSearchParams(window.location.search);
-  const isRedirect = params.get("code") || params.get("error");
-
   const [loginType, _setLoginType] = useState(() => {
-    if (isRedirect) return "user";
     if (sessionStorage.getItem("LOGIN_TYPE"))
       return sessionStorage.getItem("LOGIN_TYPE");
     if (localStorage.getItem("USER_TOKEN")) return "user";
@@ -62,7 +58,7 @@ export const useUser = () => {
 
       if (error) {
         setLoginError(true);
-        window.history.replaceState(null, "", process.env.PREACT_APP_BASE_URL);
+        window.history.replaceState(null, "", localStorage.getItem("BASE_URL"));
       } else {
         loginUser(setLoggedIn);
       }

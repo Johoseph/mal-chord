@@ -35,5 +35,4 @@ Environment configuration can be specified by adding a `.env` file to the root o
 | Key | Value | Purpose |
 | --- | --- | --- |
 |`PREACT_APP_CLIENT_ID` | Your MAL API Client ID | Used to authenticate with MyAnimeList |
-|`PREACT_APP_BASE_URL` |`http://localhost:8080`| Client URL used for redirecting users as required |
 |`PREACT_APP_API_URL`|`http://localhost:3030`| Middleware URL that requests will be sent to|

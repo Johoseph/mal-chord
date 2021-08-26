@@ -37,7 +37,7 @@ export const LoggingIn = ({ loginError }) => {
     <GraphError
       refetch={() => {
         setLoginType();
-        window.location.href = process.env.PREACT_APP_BASE_URL;
+        window.location.href = localStorage.getItem("BASE_URL");
       }}
     />
   ) : (

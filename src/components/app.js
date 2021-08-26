@@ -13,6 +13,10 @@ const App = () => {
   const { windowWidth } = useWindowDimensions();
   const { loginType, setLoginType } = useLoginType();
 
+  if (!localStorage.getItem("BASE_URL")) {
+    localStorage.setItem("BASE_URL", window.location.origin);
+  }
+
   const userContext = useMemo(
     () => ({ setLoginType, mobileWidth }),
     [setLoginType]
