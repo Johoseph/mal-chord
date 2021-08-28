@@ -103,20 +103,33 @@ export const HeaderControls = ({
 
   const handleSetStartCategory = useCallback(
     (val) => {
-      setStartCategory((prev) => {
-        if (val !== prev)
-          writeToHistory([
-            {
-              fn: setStartCategory,
-              undo: prev,
-              redo: val,
-            },
-          ]);
+      if (startCategory !== val) {
+        let toWrite = [];
 
-        return val;
-      });
+        setEndCategory((prev) => {
+          toWrite.push({
+            fn: setEndCategory,
+            undo: prev,
+            redo: "score",
+          });
+
+          return "score";
+        });
+
+        setStartCategory((prev) => {
+          toWrite.push({
+            fn: setStartCategory,
+            undo: prev,
+            redo: val,
+          });
+
+          return val;
+        });
+
+        writeToHistory(toWrite);
+      }
     },
-    [setStartCategory, writeToHistory]
+    [startCategory, setEndCategory, setStartCategory, writeToHistory]
   );
 
   const handleSetEndCategory = useCallback(

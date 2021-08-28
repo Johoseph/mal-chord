@@ -86,11 +86,6 @@ export const Graph = ({
     );
   }, [nodeCount, nodePadding, nodeSide]);
 
-  // Reset end category
-  useEffect(() => {
-    setEndCategory("score");
-  }, [startCategory]);
-
   return (
     <div ref={ref}>
       {status === "success" && (
