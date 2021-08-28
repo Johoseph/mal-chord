@@ -55,7 +55,7 @@ const FetchMore = styled.button`
   }
 `;
 
-export const MoreData = ({ fetchMore }) => {
+export const MoreData = ({ startCategory, fetchMore }) => {
   const [shouldShow, setShouldShow] = useState(false);
 
   useEffect(() => {
@@ -68,8 +68,10 @@ export const MoreData = ({ fetchMore }) => {
       <Wrapper>
         <Title>Slow down Space Cowboy! 🤠</Title>
         <Info>
-          You have watched more Anime than currently shown in the chart. Would
-          you like to <FetchMore onClick={fetchMore}>fetch more?</FetchMore>
+          You have{" "}
+          {startCategory === "manga" ? "read more Manga" : "watched more Anime"}{" "}
+          than currently shown in the chart. Would you like to{" "}
+          <FetchMore onClick={fetchMore}>fetch more?</FetchMore>
         </Info>
       </Wrapper>
     );

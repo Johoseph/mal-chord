@@ -1,6 +1,6 @@
 import { h } from "preact";
 import styled from "styled-components";
-import { useState, useEffect, useMemo } from "preact/hooks";
+import { useState, useEffect } from "preact/hooks";
 import { decode } from "he";
 
 import { titleCase, radixFormat } from "../../helpers";
@@ -91,11 +91,6 @@ export const MangaCompletion = ({ data, status }) => {
     }
   }, [data, status]);
 
-  const loading = useMemo(
-    () => Object.values(completion).filter((e) => e).length === 0,
-    [completion]
-  );
-
   return (
     <Wrapper>
       <Line>Manga Completion 📚</Line>
@@ -105,7 +100,7 @@ export const MangaCompletion = ({ data, status }) => {
           .map((unit, i) => (
             <TimeWrapper key={i}>
               <Unit>{titleCase(unit)}</Unit>
-              {loading ? (
+              {status === "loading" ? (
                 <Shimmer className="shimmer" />
               ) : (
                 <Value>{radixFormat(completion[unit])}</Value>
@@ -127,11 +122,6 @@ export const TimeWatched = ({ data, status }) => {
       setTime({ days: "😫", hours: "😭", minutes: "😴", seconds: "😖" });
     }
   }, [data, status]);
-
-  const loading = useMemo(
-    () => Object.values(time).filter((e) => e).length === 0,
-    [time]
-  );
 
   const [clock, setClock] = useState("&#128347;");
 
@@ -160,7 +150,7 @@ export const TimeWatched = ({ data, status }) => {
           .map((unit, i) => (
             <TimeWrapper key={i}>
               <Unit>{titleCase(unit)}</Unit>
-              {loading ? (
+              {status === "loading" ? (
                 <Shimmer className="shimmer" />
               ) : (
                 <Value>{time[unit]}</Value>

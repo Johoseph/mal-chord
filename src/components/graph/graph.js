@@ -5,6 +5,7 @@ import { HistoryContext } from "../../contexts";
 import { mathClamp } from "../../helpers";
 import { useSankeyHistory } from "../../hooks";
 import { GraphError } from "../error/GraphError";
+import { NoData } from "../error/NoData";
 import { GraphLoading } from "./loading/GraphLoading";
 import { MoreData } from "./MoreData";
 
@@ -91,7 +92,10 @@ export const Graph = ({
       {status === "success" && (
         <HistoryContext.Provider value={historyContext}>
           {hasNextPage && !helpActive && (
-            <MoreData fetchMore={() => refetch({ getNextPage: true })} />
+            <MoreData
+              startCategory={startCategory}
+              fetchMore={() => refetch({ getNextPage: true })}
+            />
           )}
           <SankeyControls
             startCategory={startCategory}
@@ -106,20 +110,24 @@ export const Graph = ({
             limit={limit}
             setLimit={setLimit}
           />
-          <Sankey
-            endCategory={endCategory}
-            dataNodes={dataNodes}
-            dataLinks={dataLinks}
-            dimensions={{ width, height }}
-            nodeSide={nodeSide}
-            nodePadding={nodePadding}
-            endNodeModifier={
-              // Catering for nodePadding
-              (nodeDifference * nodePadding) / dataLinks.length -
-              // Catering for more links than nodes
-              ((dataLinks.length - nodeCount) * nodeSide) / dataLinks.length
-            }
-          />
+          {data.length > 0 ? (
+            <Sankey
+              endCategory={endCategory}
+              dataNodes={dataNodes}
+              dataLinks={dataLinks}
+              dimensions={{ width, height }}
+              nodeSide={nodeSide}
+              nodePadding={nodePadding}
+              endNodeModifier={
+                // Catering for nodePadding
+                (nodeDifference * nodePadding) / dataLinks.length -
+                // Catering for more links than nodes
+                ((dataLinks.length - nodeCount) * nodeSide) / dataLinks.length
+              }
+            />
+          ) : (
+            <NoData startCategory={startCategory} />
+          )}
         </HistoryContext.Provider>
       )}
       {status === "loading" && <GraphLoading />}

@@ -25,16 +25,18 @@ const RightWrapper = styled.div`
 `;
 
 export const Overview = ({ data, status, useMock = false, startCategory }) => {
+  const noData = status === "success" && data.length === 0;
+
   return (
     <Wrapper>
       <ScrollOverview useMock={useMock} />
       <MALChord isLink={true} />
       <RightWrapper className="hlp-2">
         <UserDetails useMock={useMock} />
-        {startCategory === "anime" && (
+        {!noData && startCategory === "anime" && (
           <TimeWatched data={data} status={status} />
         )}
-        {startCategory === "manga" && (
+        {!noData && startCategory === "manga" && (
           <MangaCompletion data={data} status={status} />
         )}
       </RightWrapper>
