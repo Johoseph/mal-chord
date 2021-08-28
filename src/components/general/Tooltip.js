@@ -59,8 +59,8 @@ export const Tooltip = ({
       y={y}
       pd={pd}
       transform={{
-        x: forceTranslate.x || x > window.screen.availWidth / 2,
-        y: forceTranslate.y || y > window.screen.availHeight / 2,
+        x: forceTranslate.x || x > document.documentElement.clientWidth / 2,
+        y: forceTranslate.y || y > document.documentElement.clientHeight / 2,
       }}
       ref={tooltipRef}
     >
