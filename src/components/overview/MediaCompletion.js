@@ -44,19 +44,22 @@ const Shimmer = styled.div`
 `;
 
 const getMangaCompletion = (manga) => {
-  let mangaConsumption = {};
+  let volumesRead, chaptersRead;
 
   if (manga) {
-    mangaConsumption = manga.reduce(
+    const mangaConsumption = manga.reduce(
       (total, _manga) => ({
-        "Volumes Read": total["Volumes Read"] + _manga.volumesRead,
-        "Chapters Read": total["Chapters Read"] + _manga.chaptersRead,
+        volumesRead: total.volumesRead + _manga.volumesRead,
+        chaptersRead: total.chaptersRead + _manga.chaptersRead,
       }),
-      { "Volumes Read": 0, "Chapters Read": 0 }
+      { volumesRead: 0, chaptersRead: 0 }
     );
+
+    volumesRead = mangaConsumption.volumesRead;
+    chaptersRead = mangaConsumption.chaptersRead;
   }
 
-  return mangaConsumption;
+  return { "Volumes Read": volumesRead, "Chapters Read": chaptersRead };
 };
 
 const getTimeWatched = (anime) => {
