@@ -135,7 +135,7 @@ export const SortControls = ({
 
   return (
     <Sort>
-      <Flex className="hlp-6 right-25">
+      <Flex className="hlp-7 right-25">
         <SortButtonWrapper>
           <SortButton
             onClick={handleStartSortDirection}
@@ -155,7 +155,7 @@ export const SortControls = ({
           minWidth={120}
         />
       </Flex>
-      <Flex className="hlp-6">
+      <Flex className="hlp-7">
         <SortButtonWrapper>
           <SortButton
             onClick={handleEndSortDirection}

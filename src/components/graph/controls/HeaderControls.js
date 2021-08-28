@@ -148,7 +148,7 @@ export const HeaderControls = ({
             minWidth={150}
             alignment="left"
             optionFontSize={1}
-            // className="hlp-5 left-50"
+            className="hlp-3 right-60"
           />
           <AnimeCountFilter count={count} limit={limit} setLimit={setLimit} />
           <Chord />
@@ -167,7 +167,7 @@ export const HeaderControls = ({
             minWidth={150}
             alignment="right"
             optionFontSize={1}
-            className="hlp-5 left-50"
+            className="hlp-6 left-50"
           />
         </BoundWrap>
       </Bound>

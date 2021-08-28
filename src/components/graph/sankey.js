@@ -276,12 +276,12 @@ export const Sankey = ({
     // Help Classes
     svg
       .select("#start-nodes .listener-ignore")
-      .attr("id", "hlp-7")
-      .classed("hlp-7 top-10 forceY", true);
+      .attr("id", "hlp-8")
+      .classed("hlp-8 top-10 forceY", true);
     svg
       .select("#end-nodes .listener-ignore")
-      .attr("id", "hlp-8")
-      .classed("hlp-8 top-10 forceY left-10", true);
+      .attr("id", "hlp-9")
+      .classed("hlp-9 top-10 forceY left-10", true);
   }, [
     width,
     height,
