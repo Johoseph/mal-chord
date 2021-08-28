@@ -6,6 +6,29 @@ import { HiArrowNarrowDown, HiArrowNarrowUp } from "react-icons/hi";
 import { Dropdown } from "../../general/Dropdown";
 import { HistoryContext } from "../../../contexts";
 
+const sortOptions = [
+  {
+    value: "alphabetical",
+    label: "alphabetical",
+  },
+  {
+    value: "date",
+    label: "last updated",
+  },
+  {
+    value: "popularity",
+    label: "popularity",
+  },
+  {
+    value: "ranking",
+    label: "ranking",
+  },
+  {
+    value: "score",
+    label: "your score",
+  },
+];
+
 const Flex = styled.div`
   display: flex;
   align-items: center;
@@ -49,7 +72,6 @@ export const SortControls = ({
   setStartSort,
   endSort,
   setEndSort,
-  sortOptions,
 }) => {
   const { writeToHistory } = useContext(HistoryContext);
 

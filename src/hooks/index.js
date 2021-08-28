@@ -77,14 +77,15 @@ export const useQuery = (route) => {
   const [page, setPage] = useState(1);
 
   const refetch = ({ getNextPage }) => {
-    setData(undefined);
-    setStatus("loading");
-    setError(undefined);
     setShouldRefetch(!shouldRefetch);
     if (getNextPage) setPage((prev) => prev + 1);
   };
 
   useEffect(() => {
+    setData(undefined);
+    setStatus("loading");
+    setError(undefined);
+
     axios
       .post(`${process.env.PREACT_APP_API_URL}/${route}`, {
         userToken,

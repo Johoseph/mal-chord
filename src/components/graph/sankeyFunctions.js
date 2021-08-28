@@ -54,6 +54,9 @@ export const getSankeyFormat = (
         case "studio":
           linker = anime.studios;
           break;
+        case "author":
+          linker = anime.authors;
+          break;
       }
 
       return {
@@ -81,6 +84,9 @@ export const getSankeyFormat = (
         }
         case "studio": {
           return anime.studios.map((studio) => ({ name: studio }));
+        }
+        case "author": {
+          return anime.authors.map((author) => ({ name: author }));
         }
       }
     })

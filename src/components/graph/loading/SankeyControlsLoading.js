@@ -3,7 +3,11 @@ import styled from "styled-components";
 
 const Wrapper = styled.div`
   width: 80%;
-  margin: 0 auto 20px auto;
+  margin: 0 auto 30px auto;
+
+  @media (max-width: 1350px) {
+    width: 90%;
+  }
 `;
 
 const Row = styled.div`

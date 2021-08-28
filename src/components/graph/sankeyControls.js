@@ -14,14 +14,14 @@ const Wrapper = styled.div`
 `;
 
 export const SankeyControls = ({
+  startCategory,
+  setStartCategory,
   setStartSort,
   setEndSort,
   setEndCategory,
   startSort,
   endSort,
   endCategory,
-  categoryOptions,
-  sortOptions,
   count,
   limit,
   setLimit,
@@ -29,9 +29,10 @@ export const SankeyControls = ({
   return (
     <Wrapper>
       <HeaderControls
+        startCategory={startCategory}
+        setStartCategory={setStartCategory}
         endCategory={endCategory}
         setEndCategory={setEndCategory}
-        categoryOptions={categoryOptions}
         count={count}
         limit={limit}
         setLimit={setLimit}
@@ -41,7 +42,6 @@ export const SankeyControls = ({
         setStartSort={setStartSort}
         endSort={endSort}
         setEndSort={setEndSort}
-        sortOptions={sortOptions}
       />
     </Wrapper>
   );

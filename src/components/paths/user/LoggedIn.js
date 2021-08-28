@@ -1,7 +1,7 @@
 import { h } from "preact";
 import styled, { keyframes } from "styled-components";
 
-import { useMemo } from "preact/hooks";
+import { useMemo, useState } from "preact/hooks";
 import { useHelp, useQuery } from "../../../hooks";
 import { Tooltip } from "../../general/Tooltip";
 import { Graph } from "../../graph/Graph";
@@ -42,8 +42,10 @@ const HelpSvg = styled.svg`
 `;
 
 export const LoggedIn = ({ useMock }) => {
+  const [startCategory, setStartCategory] = useState("anime");
+
   const { data, status, refetch } = useQuery(
-    useMock ? "mock_anime_list" : "user_anime_list"
+    `${useMock ? "mock" : "user"}_${startCategory}_list`
   );
 
   const pathToData = useMemo(() => data?.data, [data]);
@@ -88,7 +90,12 @@ export const LoggedIn = ({ useMock }) => {
           )}
         </>
       )}
-      <Overview data={pathToData} status={status} useMock={useMock} />
+      <Overview
+        data={pathToData}
+        status={status}
+        useMock={useMock}
+        startCategory={startCategory}
+      />
       <Graph
         data={pathToData}
         hasNextPage={hasNextPage}
@@ -96,6 +103,8 @@ export const LoggedIn = ({ useMock }) => {
         refetch={refetch}
         helpActive={readyToRun}
         setHelpRequired={setHelpRequired}
+        startCategory={startCategory}
+        setStartCategory={setStartCategory}
       />
     </main>
   );

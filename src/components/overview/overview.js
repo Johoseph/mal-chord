@@ -1,10 +1,10 @@
 import { h } from "preact";
 import styled from "styled-components";
-import { useEffect, useState } from "preact/hooks";
 
 import { UserDetails } from "./UserDetails";
 import { ScrollOverview } from "./ScrollOverview";
 import { MALChord } from "../general/MALChord";
+import { TimeWatched, MangaCompletion } from "./MediaCompletion";
 
 const Wrapper = styled.div`
   display: flex;
@@ -24,41 +24,19 @@ const RightWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const getTimeWatched = (anime) => {
-  let days, hours, minutes, seconds;
-
-  if (anime) {
-    const secondsWatched = anime.reduce(
-      (total, anime) => total + anime.secondsWatched,
-      0
-    );
-
-    days = Math.floor(secondsWatched / (60 * 60 * 24));
-    hours = Math.floor((secondsWatched % (60 * 60 * 24)) / (60 * 60));
-    minutes = Math.floor((secondsWatched % (60 * 60)) / 60);
-    seconds = Math.floor(secondsWatched % 60);
-  }
-
-  return { days, hours, minutes, seconds };
-};
-
-export const Overview = ({ data, status, useMock = false }) => {
-  const [timeWatched, setTimeWatched] = useState({});
-
-  useEffect(() => {
-    if (status !== "error") {
-      setTimeWatched(getTimeWatched(data));
-    } else {
-      setTimeWatched({ days: "😫", hours: "😭", minutes: "😴", seconds: "😖" });
-    }
-  }, [data, status]);
-
+export const Overview = ({ data, status, useMock = false, startCategory }) => {
   return (
     <Wrapper>
       <ScrollOverview useMock={useMock} />
       <MALChord isLink={true} />
       <RightWrapper className="hlp-2">
-        <UserDetails timeWatched={timeWatched} useMock={useMock} />
+        <UserDetails useMock={useMock} />
+        {startCategory === "anime" && (
+          <TimeWatched data={data} status={status} />
+        )}
+        {startCategory === "manga" && (
+          <MangaCompletion data={data} status={status} />
+        )}
       </RightWrapper>
     </Wrapper>
   );

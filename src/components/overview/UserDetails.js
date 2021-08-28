@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useQuery } from "../../hooks";
 import dayjs from "dayjs";
 
-import { TimeWatched } from "./TimeWatched";
 import { UserDetailsError } from "../error/UserDetailsError";
 import { HiOutlineExternalLink } from "react-icons/hi";
 import SailorMoon from "../../assets/ornamental/sailor-moon.svg";
@@ -89,11 +88,7 @@ const ImgShimmer = styled.div`
   margin-left: 10px;
 `;
 
-export const UserDetails = ({
-  compressed = false,
-  timeWatched = {},
-  useMock,
-}) => {
+export const UserDetails = ({ compressed = false, useMock }) => {
   const { data, status, refetch } = useQuery(
     useMock ? "mock_details" : "user_details"
   );
@@ -146,7 +141,6 @@ export const UserDetails = ({
       ) : (
         <UserDetailsError refetch={refetch} />
       )}
-      {!compressed && <TimeWatched time={timeWatched} />}
     </>
   );
 };

@@ -14,52 +14,6 @@ import { getSankeyFormat } from "./sankeyFunctions";
 
 const DEFAULT_LIMIT = 25;
 
-const endCategories = [
-  {
-    value: "rating",
-    label: "anime rating",
-  },
-  {
-    value: "genre",
-    label: "genre",
-  },
-  {
-    value: "studio",
-    label: "studio",
-  },
-  {
-    value: "status",
-    label: "your list status",
-  },
-  {
-    value: "score",
-    label: "your score",
-  },
-];
-
-const sortOptions = [
-  {
-    value: "alphabetical",
-    label: "alphabetical",
-  },
-  {
-    value: "date",
-    label: "last updated",
-  },
-  {
-    value: "popularity",
-    label: "popularity",
-  },
-  {
-    value: "ranking",
-    label: "ranking",
-  },
-  {
-    value: "score",
-    label: "your score",
-  },
-];
-
 export const Graph = ({
   data,
   status,
@@ -67,6 +21,8 @@ export const Graph = ({
   hasNextPage,
   helpActive,
   setHelpRequired,
+  startCategory,
+  setStartCategory,
 }) => {
   const { currentIndex, setCurrentIndex, sankeyHistory, writeToHistory } =
     useSankeyHistory();
@@ -130,6 +86,11 @@ export const Graph = ({
     );
   }, [nodeCount, nodePadding, nodeSide]);
 
+  // Reset end category
+  useEffect(() => {
+    setEndCategory("score");
+  }, [startCategory]);
+
   return (
     <div ref={ref}>
       {status === "success" && (
@@ -138,14 +99,14 @@ export const Graph = ({
             <MoreData fetchMore={() => refetch({ getNextPage: true })} />
           )}
           <SankeyControls
+            startCategory={startCategory}
+            setStartCategory={setStartCategory}
             setStartSort={setStartSort}
             setEndSort={setEndSort}
             setEndCategory={setEndCategory}
             startSort={startSort}
             endSort={endSort}
             endCategory={endCategory}
-            categoryOptions={endCategories}
-            sortOptions={sortOptions}
             count={data.length}
             limit={limit}
             setLimit={setLimit}

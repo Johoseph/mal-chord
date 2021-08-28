@@ -7,6 +7,56 @@ import { AnimeCountFilter } from "./../AnimeCountFilter";
 import { SankeyStateTraversal } from "./../SankeyStateTraversal";
 import { HistoryContext } from "../../../contexts";
 
+const startCategoryOptions = [
+  {
+    value: "anime",
+    label: "anime",
+  },
+  {
+    value: "manga",
+    label: "manga",
+  },
+];
+
+const endCategoryOptions = [
+  {
+    value: "author",
+    label: "author",
+    anime: false,
+    manga: true,
+  },
+  {
+    value: "rating",
+    label: "anime rating",
+    anime: true,
+    manga: false,
+  },
+  {
+    value: "genre",
+    label: "genre",
+    anime: true,
+    manga: true,
+  },
+  {
+    value: "studio",
+    label: "studio",
+    anime: true,
+    manga: false,
+  },
+  {
+    value: "status",
+    label: "your list status",
+    anime: true,
+    manga: true,
+  },
+  {
+    value: "score",
+    label: "your score",
+    anime: true,
+    manga: true,
+  },
+];
+
 const Header = styled.div`
   display: flex;
   justify-content: center;
@@ -41,9 +91,10 @@ const BoundWrap = styled.span`
 `;
 
 export const HeaderControls = ({
+  startCategory,
+  setStartCategory,
   endCategory,
   setEndCategory,
-  categoryOptions,
   count,
   limit,
   setLimit,
@@ -72,7 +123,15 @@ export const HeaderControls = ({
     <Header>
       <Bound>
         <BoundWrap bound="start">
-          <span>anime</span>
+          <Dropdown
+            value={startCategory}
+            setValue={setStartCategory}
+            options={startCategoryOptions}
+            minWidth={150}
+            alignment="left"
+            optionFontSize={1}
+            // className="hlp-5 left-50"
+          />
           <AnimeCountFilter count={count} limit={limit} setLimit={setLimit} />
           <Chord />
         </BoundWrap>
@@ -84,7 +143,9 @@ export const HeaderControls = ({
           <Dropdown
             value={endCategory}
             setValue={handleEndSortCategory}
-            options={categoryOptions}
+            options={endCategoryOptions.filter(
+              (option) => option[startCategory]
+            )}
             minWidth={150}
             alignment="right"
             optionFontSize={1}
