@@ -101,7 +101,25 @@ export const HeaderControls = ({
 }) => {
   const { writeToHistory } = useContext(HistoryContext);
 
-  const handleEndSortCategory = useCallback(
+  const handleSetStartCategory = useCallback(
+    (val) => {
+      setStartCategory((prev) => {
+        if (val !== prev)
+          writeToHistory([
+            {
+              fn: setStartCategory,
+              undo: prev,
+              redo: val,
+            },
+          ]);
+
+        return val;
+      });
+    },
+    [setStartCategory, writeToHistory]
+  );
+
+  const handleSetEndCategory = useCallback(
     (val) => {
       setEndCategory((prev) => {
         if (val !== prev)
@@ -125,7 +143,7 @@ export const HeaderControls = ({
         <BoundWrap bound="start">
           <Dropdown
             value={startCategory}
-            setValue={setStartCategory}
+            setValue={handleSetStartCategory}
             options={startCategoryOptions}
             minWidth={150}
             alignment="left"
@@ -142,7 +160,7 @@ export const HeaderControls = ({
           <Chord />
           <Dropdown
             value={endCategory}
-            setValue={handleEndSortCategory}
+            setValue={handleSetEndCategory}
             options={endCategoryOptions.filter(
               (option) => option[startCategory]
             )}
