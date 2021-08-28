@@ -8,10 +8,6 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
 
-  & span {
-    margin-bottom: 20px;
-  }
-
   @media (max-width: 1350px) {
     width: 90%;
   }
@@ -32,14 +28,15 @@ const Link = styled.a`
 
   & svg {
     margin-left: 7px;
+    font-size: 1rem;
   }
 `;
 
 export const NoData = ({ startCategory }) => {
   return (
     <Wrapper>
-      <span style={{ fontSize: "5rem" }}>😱</span>
-      <span style={{ fontSize: "2rem" }}>
+      <span style={{ fontSize: "5rem", marginBottom: "30px" }}>😱</span>
+      <span style={{ fontSize: "2rem", marginBottom: "5px" }}>
         It looks like you haven't{" "}
         {startCategory === "manga" ? "read any manga" : "watched any anime"}{" "}
         yet.
