@@ -80,7 +80,7 @@ export const refreshTokens = async (setLoggedIn) => {
 export const titleCase = (val) => `${val[0].toUpperCase()}${val.substr(1)}`;
 
 export const radixFormat = (number) =>
-  Array.from(number.toString())
+  Array.from((number ?? 0).toString())
     .reverse()
     .map((num, i) => ((i + 1) % 3 === 0 ? `,${num}` : num))
     .reverse()

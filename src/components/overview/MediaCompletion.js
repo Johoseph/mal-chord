@@ -95,18 +95,16 @@ export const MangaCompletion = ({ data, status }) => {
     <Wrapper>
       <Line>Manga Completion 📚</Line>
       <div style={{ display: "flex" }}>
-        {Object.keys(completion)
-          .filter((unit) => completion[unit] !== 0)
-          .map((unit, i) => (
-            <TimeWrapper key={i}>
-              <Unit>{titleCase(unit)}</Unit>
-              {status === "loading" ? (
-                <Shimmer className="shimmer" />
-              ) : (
-                <Value>{radixFormat(completion[unit])}</Value>
-              )}
-            </TimeWrapper>
-          ))}
+        {Object.keys(completion).map((unit, i) => (
+          <TimeWrapper key={i}>
+            <Unit>{titleCase(unit)}</Unit>
+            {status === "loading" ? (
+              <Shimmer className="shimmer" />
+            ) : (
+              <Value>{radixFormat(completion[unit])}</Value>
+            )}
+          </TimeWrapper>
+        ))}
       </div>
     </Wrapper>
   );
