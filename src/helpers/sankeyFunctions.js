@@ -1,5 +1,5 @@
 import { interpolateNumber, scaleOrdinal, schemeCategory10 } from "d3";
-import { mathClamp } from "../../helpers";
+import { mathClamp } from "helpers";
 
 export const getSankeyFormat = (
   data,

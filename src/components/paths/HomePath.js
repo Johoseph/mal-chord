@@ -2,10 +2,9 @@ import { h } from "preact";
 import styled from "styled-components";
 import { useContext } from "preact/hooks";
 
-import { HomeHeader } from "./home/HomeHeader";
-import { SankeyLoading } from "../graph/loading/SankeyLoading";
-import { UserContext } from "../../contexts";
-import { useTabVisible } from "../../hooks";
+import { HomeHeader, SankeyLoading } from "components";
+import { UserContext } from "contexts";
+import { useTabVisible } from "hooks";
 
 const Wrapper = styled.div`
   display: flex;

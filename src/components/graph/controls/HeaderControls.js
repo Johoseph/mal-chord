@@ -2,10 +2,8 @@ import { h } from "preact";
 import styled from "styled-components";
 import { useCallback, useContext } from "preact/hooks";
 
-import { Dropdown } from "../../general/Dropdown";
-import { AnimeCountFilter } from "./../AnimeCountFilter";
-import { SankeyStateTraversal } from "./../SankeyStateTraversal";
-import { HistoryContext } from "../../../contexts";
+import { Dropdown, AnimeCountFilter, SankeyStateTraversal } from "components";
+import { HistoryContext } from "contexts";
 
 const startCategoryOptions = [
   {

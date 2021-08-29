@@ -1,13 +1,13 @@
 import { h } from "preact";
 import styled from "styled-components";
-
-import MALLogoText from "../../assets/branding/mal-text.svg";
-import MALChordLogo from "../../assets/branding/mal-chord-small.svg";
-import MALAcronym from "../../assets/branding/mal.svg";
 import { useContext, useEffect, useState } from "preact/hooks";
-import { UserContext } from "../../contexts";
-import { useWindowDimensions } from "../../hooks";
-import { MALChordMobile } from "./MALChordMobile";
+
+import MALLogoText from "assets/branding/mal-text.svg";
+import MALChordLogo from "assets/branding/mal-chord-small.svg";
+import MALAcronym from "assets/branding/mal.svg";
+import { UserContext } from "contexts";
+import { useWindowDimensions } from "hooks";
+import { MALChordMobile } from "components";
 
 const ACRONYM_WIDTH = 1200;
 

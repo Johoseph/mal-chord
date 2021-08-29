@@ -9,10 +9,8 @@ import {
   useState,
 } from "preact/hooks";
 
-import { Tooltip } from "../general/Tooltip";
-import { customLinkHorizontal, getNodeColour } from "./sankeyFunctions";
-import { NodeCard } from "./cards/NodeCard";
-import { ContextMenu } from "./cards/ContextMenu";
+import { Tooltip, NodeCard, ContextMenu } from "components";
+import { customLinkHorizontal, getNodeColour } from "helpers";
 
 export const Sankey = ({
   startCategory,

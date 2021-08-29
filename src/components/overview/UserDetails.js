@@ -3,9 +3,9 @@ import styled from "styled-components";
 import { useQuery } from "../../hooks";
 import dayjs from "dayjs";
 
-import { UserDetailsError } from "../error/UserDetailsError";
 import { HiOutlineExternalLink } from "react-icons/hi";
-import SailorMoon from "../../assets/ornamental/sailor-moon.svg";
+import SailorMoon from "assets/ornamental/sailor-moon.svg";
+import { UserDetailsError } from "components";
 
 const Wrapper = styled.div`
   display: flex;

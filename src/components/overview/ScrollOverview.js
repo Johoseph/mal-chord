@@ -8,10 +8,10 @@ import {
 } from "preact/hooks";
 import styled, { keyframes } from "styled-components";
 
-import MALChord from "../../assets/branding/mal-chord-small.svg";
-import MALLogo from "../../assets/branding/mal.svg";
-import { UserContext } from "../../contexts";
-import { UserDetails } from "./UserDetails";
+import MALChord from "assets/branding/mal-chord-small.svg";
+import MALLogo from "assets/branding/mal.svg";
+import { UserContext } from "contexts";
+import { UserDetails } from "components";
 
 const slide = keyframes`
   from {

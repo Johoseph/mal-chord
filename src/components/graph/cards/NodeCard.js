@@ -1,7 +1,7 @@
 import { h } from "preact";
 import styled, { css } from "styled-components";
 import { HiOutlineExternalLink } from "react-icons/hi";
-import { getNodeColour } from "../sankeyFunctions";
+import { getNodeColour } from "helpers";
 
 const Wrapper = styled.div`
   display: flex;

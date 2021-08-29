@@ -1,8 +1,8 @@
 import { h } from "preact";
 import styled from "styled-components";
 
-import MALChordLogo from "../../assets/branding/mal-chord-small.svg";
-import MALAcronym from "../../assets/branding/mal.svg";
+import MALChordLogo from "assets/branding/mal-chord-small.svg";
+import MALAcronym from "assets/branding/mal.svg";
 
 const Wrapper = styled.div`
   display: flex;

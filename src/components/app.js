@@ -1,11 +1,9 @@
 import { h } from "preact";
 import { useEffect, useMemo } from "preact/hooks";
 
-import { UserPath } from "./paths/UserPath";
-import { GuestPath } from "./paths/GuestPath";
-import { HomePath } from "./paths/HomePath";
-import { useLoginType, useWindowDimensions } from "../hooks";
-import { UserContext } from "../contexts";
+import { UserPath, GuestPath, HomePath } from "components";
+import { useLoginType, useWindowDimensions } from "hooks";
+import { UserContext } from "contexts";
 
 const mobileWidth = 840;
 

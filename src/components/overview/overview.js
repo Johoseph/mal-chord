@@ -1,10 +1,13 @@
 import { h } from "preact";
 import styled from "styled-components";
 
-import { UserDetails } from "./UserDetails";
-import { ScrollOverview } from "./ScrollOverview";
-import { MALChord } from "../general/MALChord";
-import { TimeWatched, MangaCompletion } from "./MediaCompletion";
+import {
+  UserDetails,
+  ScrollOverview,
+  MALChord,
+  TimeWatched,
+  MangaCompletion,
+} from "components";
 
 const Wrapper = styled.div`
   display: flex;

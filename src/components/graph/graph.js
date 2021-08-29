@@ -1,17 +1,18 @@
 import { h } from "preact";
 import { useEffect, useState, useMemo } from "preact/hooks";
 import useResizeObserver from "use-resize-observer";
-import { HistoryContext } from "../../contexts";
-import { mathClamp } from "../../helpers";
-import { useSankeyHistory } from "../../hooks";
-import { GraphError } from "../error/GraphError";
-import { NoData } from "../error/NoData";
-import { GraphLoading } from "./loading/GraphLoading";
-import { MoreData } from "./MoreData";
 
-import { Sankey } from "./Sankey";
-import { SankeyControls } from "./SankeyControls";
-import { getSankeyFormat } from "./sankeyFunctions";
+import { HistoryContext } from "contexts";
+import { mathClamp, getSankeyFormat } from "helpers";
+import { useSankeyHistory } from "hooks";
+import {
+  Sankey,
+  SankeyControls,
+  GraphError,
+  NoData,
+  GraphLoading,
+  MoreData,
+} from "components";
 
 const DEFAULT_LIMIT = 25;
 

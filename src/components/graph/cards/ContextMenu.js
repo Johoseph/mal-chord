@@ -5,7 +5,7 @@ import { AiOutlineHighlight } from "react-icons/ai";
 import { CgErase } from "react-icons/cg";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useCallback, useContext } from "preact/hooks";
-import { HistoryContext } from "../../../contexts";
+import { HistoryContext } from "contexts";
 
 const Wrapper = styled.div`
   display: flex;

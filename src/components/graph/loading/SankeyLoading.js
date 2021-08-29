@@ -2,7 +2,7 @@ import { h } from "preact";
 import { useEffect, useMemo, useRef } from "preact/hooks";
 import styled from "styled-components";
 import { select, interpolateNumber } from "d3";
-import { getNodeColour } from "../sankeyFunctions";
+import { getNodeColour } from "helpers";
 
 const STROKE_WIDTH = 40;
 

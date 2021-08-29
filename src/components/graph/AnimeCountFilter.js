@@ -8,8 +8,8 @@ import {
   useContext,
 } from "preact/hooks";
 import styled from "styled-components";
-import { HistoryContext } from "../../contexts";
-import { mathClamp } from "../../helpers";
+import { HistoryContext } from "contexts";
+import { mathClamp } from "helpers";
 
 const Wrapper = styled.div`
   font-size: 0.8rem;

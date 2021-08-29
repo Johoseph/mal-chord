@@ -1,7 +1,6 @@
 import { h } from "preact";
-import { useUser } from "../../hooks";
-import { LoggedIn } from "./user/LoggedIn";
-import { LoggingIn } from "./user/LoggingIn";
+import { useUser } from "hooks";
+import { LoggedIn, LoggingIn } from "components";
 
 export const UserPath = () => {
   const { loggedIn, loginError } = useUser();

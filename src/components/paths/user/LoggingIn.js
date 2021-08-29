@@ -3,8 +3,8 @@ import { useContext } from "preact/hooks";
 import styled, { keyframes } from "styled-components";
 
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { UserContext } from "../../../contexts";
-import { GraphError } from "../../error/GraphError";
+import { UserContext } from "contexts";
+import { GraphError } from "components";
 
 const Wrapper = styled.div`
   height: calc(100vh - 100px);

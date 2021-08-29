@@ -1,8 +1,7 @@
 import { h } from "preact";
 import styled from "styled-components";
 
-import { HeaderControls } from "./controls/HeaderControls";
-import { SortControls } from "./controls/SortControls";
+import { HeaderControls, SortControls } from "components";
 
 const Wrapper = styled.div`
   width: 80%;

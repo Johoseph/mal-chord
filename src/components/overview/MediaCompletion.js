@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useState, useEffect } from "preact/hooks";
 import { decode } from "he";
 
-import { titleCase, radixFormat } from "../../helpers";
+import { titleCase, radixFormat } from "helpers";
 
 const Wrapper = styled.div`
   display: flex;

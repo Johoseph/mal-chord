@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { FaUndo, FaRedo } from "react-icons/fa";
 import { IoMdHelp } from "react-icons/io";
 import { useCallback, useContext, useEffect } from "preact/hooks";
-import { HistoryContext } from "../../contexts";
+import { HistoryContext } from "contexts";
 
 const Wrapper = styled.div`
   display: flex;

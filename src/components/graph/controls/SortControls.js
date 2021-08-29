@@ -3,8 +3,8 @@ import { useCallback, useContext } from "preact/hooks";
 import styled from "styled-components";
 import { HiArrowNarrowDown, HiArrowNarrowUp } from "react-icons/hi";
 
-import { Dropdown } from "../../general/Dropdown";
-import { HistoryContext } from "../../../contexts";
+import { Dropdown } from "components";
+import { HistoryContext } from "contexts";
 
 const sortOptions = [
   {

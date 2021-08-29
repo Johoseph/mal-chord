@@ -1,9 +1,9 @@
 import { h } from "preact";
 import styled from "styled-components";
 
-import MALLogo from "../../../assets/branding/mal.svg";
-import { useWindowDimensions } from "../../../hooks";
-import { MALChord } from "../../general/MALChord";
+import MALLogo from "assets/branding/mal.svg";
+import { useWindowDimensions } from "hooks";
+import { MALChord } from "components";
 
 const Wrapper = styled.div`
   display: flex;

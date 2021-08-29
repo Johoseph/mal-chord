@@ -2,11 +2,8 @@ import { h } from "preact";
 import styled, { keyframes } from "styled-components";
 
 import { useMemo, useState } from "preact/hooks";
-import { useHelp, useQuery } from "../../../hooks";
-import { Tooltip } from "../../general/Tooltip";
-import { Graph } from "../../graph/Graph";
-import { Overview } from "../../overview/Overview";
-import { Help } from "../../general/Help";
+import { useHelp, useQuery } from "hooks";
+import { Graph, Overview, Help, Tooltip } from "components";
 
 const fadeIn = keyframes`
   from {
