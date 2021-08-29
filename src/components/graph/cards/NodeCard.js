@@ -67,14 +67,14 @@ const LinkIcon = styled(HiOutlineExternalLink)`
   color: #dadada;
 `;
 
-export const NodeCard = ({ node }) => {
+export const NodeCard = ({ node, startCategory }) => {
   return (
     <Wrapper>
       {node.photo && <Photo src={node.photo} alt={`${node.title} cover art`} />}
       <Data>
         {node.id ? (
           <Link
-            href={`https://myanimelist.net/anime/${node.id}`}
+            href={`https://myanimelist.net/${startCategory}/${node.id}`}
             target="_blank"
           >
             {node.title}

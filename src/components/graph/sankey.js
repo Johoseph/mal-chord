@@ -15,6 +15,7 @@ import { NodeCard } from "./cards/NodeCard";
 import { ContextMenu } from "./cards/ContextMenu";
 
 export const Sankey = ({
+  startCategory,
   endCategory,
   dataNodes,
   dataLinks,
@@ -69,7 +70,7 @@ export const Sankey = ({
   useEffect(() => {
     setHighlightedLinks([]);
     setHiddenLinks([]);
-  }, [endCategory]);
+  }, [startCategory, endCategory]);
 
   useEffect(() => {
     select(sankeyRef.current).select("svg").remove();
@@ -306,7 +307,7 @@ export const Sankey = ({
           y={animeTooltip.y}
           removeFn={() => setAnimeTooltip(undefined)}
         >
-          <NodeCard node={animeTooltip.data} />
+          <NodeCard node={animeTooltip.data} startCategory={startCategory} />
         </Tooltip>
       )}
       {contextTooltip && (

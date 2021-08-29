@@ -112,6 +112,7 @@ export const Graph = ({
           />
           {data.length > 0 ? (
             <Sankey
+              startCategory={startCategory}
               endCategory={endCategory}
               dataNodes={dataNodes}
               dataLinks={dataLinks}
