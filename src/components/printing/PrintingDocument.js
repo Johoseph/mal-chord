@@ -89,7 +89,7 @@ export const PrintingDocument = ({ chordSvg }) => {
       {PDFDocument ? (
         <PDFViewer
           type="application/pdf"
-          src={PDFDocument.output("datauristring")}
+          src={PDFDocument.output("datauristring", "mal-chord-poster.pdf")}
         />
       ) : (
         <div>TODO: Loading</div>
