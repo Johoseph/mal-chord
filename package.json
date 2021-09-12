@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "canvg": "^3.0.7",
     "crypto-random-string": "^4.0.0",
     "d3": "^7.0.0",
     "d3-sankey": "^0.12.3",

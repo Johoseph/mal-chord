@@ -160,6 +160,7 @@ export const Sankey = ({
       .attr("width", nodeSide)
       .attr("height", nodeSide)
       .attr("class", "listener-ignore")
+      .attr("crossorigin", "anonymous")
       .style("cursor", "pointer")
       .on("contextmenu", handleNodeRightClick)
       .on("click", handleNodeClick);
@@ -327,7 +328,11 @@ export const Sankey = ({
           />
         </Tooltip>
       )}
-      <PrintingModal isPrinting={isPrinting} setIsPrinting={setIsPrinting} />
+      <PrintingModal
+        isPrinting={isPrinting}
+        setIsPrinting={setIsPrinting}
+        chordSvg={sankeyRef?.current?.firstElementChild}
+      />
     </>
   );
 };
