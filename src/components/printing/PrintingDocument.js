@@ -59,71 +59,18 @@ export const PrintingDocument = ({ chordSvg }) => {
       if (chordSvg && canvasRef.current) {
         const ctx = canvasRef.current.getContext("2d");
 
+        chordSvg.style = "";
+
         canvgInstance = await Canvg.from(
           ctx,
-          // Width should be portrait/landscape width (to figure out)
-          `<svg width="1437" height="40">
-          <g id="start-nodes">
-            <image
-            href="https://api-cdn.myanimelist.net/images/anime/1704/106947.jpg"
-            x="72.85"
-            y="1"
-            width="40"
-            height="40"
-          />
-          </g>
-          <g id="end-nodes">
-            <rect
-              width="40"
-              height="40"
-              x="1325.15"
-              y="0"
-              class="listener-ignore hlp-9 top-10 forceY left-10"
-              id="hlp-9"
-              style="fill: rgb(31, 119, 180); cursor: pointer"
-            ></rect>
-          </g>
-          <g id="links">
-            <g>
-              <path
-                d="M112.85,1C800.3014285714286,1 597.7700000000001,0 1325.15,0L1325.15,40C637.6985714285715,40 840.23,41 112.85,41L112.85,1"
-                fill="#1f77b4"
-                opacity="0.5"
-                id="0"
-              ></path>
-            </g>
-          </g>
-          <g id="highlighted-links"></g>
-          <g style="font: 10px sans-serif; fill: rgb(255, 255, 255)">
-            <text
-              x="117.85"
-              y="21"
-              dy="0.35em"
-              text-anchor="start"
-              style="font-size: 13.3333px"
-            >
-              Demon Slayer -Kimetsu no Yaiba- The Movie: Mugen Train
-            </text>
-          </g>
-          <g style="font: 10px sans-serif; fill: rgb(255, 255, 255)">
-            <text
-              x="1320.15"
-              y="20"
-              dy="0.35em"
-              text-anchor="end"
-              style="font-size: 13.3333px"
-            >
-              10
-            </text>
-          </g>
-        </svg>
-        `,
+          // TODO: Figure out how to handle width better
+          chordSvg.outerHTML,
           {
             anonymousCrossOrigin: true,
           }
         );
 
-        canvgInstance.start();
+        await canvgInstance.start();
       }
     },
     [chordSvg]
