@@ -58,6 +58,7 @@ export const Graph = ({
     direction: "DESC",
   });
   const [endCategory, setEndCategory] = useState("score");
+  const [isPrinting, setIsPrinting] = useState(false);
   const [limit, setLimit] = useState(DEFAULT_LIMIT);
 
   const { dataNodes, dataLinks, nodeCount, nodeDifference } = getSankeyFormat(
@@ -107,6 +108,7 @@ export const Graph = ({
             startSort={startSort}
             endSort={endSort}
             endCategory={endCategory}
+            setIsPrinting={setIsPrinting}
             count={data.length}
             limit={limit}
             setLimit={setLimit}
@@ -126,6 +128,8 @@ export const Graph = ({
                 // Catering for more links than nodes
                 ((dataLinks.length - nodeCount) * nodeSide) / dataLinks.length
               }
+              isPrinting={isPrinting}
+              setIsPrinting={setIsPrinting}
             />
           ) : (
             <NoData startCategory={startCategory} />

@@ -1,6 +1,7 @@
 import { h } from "preact";
 import styled from "styled-components";
 
+import { AiOutlinePrinter } from "react-icons/ai";
 import { FaUndo, FaRedo } from "react-icons/fa";
 import { IoMdHelp } from "react-icons/io";
 import { useCallback, useContext, useEffect } from "preact/hooks";
@@ -39,7 +40,7 @@ const Icon = styled.button`
   }
 `;
 
-export const SankeyStateTraversal = () => {
+export const SankeyStateTraversal = ({ setIsPrinting }) => {
   const { currentIndex, setCurrentIndex, sankeyHistory, setHelpRequired } =
     useContext(HistoryContext);
 
@@ -97,6 +98,9 @@ export const SankeyStateTraversal = () => {
         aria-label="Undo last action"
       >
         <FaUndo viewBox="-80 -80 612 612" />
+      </Icon>
+      <Icon onClick={() => setIsPrinting(true)} aria-label="Print chart">
+        <AiOutlinePrinter />
       </Icon>
       <Icon
         onClick={() => setHelpRequired(true)}

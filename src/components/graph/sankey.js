@@ -9,7 +9,7 @@ import {
   useState,
 } from "preact/hooks";
 
-import { Tooltip, NodeCard, ContextMenu } from "components";
+import { Tooltip, NodeCard, ContextMenu, PrintingModal } from "components";
 import { customLinkHorizontal, getNodeColour } from "helpers";
 
 export const Sankey = ({
@@ -21,6 +21,8 @@ export const Sankey = ({
   nodeSide = 50,
   nodePadding = 50,
   endNodeModifier = 0,
+  isPrinting,
+  setIsPrinting,
 }) => {
   let sankeyRef = useRef();
 
@@ -325,6 +327,7 @@ export const Sankey = ({
           />
         </Tooltip>
       )}
+      <PrintingModal isPrinting={isPrinting} setIsPrinting={setIsPrinting} />
     </>
   );
 };

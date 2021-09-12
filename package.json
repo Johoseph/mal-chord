@@ -31,11 +31,13 @@
     "d3-sankey": "^0.12.3",
     "dayjs": "^1.10.6",
     "he": "^1.2.0",
+    "jspdf": "^2.3.1",
     "preact": "^10.3.2",
     "preact-compat": "^3.19.0",
     "preact-render-to-string": "^5.1.4",
     "preact-router": "^3.2.1",
     "react-icons": "^4.2.0",
+    "react-modal": "^3.14.3",
     "styled-components": "^5.3.0",
     "use-resize-observer": "^7.0.0"
   }

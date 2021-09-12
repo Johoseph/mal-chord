@@ -93,6 +93,7 @@ export const HeaderControls = ({
   setStartCategory,
   endCategory,
   setEndCategory,
+  setIsPrinting,
   count,
   limit,
   setLimit,
@@ -165,7 +166,7 @@ export const HeaderControls = ({
           <Chord />
         </BoundWrap>
       </Bound>
-      <SankeyStateTraversal />
+      <SankeyStateTraversal setIsPrinting={setIsPrinting} />
       <Bound>
         <BoundWrap bound="end">
           <Chord />

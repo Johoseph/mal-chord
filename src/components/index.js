@@ -43,3 +43,7 @@ export * from "./paths/home/HomeHeader";
 
 export * from "./paths/user/LoggedIn";
 export * from "./paths/user/LoggingIn";
+
+// printing
+export * from "./printing/ChordDocument";
+export * from "./printing/PrintingModal";
