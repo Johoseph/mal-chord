@@ -9,6 +9,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   width: 30%;
   padding-right: 40px;
+  overflow-y: auto;
 `;
 
 const Label = styled.h3`
@@ -69,7 +70,20 @@ export const PrintingControls = ({ pageState, dispatch }) => {
           />
         ))}
       </FieldWrap>
-      <Label>Anime Thumbnails</Label> {/* on/off */}
+      <Label>Anime Thumbnails</Label>
+      <FieldWrap>
+        {["On", "Off"].map((state) => (
+          <Radio
+            key={state}
+            label={state}
+            isActive={pageState.thumbnailState === state}
+            onClick={() =>
+              dispatch({ type: "updateThumbnail", payload: state })
+            }
+            ariaLabel={`Toggle anime thumbnail ${state}`}
+          />
+        ))}
+      </FieldWrap>
       <Label>Node Size</Label> {/* scroll 5-100 */}
       <Label>Node Padding</Label> {/* scroll 5-30 */}
     </Wrapper>

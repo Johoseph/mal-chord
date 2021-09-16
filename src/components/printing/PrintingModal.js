@@ -81,6 +81,8 @@ const pageReducer = (state, action) => {
       return { ...state, pageOrientation: action.payload };
     case "updateHeader":
       return { ...state, headerState: action.payload };
+    case "updateThumbnail":
+      return { ...state, thumbnailState: action.payload };
     default:
       return state;
   }
@@ -93,6 +95,7 @@ export const PrintingModal = ({ isPrinting, setIsPrinting, chordSvg }) => {
     pageSize: "A4",
     pageOrientation: "Portrait",
     headerState: "On",
+    thumbnailState: "Off",
   });
 
   return (
