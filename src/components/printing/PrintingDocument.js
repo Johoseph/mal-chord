@@ -19,13 +19,16 @@ const Canvas = styled.canvas`
   width: 100%;
 `;
 
-export const PrintingDocument = ({ chordSvg }) => {
+export const PrintingDocument = ({ chordSvg, pageSize, pageOrientation }) => {
   const [PDFDocument, newPDFDocument] = useState();
 
   let canvasRef = useRef();
 
   const generatePDF = useCallback(() => {
-    const doc = new jsPDF();
+    const doc = new jsPDF({
+      format: pageSize,
+      orientation: pageOrientation,
+    });
 
     doc.setProperties({
       title: "MAL Chord - Printable Poster",
@@ -55,7 +58,7 @@ export const PrintingDocument = ({ chordSvg }) => {
     );
 
     newPDFDocument(doc);
-  }, []);
+  }, [pageSize, pageOrientation]);
 
   const generateCanvas = useCallback(
     async (canvgInstance) => {

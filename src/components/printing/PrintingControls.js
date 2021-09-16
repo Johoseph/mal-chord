@@ -1,5 +1,65 @@
-import { h } from "preact";
+import styled from "styled-components";
+import { Radio } from "components";
 
-export const PrintingControls = () => {
-  return <div>Controls Div</div>;
+const pageSizes = ["A4", "A3", "A2"];
+const pageOrientations = ["Portrait", "Landscape"];
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  padding-right: 40px;
+`;
+
+const Label = styled.h3`
+  font-weight: 400;
+  font-size: 1.2rem;
+  margin: 0;
+  margin-bottom: 10px;
+`;
+
+const FieldWrap = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+
+  & button:not(:last-of-type) {
+    margin-right: 15px;
+  }
+`;
+
+export const PrintingControls = ({
+  pageSize,
+  setPageSize,
+  pageOrientation,
+  setPageOrientation,
+}) => {
+  return (
+    <Wrapper>
+      <Label>Page Orientation</Label>
+      <FieldWrap>
+        {pageOrientations.map((orientation) => (
+          <Radio
+            key={orientation}
+            label={orientation}
+            isActive={pageOrientation === orientation}
+            onClick={() => setPageOrientation(orientation)}
+            ariaLabel={`Set page orientation to ${orientation}`}
+          />
+        ))}
+      </FieldWrap>
+      <Label>Page Size</Label>
+      <FieldWrap>
+        {pageSizes.map((size) => (
+          <Radio
+            key={size}
+            label={size}
+            isActive={pageSize === size}
+            onClick={() => setPageSize(size)}
+            ariaLabel={`Set page size to ${size}`}
+          />
+        ))}
+      </FieldWrap>
+    </Wrapper>
+  );
 };

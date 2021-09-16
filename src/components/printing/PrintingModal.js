@@ -1,4 +1,4 @@
-import { h } from "preact";
+import { useState } from "preact/hooks";
 import styled from "styled-components";
 import Modal from "react-modal";
 
@@ -76,6 +76,9 @@ const CloseButton = styled.button`
 export const PrintingModal = ({ isPrinting, setIsPrinting, chordSvg }) => {
   useLockBodyScroll(isPrinting);
 
+  const [pageSize, setPageSize] = useState("A4");
+  const [pageOrientation, setPageOrientation] = useState("Portrait");
+
   return (
     <StyledModal
       isOpen={isPrinting}
@@ -102,10 +105,17 @@ export const PrintingModal = ({ isPrinting, setIsPrinting, chordSvg }) => {
           </CloseButton>
         </Header>
         <Body>
-          <div style={{ width: "30%" }}>
-            <PrintingControls />
-          </div>
-          <PrintingDocument chordSvg={chordSvg} />
+          <PrintingControls
+            pageSize={pageSize}
+            setPageSize={setPageSize}
+            pageOrientation={pageOrientation}
+            setPageOrientation={setPageOrientation}
+          />
+          <PrintingDocument
+            chordSvg={chordSvg}
+            pageSize={pageSize}
+            pageOrientation={pageOrientation}
+          />
         </Body>
       </Wrapper>
     </StyledModal>
