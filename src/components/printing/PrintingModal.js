@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useReducer } from "preact/hooks";
 import styled from "styled-components";
 import Modal from "react-modal";
 
@@ -73,11 +73,27 @@ const CloseButton = styled.button`
   }
 `;
 
+const pageReducer = (state, action) => {
+  switch (action.type) {
+    case "updateSize":
+      return { ...state, pageSize: action.payload };
+    case "updateOrientation":
+      return { ...state, pageOrientation: action.payload };
+    case "updateHeader":
+      return { ...state, headerState: action.payload };
+    default:
+      return state;
+  }
+};
+
 export const PrintingModal = ({ isPrinting, setIsPrinting, chordSvg }) => {
   useLockBodyScroll(isPrinting);
 
-  const [pageSize, setPageSize] = useState("A4");
-  const [pageOrientation, setPageOrientation] = useState("Portrait");
+  const [pageState, dispatchPageState] = useReducer(pageReducer, {
+    pageSize: "A4",
+    pageOrientation: "Portrait",
+    headerState: "On",
+  });
 
   return (
     <StyledModal
@@ -106,16 +122,10 @@ export const PrintingModal = ({ isPrinting, setIsPrinting, chordSvg }) => {
         </Header>
         <Body>
           <PrintingControls
-            pageSize={pageSize}
-            setPageSize={setPageSize}
-            pageOrientation={pageOrientation}
-            setPageOrientation={setPageOrientation}
+            pageState={pageState}
+            dispatch={dispatchPageState}
           />
-          <PrintingDocument
-            chordSvg={chordSvg}
-            pageSize={pageSize}
-            pageOrientation={pageOrientation}
-          />
+          <PrintingDocument chordSvg={chordSvg} pageState={pageState} />
         </Body>
       </Wrapper>
     </StyledModal>

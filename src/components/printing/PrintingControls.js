@@ -28,12 +28,7 @@ const FieldWrap = styled.div`
   }
 `;
 
-export const PrintingControls = ({
-  pageSize,
-  setPageSize,
-  pageOrientation,
-  setPageOrientation,
-}) => {
+export const PrintingControls = ({ pageState, dispatch }) => {
   return (
     <Wrapper>
       <Label>Page Orientation</Label>
@@ -42,8 +37,10 @@ export const PrintingControls = ({
           <Radio
             key={orientation}
             label={orientation}
-            isActive={pageOrientation === orientation}
-            onClick={() => setPageOrientation(orientation)}
+            isActive={pageState.pageOrientation === orientation}
+            onClick={() =>
+              dispatch({ type: "updateOrientation", payload: orientation })
+            }
             ariaLabel={`Set page orientation to ${orientation}`}
           />
         ))}
@@ -54,12 +51,27 @@ export const PrintingControls = ({
           <Radio
             key={size}
             label={size}
-            isActive={pageSize === size}
-            onClick={() => setPageSize(size)}
+            isActive={pageState.pageSize === size}
+            onClick={() => dispatch({ type: "updateSize", payload: size })}
             ariaLabel={`Set page size to ${size}`}
           />
         ))}
       </FieldWrap>
+      <Label>Header Details</Label> {/* on/off */}
+      <FieldWrap>
+        {["On", "Off"].map((state) => (
+          <Radio
+            key={state}
+            label={state}
+            isActive={pageState.headerState === state}
+            onClick={() => dispatch({ type: "updateHeader", payload: state })}
+            ariaLabel={`Toggle header ${state}`}
+          />
+        ))}
+      </FieldWrap>
+      <Label>Anime Thumbnails</Label> {/* on/off */}
+      <Label>Node Size</Label> {/* scroll 5-100 */}
+      <Label>Node Padding</Label> {/* scroll 5-30 */}
     </Wrapper>
   );
 };

@@ -19,15 +19,15 @@ const Canvas = styled.canvas`
   width: 100%;
 `;
 
-export const PrintingDocument = ({ chordSvg, pageSize, pageOrientation }) => {
+export const PrintingDocument = ({ chordSvg, pageState }) => {
   const [PDFDocument, newPDFDocument] = useState();
 
   let canvasRef = useRef();
 
   const generatePDF = useCallback(() => {
     const doc = new jsPDF({
-      format: pageSize,
-      orientation: pageOrientation,
+      format: pageState.pageSize,
+      orientation: pageState.pageOrientation,
     });
 
     doc.setProperties({
@@ -58,7 +58,7 @@ export const PrintingDocument = ({ chordSvg, pageSize, pageOrientation }) => {
     );
 
     newPDFDocument(doc);
-  }, [pageSize, pageOrientation]);
+  }, [pageState.pageSize, pageState.pageOrientation]);
 
   const generateCanvas = useCallback(
     async (canvgInstance) => {
