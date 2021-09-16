@@ -5,6 +5,10 @@ import Canvg from "canvg";
 
 import { useEffect, useState, useRef, useCallback } from "preact/hooks";
 
+const Wrapper = styled.div`
+  width: 70%;
+`;
+
 const PDFViewer = styled.embed`
   width: 100%;
   height: 100%;
@@ -13,7 +17,6 @@ const PDFViewer = styled.embed`
 const Canvas = styled.canvas`
   height: 100%;
   width: 100%;
-  display: none;
 `;
 
 export const PrintingDocument = ({ chordSvg }) => {
@@ -83,9 +86,31 @@ export const PrintingDocument = ({ chordSvg }) => {
     return () => canvgInstance?.stop();
   }, [generateCanvas, generatePDF]);
 
+  const observeCanvas = useCallback(() => {
+    const currentStyle = canvasRef.current.style;
+    if (
+      currentStyle.display != "none" &&
+      currentStyle.getPropertyPriority("display") != "important"
+    )
+      currentStyle.setProperty("display", "none", "important");
+  }, []);
+
+  // Prevent changing the display on canvas element as much as possible
+  useEffect(() => {
+    let observer;
+    if (canvasRef.current) {
+      observer = new MutationObserver(observeCanvas);
+      observer.observe(canvasRef.current, {
+        attributes: true,
+        attributeFilter: ["style"],
+      });
+    }
+    return () => observer.disconnect();
+  }, [observeCanvas]);
+
   return (
-    <>
-      <Canvas ref={canvasRef} />
+    <Wrapper>
+      <Canvas ref={canvasRef} style={{ display: "none" }} />
       {PDFDocument ? (
         <PDFViewer
           type="application/pdf"
@@ -94,6 +119,6 @@ export const PrintingDocument = ({ chordSvg }) => {
       ) : (
         <div>TODO: Loading</div>
       )}
-    </>
+    </Wrapper>
   );
 };

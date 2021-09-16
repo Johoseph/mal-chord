@@ -105,9 +105,7 @@ export const PrintingModal = ({ isPrinting, setIsPrinting, chordSvg }) => {
           <div style={{ width: "30%" }}>
             <PrintingControls />
           </div>
-          <div style={{ width: "70%" }}>
-            <PrintingDocument chordSvg={chordSvg} />
-          </div>
+          <PrintingDocument chordSvg={chordSvg} />
         </Body>
       </Wrapper>
     </StyledModal>
