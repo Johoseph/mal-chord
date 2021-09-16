@@ -257,6 +257,7 @@ export const Sankey = ({
       .attr("dy", "0.35em")
       .attr("text-anchor", "start")
       .style("font-size", () => `${Math.max(nodeSide / 3, 10)}`)
+      .style("font-family", "Roboto")
       .text((d) => d.name);
 
     // End Node Text
@@ -273,6 +274,7 @@ export const Sankey = ({
       .attr("dy", "0.35em")
       .attr("text-anchor", "end")
       .style("font-size", () => `${Math.max(nodeSide / 3, 10)}`)
+      .style("font-family", "Roboto")
       .text((d) => d.name);
 
     // Help Classes
