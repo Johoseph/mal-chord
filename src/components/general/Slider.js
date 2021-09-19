@@ -32,11 +32,24 @@ const Label = styled.div`
   margin-top: 10px;
 `;
 
-export const SliderInput = ({ leftLabel, rightLabel, hideLabel = false }) => {
+export const SliderInput = ({
+  leftLabel,
+  rightLabel,
+  hideLabel = false,
+  minVal,
+  maxVal,
+  defaultValue,
+  onChange,
+}) => {
   return (
     <Wrapper>
       <SliderWrap>
-        <StyledSlider />
+        <StyledSlider
+          min={minVal}
+          max={maxVal}
+          onAfterChange={onChange}
+          defaultValue={defaultValue}
+        />
       </SliderWrap>
       {!hideLabel && (
         <Label>

@@ -1,4 +1,4 @@
-import { useReducer } from "preact/hooks";
+import { useEffect, useReducer, useState } from "preact/hooks";
 import styled from "styled-components";
 import Modal from "react-modal";
 
@@ -7,6 +7,7 @@ import { BsX } from "react-icons/bs";
 
 import { useLockBodyScroll } from "hooks";
 import { PrintingDocument, PrintingControls } from "components";
+import { handleSankeySvg } from "helpers";
 
 const StyledModal = styled((props) => <Modal {...props} />)`
   position: absolute;
@@ -83,12 +84,28 @@ const pageReducer = (state, action) => {
       return { ...state, headerState: action.payload };
     case "updateThumbnail":
       return { ...state, thumbnailState: action.payload };
+    case "updateNodeSize":
+      return { ...state, nodeSize: action.payload };
+    case "updateNodePadding":
+      return { ...state, nodePadding: action.payload };
     default:
       return state;
   }
 };
 
-export const PrintingModal = ({ isPrinting, setIsPrinting, chordSvg }) => {
+export const PrintingModal = ({
+  isPrinting,
+  setIsPrinting,
+  defaultNode,
+  dataNodes,
+  dataLinks,
+  highlightedLinks,
+  hiddenLinks,
+  nodeDifference,
+  nodeCount,
+}) => {
+  const [printingSvg, setPrintingSvg] = useState();
+
   useLockBodyScroll(isPrinting);
 
   const [pageState, dispatchPageState] = useReducer(pageReducer, {
@@ -96,7 +113,42 @@ export const PrintingModal = ({ isPrinting, setIsPrinting, chordSvg }) => {
     pageOrientation: "Portrait",
     headerState: "On",
     thumbnailState: "Off",
+    nodeSize: defaultNode.nodeSide,
+    nodePadding: defaultNode.nodePadding,
   });
+
+  useEffect(() => {
+    if (isPrinting) {
+      setPrintingSvg(
+        handleSankeySvg({
+          width: 2480,
+          height: Math.max(
+            0,
+            (nodeCount || 0) * (pageState.nodeSize + pageState.nodePadding) -
+              pageState.nodePadding
+          ),
+          nodeSide: pageState.nodeSize,
+          nodePadding: pageState.nodePadding,
+          highlightedLinks,
+          hiddenLinks,
+          dataNodes,
+          dataLinks,
+          widthModifier: 0,
+          nodeDifference,
+          nodeCount,
+        })
+      );
+    }
+  }, [
+    isPrinting,
+    pageState,
+    highlightedLinks,
+    hiddenLinks,
+    dataNodes,
+    dataLinks,
+    nodeDifference,
+    nodeCount,
+  ]);
 
   return (
     <StyledModal
@@ -128,7 +180,7 @@ export const PrintingModal = ({ isPrinting, setIsPrinting, chordSvg }) => {
             pageState={pageState}
             dispatch={dispatchPageState}
           />
-          <PrintingDocument chordSvg={chordSvg} pageState={pageState} />
+          <PrintingDocument chordSvg={printingSvg} pageState={pageState} />
         </Body>
       </Wrapper>
     </StyledModal>

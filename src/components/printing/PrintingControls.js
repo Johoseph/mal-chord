@@ -58,7 +58,7 @@ export const PrintingControls = ({ pageState, dispatch }) => {
           />
         ))}
       </FieldWrap>
-      <Label>Header Details</Label> {/* on/off */}
+      <Label>Header Details</Label>
       <FieldWrap>
         {["On", "Off"].map((state) => (
           <Radio
@@ -84,13 +84,29 @@ export const PrintingControls = ({ pageState, dispatch }) => {
           />
         ))}
       </FieldWrap>
-      <Label>Node Size</Label> {/* scroll 5-100 */}
+      <Label>Node Size</Label>
       <FieldWrap>
-        <SliderInput leftLabel="Smallest" rightLabel="Largest" />
+        <SliderInput
+          leftLabel="Smallest"
+          rightLabel="Largest"
+          minVal={10}
+          maxVal={60}
+          defaultValue={pageState.nodeSize}
+          onChange={(val) => dispatch({ type: "updateNodeSize", payload: val })}
+        />
       </FieldWrap>
-      <Label>Node Padding</Label> {/* scroll 5-30 */}
+      <Label>Node Padding</Label>
       <FieldWrap>
-        <SliderInput leftLabel="Smallest" rightLabel="Largest" />
+        <SliderInput
+          leftLabel="Smallest"
+          rightLabel="Largest"
+          minVal={5}
+          maxVal={20}
+          defaultValue={pageState.nodePadding}
+          onChange={(val) =>
+            dispatch({ type: "updateNodePadding", payload: val })
+          }
+        />
       </FieldWrap>
     </Wrapper>
   );
