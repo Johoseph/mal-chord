@@ -8,6 +8,7 @@ export * from "./general/Dropdown";
 export * from "./general/Help";
 export * from "./general/MALChord";
 export * from "./general/MALChordMobile";
+export * from "./general/Slider";
 export * from "./general/Radio";
 export * from "./general/Tooltip";
 
