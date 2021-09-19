@@ -122,12 +122,8 @@ export const Graph = ({
               dimensions={{ width, height }}
               nodeSide={nodeSide}
               nodePadding={nodePadding}
-              endNodeModifier={
-                // Catering for nodePadding
-                (nodeDifference * nodePadding) / dataLinks.length -
-                // Catering for more links than nodes
-                ((dataLinks.length - nodeCount) * nodeSide) / dataLinks.length
-              }
+              nodeDifference={nodeDifference}
+              nodeCount={nodeCount}
               isPrinting={isPrinting}
               setIsPrinting={setIsPrinting}
             />
