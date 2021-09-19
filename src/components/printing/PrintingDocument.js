@@ -48,7 +48,7 @@ export const PrintingDocument = ({ chordSvg, pageState }) => {
     );
 
     doc.addImage(
-      canvasRef.current,
+      canvasCurrent,
       "JPEG",
       0,
       10,
@@ -67,14 +67,9 @@ export const PrintingDocument = ({ chordSvg, pageState }) => {
 
         chordSvg.style = "";
 
-        canvgInstance = await Canvg.from(
-          ctx,
-          // TODO: Figure out how to handle width better
-          chordSvg.outerHTML,
-          {
-            anonymousCrossOrigin: true,
-          }
-        );
+        canvgInstance = await Canvg.from(ctx, chordSvg.outerHTML, {
+          anonymousCrossOrigin: true,
+        });
 
         await canvgInstance.start();
       }
@@ -84,9 +79,19 @@ export const PrintingDocument = ({ chordSvg, pageState }) => {
 
   useEffect(() => {
     let canvgInstance;
+    let timeout;
+
     generateCanvas(canvgInstance);
-    generatePDF();
-    return () => canvgInstance?.stop();
+
+    // Ensure canvgInstance restarts
+    timeout = setTimeout(() => {
+      generatePDF();
+    }, 500);
+
+    return () => {
+      canvgInstance?.stop();
+      clearTimeout(timeout);
+    };
   }, [generateCanvas, generatePDF]);
 
   const observeCanvas = useCallback(() => {
@@ -118,6 +123,7 @@ export const PrintingDocument = ({ chordSvg, pageState }) => {
         <PDFViewer
           type="application/pdf"
           src={PDFDocument.output("datauristring", "mal-chord-poster.pdf")}
+          // onLoad={() => console.log("TODO:!")}
         />
       ) : (
         <div>TODO: Loading</div>
