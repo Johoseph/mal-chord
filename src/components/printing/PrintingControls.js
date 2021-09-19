@@ -90,7 +90,7 @@ export const PrintingControls = ({ pageState, dispatch }) => {
           leftLabel="Smallest"
           rightLabel="Largest"
           minVal={10}
-          maxVal={60}
+          maxVal={100}
           defaultValue={pageState.nodeSize}
           onChange={(val) => dispatch({ type: "updateNodeSize", payload: val })}
         />
@@ -101,7 +101,7 @@ export const PrintingControls = ({ pageState, dispatch }) => {
           leftLabel="Smallest"
           rightLabel="Largest"
           minVal={5}
-          maxVal={20}
+          maxVal={60}
           defaultValue={pageState.nodePadding}
           onChange={(val) =>
             dispatch({ type: "updateNodePadding", payload: val })
