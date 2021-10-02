@@ -1,17 +1,22 @@
 import { h } from "preact";
+import { useEffect, useState, useRef, useCallback } from "preact/hooks";
 import styled from "styled-components";
 import { jsPDF } from "jspdf";
 import Canvg from "canvg";
 
-import { useEffect, useState, useRef, useCallback } from "preact/hooks";
+import { Spinner } from "components";
 
 const Wrapper = styled.div`
   width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const PDFViewer = styled.embed`
   width: 100%;
   height: 100%;
+  z-index: 1;
 `;
 
 const Canvas = styled.canvas`
@@ -78,9 +83,9 @@ export const PrintingDocument = ({ chordSvg, pageState }) => {
   );
 
   useEffect(() => {
-    let canvgInstance;
-    let timeout;
+    let canvgInstance, timeout;
 
+    newPDFDocument(); // Reset current PDF document
     generateCanvas(canvgInstance);
 
     // Ensure canvgInstance restarts
@@ -119,17 +124,15 @@ export const PrintingDocument = ({ chordSvg, pageState }) => {
   return (
     <Wrapper>
       <Canvas ref={canvasRef} style={{ display: "none" }} />
-      {PDFDocument ? (
+      {PDFDocument && (
         <PDFViewer
           type="application/pdf"
           src={URL.createObjectURL(
             PDFDocument.output("blob", "mal-chord-poster.pdf")
           )}
-          // onLoad={() => console.log("TODO:!")}
         />
-      ) : (
-        <div>TODO: Loading</div>
       )}
+      <Spinner />
     </Wrapper>
   );
 };
