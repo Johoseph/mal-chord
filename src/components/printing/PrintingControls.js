@@ -39,9 +39,10 @@ export const PrintingControls = ({ pageState, dispatch }) => {
             key={orientation}
             label={orientation}
             isActive={pageState.pageOrientation === orientation}
-            onClick={() =>
-              dispatch({ type: "updateOrientation", payload: orientation })
-            }
+            onClick={() => {
+              if (pageState.pageOrientation !== orientation)
+                dispatch({ type: "updateOrientation", payload: orientation });
+            }}
             ariaLabel={`Set page orientation to ${orientation}`}
           />
         ))}
@@ -53,7 +54,10 @@ export const PrintingControls = ({ pageState, dispatch }) => {
             key={size}
             label={size}
             isActive={pageState.pageSize === size}
-            onClick={() => dispatch({ type: "updateSize", payload: size })}
+            onClick={() => {
+              if (pageState.pageSize !== size)
+                dispatch({ type: "updateSize", payload: size });
+            }}
             ariaLabel={`Set page size to ${size}`}
           />
         ))}
@@ -65,7 +69,10 @@ export const PrintingControls = ({ pageState, dispatch }) => {
             key={state}
             label={state}
             isActive={pageState.headerState === state}
-            onClick={() => dispatch({ type: "updateHeader", payload: state })}
+            onClick={() => {
+              if (pageState.headerState !== state)
+                dispatch({ type: "updateHeader", payload: state });
+            }}
             ariaLabel={`Toggle header ${state}`}
             disabled={true} // Disabled until header detail is added to PDF
           />
@@ -78,9 +85,10 @@ export const PrintingControls = ({ pageState, dispatch }) => {
             key={state}
             label={state}
             isActive={pageState.thumbnailState === state}
-            onClick={() =>
-              dispatch({ type: "updateThumbnail", payload: state })
-            }
+            onClick={() => {
+              if (pageState.thumbnailState !== state)
+                dispatch({ type: "updateThumbnail", payload: state });
+            }}
             ariaLabel={`Toggle anime thumbnail ${state}`}
             disabled={true} // Disabled until non-thumbnails option is added to sankey svg
           />
@@ -94,7 +102,10 @@ export const PrintingControls = ({ pageState, dispatch }) => {
           minVal={10}
           maxVal={100}
           defaultValue={pageState.nodeSize}
-          onChange={(val) => dispatch({ type: "updateNodeSize", payload: val })}
+          onChange={(val) => {
+            if (pageState.nodeSize !== val)
+              dispatch({ type: "updateNodeSize", payload: val });
+          }}
         />
       </FieldWrap>
       <Label>Node Padding</Label>
@@ -105,9 +116,10 @@ export const PrintingControls = ({ pageState, dispatch }) => {
           minVal={5}
           maxVal={60}
           defaultValue={pageState.nodePadding}
-          onChange={(val) =>
-            dispatch({ type: "updateNodePadding", payload: val })
-          }
+          onChange={(val) => {
+            if (pageState.nodePadding !== val)
+              dispatch({ type: "updateNodePadding", payload: val });
+          }}
         />
       </FieldWrap>
     </Wrapper>
