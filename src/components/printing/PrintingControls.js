@@ -67,6 +67,7 @@ export const PrintingControls = ({ pageState, dispatch }) => {
             isActive={pageState.headerState === state}
             onClick={() => dispatch({ type: "updateHeader", payload: state })}
             ariaLabel={`Toggle header ${state}`}
+            disabled={true} // Disabled until header detail is added to PDF
           />
         ))}
       </FieldWrap>

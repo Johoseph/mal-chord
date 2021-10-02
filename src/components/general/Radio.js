@@ -7,16 +7,20 @@ const RadioButton = styled.button`
   align-items: center;
   margin-bottom: 8px;
   outline: none;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   padding: 2px 0px;
   padding-right: 5px;
 
-  &:hover,
-  :focus-visible {
-    div {
-      border: 2px solid #ffffff;
+  ${(props) =>
+    !props.disabled &&
+    `
+    &:hover,
+    :focus-visible {
+      div {
+        border: 2px solid #ffffff;
+      }
     }
-  }
+  `}
 `;
 
 const RadioLabel = styled.span`
@@ -58,9 +62,15 @@ const RadioCircle = styled.div`
   `}
 `;
 
-export const Radio = ({ onClick, ariaLabel, isActive, label }) => {
+export const Radio = ({
+  onClick,
+  ariaLabel,
+  isActive,
+  label,
+  disabled = false,
+}) => {
   return (
-    <RadioButton onClick={onClick} aria-label={ariaLabel}>
+    <RadioButton onClick={onClick} aria-label={ariaLabel} disabled={disabled}>
       <RadioCircle className="circle" isActive={isActive} />
       <RadioLabel>{label}</RadioLabel>
     </RadioButton>
