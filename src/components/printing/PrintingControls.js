@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Radio, SliderInput } from "components";
+import { Radio, Slider } from "components";
 
 const pageSizes = ["A4", "A3", "A2"];
 const pageOrientations = ["Portrait", "Landscape"];
@@ -88,7 +88,7 @@ export const PrintingControls = ({ pageState, dispatch }) => {
       </FieldWrap>
       <Label>Node Size</Label>
       <FieldWrap>
-        <SliderInput
+        <Slider
           leftLabel="Smallest"
           rightLabel="Largest"
           minVal={10}
@@ -99,7 +99,7 @@ export const PrintingControls = ({ pageState, dispatch }) => {
       </FieldWrap>
       <Label>Node Padding</Label>
       <FieldWrap>
-        <SliderInput
+        <Slider
           leftLabel="Smallest"
           rightLabel="Largest"
           minVal={5}

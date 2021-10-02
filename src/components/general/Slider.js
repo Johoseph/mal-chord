@@ -1,4 +1,4 @@
-import Slider from "rc-slider";
+import { default as SliderImport } from "rc-slider";
 import styled from "styled-components";
 
 import "rc-slider/assets/index.css";
@@ -13,14 +13,41 @@ const SliderWrap = styled.div`
   padding: 0 7px;
 `;
 
-const StyledSlider = styled((props) => <Slider {...props} />)`
+const StyledSlider = styled((props) => <SliderImport {...props} />)`
   & .rc-slider-rail {
-    width: calc(100% + 14px);
-    left: -7px;
+    width: calc(100% + 12px);
+    left: -6px;
   }
 
   & .rc-slider-track {
     left: -7px !important;
+    background-color: #2e51a2;
+    border-radius: 6px 0 0 6px;
+  }
+
+  & .rc-slider-handle {
+    width: 18px;
+    height: 18px;
+    border: 5px solid #1f1f1f;
+
+    &::before {
+      content: "";
+      width: 14px;
+      height: 14px;
+      border: 2px solid #ffffff;
+      border-radius: 100%;
+      position: absolute;
+      left: -5px;
+      top: -5px;
+    }
+
+    &:active {
+      box-shadow: none;
+
+      &::before {
+        box-shadow: 0 0 5px #ffffff;
+      }
+    }
   }
 `;
 
@@ -32,7 +59,7 @@ const Label = styled.div`
   margin-top: 10px;
 `;
 
-export const SliderInput = ({
+export const Slider = ({
   leftLabel,
   rightLabel,
   hideLabel = false,
