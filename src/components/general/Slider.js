@@ -26,27 +26,12 @@ const StyledSlider = styled((props) => <SliderImport {...props} />)`
   }
 
   & .rc-slider-handle {
-    width: 18px;
-    height: 18px;
-    border: 5px solid #1f1f1f;
-
-    &::before {
-      content: "";
-      width: 14px;
-      height: 14px;
-      border: 2px solid #ffffff;
-      border-radius: 100%;
-      position: absolute;
-      left: -5px;
-      top: -5px;
-    }
+    width: 16px;
+    height: 16px;
+    border: none;
 
     &:active {
-      box-shadow: none;
-
-      &::before {
-        box-shadow: 0 0 5px #ffffff;
-      }
+      box-shadow: 0 0 5px #ffffff;
     }
   }
 `;
