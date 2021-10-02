@@ -6,6 +6,8 @@ import Canvg from "canvg";
 
 import { Spinner } from "components";
 
+const TOP_MARGIN = 10;
+
 const Wrapper = styled.div`
   width: 70%;
   display: flex;
@@ -43,24 +45,49 @@ export const PrintingDocument = ({ chordSvg, pageState }) => {
 
     const canvasCurrent = canvasRef.current;
 
+    const dimensionFactor =
+      canvasCurrent.width / doc.internal.pageSize.getWidth();
+
+    const relativeImgHeight = canvasCurrent.height / dimensionFactor;
+    const pageDimensions = {
+      width: doc.internal.pageSize.getWidth(),
+      height: doc.internal.pageSize.getHeight(),
+    };
+
+    let totalPageHeight = pageDimensions.height;
+
+    // First page
     doc.setFillColor("#07070a");
-    doc.rect(
-      0,
-      0,
-      doc.internal.pageSize.getWidth(),
-      doc.internal.pageSize.getHeight(),
-      "F"
-    );
+    doc.rect(0, 0, pageDimensions.width, pageDimensions.height, "F");
 
     doc.addImage(
       canvasCurrent,
       "JPEG",
       0,
-      10,
-      doc.internal.pageSize.getWidth(),
-      canvasCurrent.height /
-        (canvasCurrent.width / doc.internal.pageSize.getWidth())
+      TOP_MARGIN,
+      pageDimensions.width,
+      relativeImgHeight
     );
+
+    // Additional pages (if required)
+    while (TOP_MARGIN + relativeImgHeight > totalPageHeight) {
+      doc.addPage();
+
+      doc.setFillColor("#07070a");
+      doc.rect(0, 0, pageDimensions.width, pageDimensions.height, "F");
+
+      doc.addImage(
+        canvasCurrent,
+        "JPEG",
+        0,
+        -totalPageHeight + TOP_MARGIN,
+        pageDimensions.width,
+        relativeImgHeight
+      );
+
+      // Increment totalPageHeight
+      totalPageHeight += pageDimensions.height;
+    }
 
     newPDFDocument(doc);
   }, [pageState.pageSize, pageState.pageOrientation]);
