@@ -77,11 +77,11 @@ const CloseButton = styled.button`
 const getPrintingWidth = ({ pageSize, pageOrientation }) => {
   switch (pageSize) {
     case "A4":
-      return pageOrientation === "Portrait" ? 1240 : 2480;
+      return pageOrientation === "Portrait" ? 1240 : 1754;
     case "A3":
-      return pageOrientation === "Portrait" ? 2480 : 4960;
+      return pageOrientation === "Portrait" ? 2480 : 3507;
     case "A2":
-      return pageOrientation === "Portrait" ? 4960 : 9920;
+      return pageOrientation === "Portrait" ? 4960 : 7015;
   }
 };
 
