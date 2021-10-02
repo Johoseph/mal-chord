@@ -74,6 +74,17 @@ const CloseButton = styled.button`
   }
 `;
 
+const getPrintingWidth = ({ pageSize, pageOrientation }) => {
+  switch (pageSize) {
+    case "A4":
+      return pageOrientation === "Portrait" ? 1240 : 2480;
+    case "A3":
+      return pageOrientation === "Portrait" ? 2480 : 4960;
+    case "A2":
+      return pageOrientation === "Portrait" ? 4960 : 9920;
+  }
+};
+
 const pageReducer = (state, action) => {
   switch (action.type) {
     case "updateSize":
@@ -111,17 +122,19 @@ export const PrintingModal = ({
   const [pageState, dispatchPageState] = useReducer(pageReducer, {
     pageSize: "A4",
     pageOrientation: "Portrait",
-    headerState: "On",
-    thumbnailState: "Off",
+    headerState: "Off",
+    thumbnailState: "On",
     nodeSize: defaultNode.nodeSide,
     nodePadding: defaultNode.nodePadding,
   });
 
   useEffect(() => {
     if (isPrinting) {
+      const printingWidth = getPrintingWidth(pageState);
+
       setPrintingSvg(
         handleSankeySvg({
-          width: 2480,
+          width: printingWidth,
           height: Math.max(
             0,
             (nodeCount || 0) * (pageState.nodeSize + pageState.nodePadding) -
@@ -133,7 +146,7 @@ export const PrintingModal = ({
           hiddenLinks,
           dataNodes,
           dataLinks,
-          widthModifier: 0,
+          widthModifier: printingWidth / 20,
           nodeDifference,
           nodeCount,
         })
