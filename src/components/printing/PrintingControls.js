@@ -90,7 +90,6 @@ export const PrintingControls = ({ pageState, dispatch }) => {
                 dispatch({ type: "updateThumbnail", payload: state });
             }}
             ariaLabel={`Toggle anime thumbnail ${state}`}
-            disabled={true} // Disabled until non-thumbnails option is added to sankey svg
           />
         ))}
       </FieldWrap>

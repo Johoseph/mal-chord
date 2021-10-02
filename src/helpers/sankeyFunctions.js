@@ -188,6 +188,7 @@ export const handleSankeySvg = ({
   hiddenLinks,
   nodeDifference,
   nodeCount,
+  useThumbnails = true,
 }) => {
   let svg;
 
@@ -277,23 +278,70 @@ export const handleSankeySvg = ({
   });
 
   // Start nodes
-  svg
+  let startG = svg
     .append("g")
     .attr("id", "start-nodes")
     .selectAll("rect")
-    .data(startNodes)
-    .enter()
-    .append("image")
-    .attr("href", (d) => d.photo)
-    .attr("x", (d) => d.x0)
-    .attr("y", (d) => d.y0)
-    .attr("width", nodeSide)
-    .attr("height", nodeSide)
-    .attr("class", "listener-ignore")
-    .attr("crossorigin", "anonymous")
-    .style("cursor", "pointer")
-    .on("contextmenu", handleNodeRightClick)
-    .on("click", handleNodeClick);
+    .data(startNodes);
+
+  if (useThumbnails) {
+    startG
+      .enter()
+      .append("image")
+      .attr("href", (d) => d.photo)
+      .attr("x", (d) => d.x0)
+      .attr("y", (d) => d.y0)
+      .attr("width", nodeSide)
+      .attr("height", nodeSide)
+      .attr("class", "listener-ignore")
+      .attr("crossorigin", "anonymous")
+      .style("cursor", "pointer")
+      .on("contextmenu", handleNodeRightClick)
+      .on("click", handleNodeClick);
+  } else {
+    const defs = svg.select("#start-nodes").append("defs");
+
+    for (const startNode of startNodes) {
+      if (startNode.sourceLinks.length > 1) {
+        const linkCount = startNode.sourceLinks.length;
+        // const linearGradient = defs
+        //   .append("linearGradient")
+        //   .attr("id", `gradient-${startNode.id}`)
+        //   .attr("gradientTransform", "rotate(90)");
+
+        // Using zoomed radialGradient implementation as Canvg does not cater for linearGradient 'gradientTransform' property -> https://github.com/canvg/canvg/issues/476
+        const radialGradient = defs
+          .append("radialGradient")
+          .attr("id", `gradient-${startNode.id}`)
+          .attr("r", "10000%")
+          .attr("cy", "-9900%");
+
+        startNode.sourceLinks.forEach((link, i) =>
+          // linearGradient
+          //   .append("stop")
+          //   .attr("offset", `${(100 / (linkCount - 1)) * i}%`)
+          //   .attr("stop-color", getNodeColour(link.target.name))
+
+          radialGradient
+            .append("stop")
+            .attr("offset", `${99.1 + (0.8 / (linkCount - 1)) * i}%`)
+            .attr("stop-color", getNodeColour(link.target.name))
+        );
+      }
+    }
+
+    startG
+      .enter()
+      .append("rect")
+      .attr("x", (d) => d.x0)
+      .attr("y", (d) => d.y0)
+      .attr("width", nodeSide)
+      .attr("height", nodeSide)
+      .style("fill", (d) => {
+        if (d.linker.length > 1) return `url('#gradient-${d.id}')`;
+        return getNodeColour(d.linker[0]);
+      });
+  }
 
   // End nodes
   svg

@@ -123,7 +123,7 @@ export const PrintingModal = ({
     pageSize: "A4",
     pageOrientation: "Portrait",
     headerState: "Off",
-    thumbnailState: "On",
+    thumbnailState: "Off",
     nodeSize: defaultNode.nodeSide,
     nodePadding: defaultNode.nodePadding,
   });
@@ -149,6 +149,7 @@ export const PrintingModal = ({
           widthModifier: printingWidth / 20,
           nodeDifference,
           nodeCount,
+          useThumbnails: pageState.thumbnailState === "On",
         })
       );
     }
