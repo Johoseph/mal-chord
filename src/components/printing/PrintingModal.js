@@ -173,7 +173,7 @@ export const PrintingModal = ({
       style={{
         overlay: {
           background: "rgb(0, 0, 0, 0.5)",
-          zIndex: 2,
+          zIndex: 4,
         },
       }}
     >

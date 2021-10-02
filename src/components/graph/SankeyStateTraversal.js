@@ -99,12 +99,16 @@ export const SankeyStateTraversal = ({ setIsPrinting }) => {
       >
         <FaUndo viewBox="-80 -80 612 612" />
       </Icon>
-      <Icon onClick={() => setIsPrinting(true)} aria-label="Print chart">
+      <Icon
+        onClick={() => setIsPrinting(true)}
+        className="hlp-10"
+        aria-label="Print chart"
+      >
         <AiOutlinePrinter />
       </Icon>
       <Icon
         onClick={() => setHelpRequired(true)}
-        className="hlp-10"
+        className="hlp-11"
         aria-label="Get help"
       >
         <IoMdHelp />
