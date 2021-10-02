@@ -122,7 +122,9 @@ export const PrintingDocument = ({ chordSvg, pageState }) => {
       {PDFDocument ? (
         <PDFViewer
           type="application/pdf"
-          src={PDFDocument.output("datauristring", "mal-chord-poster.pdf")}
+          src={URL.createObjectURL(
+            PDFDocument.output("blob", "mal-chord-poster.pdf")
+          )}
           // onLoad={() => console.log("TODO:!")}
         />
       ) : (
