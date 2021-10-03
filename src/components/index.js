@@ -24,6 +24,7 @@ export * from "./graph/SankeyStateTraversal";
 export * from "./graph/cards/ContextMenu";
 export * from "./graph/cards/NodeCard";
 
+export * from "./graph/controls/FilterList";
 export * from "./graph/controls/HeaderControls";
 export * from "./graph/controls/SortControls";
 

@@ -14,6 +14,7 @@ import { mathClamp } from "helpers";
 const Wrapper = styled.div`
   font-size: 0.8rem;
   margin-left: 15px;
+  margin-right: 10px;
 
   position: relative;
   top: 2px;

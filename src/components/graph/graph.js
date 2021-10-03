@@ -16,6 +16,11 @@ import {
 
 const DEFAULT_LIMIT = 25;
 
+const LIST_STATUS = {
+  anime: ["Completed", "Watching", "On Hold", "Dropped", "Plan To Watch"],
+  manga: ["Completed", "Reading", "On Hold", "Dropped", "Plan To Read"],
+};
+
 export const Graph = ({
   data,
   status,
@@ -60,9 +65,23 @@ export const Graph = ({
   const [endCategory, setEndCategory] = useState("score");
   const [isPrinting, setIsPrinting] = useState(false);
   const [limit, setLimit] = useState(DEFAULT_LIMIT);
+  const [nodeFilter, setNodeFilter] = useState(
+    LIST_STATUS[startCategory].map((status) => ({ name: status, active: true }))
+  );
+
+  const filteredData = useMemo(
+    () =>
+      data
+        ? data.filter(
+            (item) =>
+              nodeFilter.find((filter) => filter.name === item.status).active
+          )
+        : undefined,
+    [data, nodeFilter]
+  );
 
   const { dataNodes, dataLinks, nodeCount, nodeDifference } = getSankeyFormat(
-    data || [],
+    filteredData || [],
     startSort,
     endSort,
     endCategory,
@@ -80,14 +99,26 @@ export const Graph = ({
   );
 
   useEffect(() => {
-    if (data) setLimit(Math.min(data.length, DEFAULT_LIMIT));
-  }, [data]);
+    if (filteredData) setLimit(Math.min(filteredData.length, DEFAULT_LIMIT));
+  }, [filteredData]);
 
   useEffect(() => {
     setHeight(
       Math.max(0, (nodeCount || 0) * (nodeSide + nodePadding) - nodePadding)
     );
   }, [nodeCount, nodePadding, nodeSide]);
+
+  // Reinitialise nodeFilter when startCategory changes
+  useEffect(
+    () =>
+      setNodeFilter(
+        LIST_STATUS[startCategory].map((status) => ({
+          name: status,
+          active: true,
+        }))
+      ),
+    [startCategory]
+  );
 
   return (
     <div ref={ref}>
@@ -109,11 +140,11 @@ export const Graph = ({
             endSort={endSort}
             endCategory={endCategory}
             setIsPrinting={setIsPrinting}
-            count={data.length}
+            count={filteredData.length}
             limit={limit}
             setLimit={setLimit}
           />
-          {data.length > 0 ? (
+          {filteredData.length > 0 ? (
             <Sankey
               startCategory={startCategory}
               endCategory={endCategory}

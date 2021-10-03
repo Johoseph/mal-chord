@@ -1,8 +1,15 @@
 import { h } from "preact";
 import styled from "styled-components";
-import { useCallback, useContext } from "preact/hooks";
+import { useCallback, useContext, useState } from "preact/hooks";
+import { HiOutlineFilter } from "react-icons/hi";
 
-import { Dropdown, AnimeCountFilter, SankeyStateTraversal } from "components";
+import {
+  Dropdown,
+  AnimeCountFilter,
+  SankeyStateTraversal,
+  Tooltip,
+  FilterList,
+} from "components";
 import { HistoryContext } from "contexts";
 
 const startCategoryOptions = [
@@ -88,6 +95,29 @@ const BoundWrap = styled.span`
     props.bound === "start" ? `margin-right: auto;` : `margin-left: auto;`}
 `;
 
+const FilterButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  min-width: 2rem;
+  height: 2rem;
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+
+  background: #1f1f1f;
+  border: none;
+  outline: none;
+
+  & svg {
+    font-size: 1.1rem;
+  }
+
+  &:hover,
+  :focus-visible {
+    background: #252525;
+  }
+`;
+
 export const HeaderControls = ({
   startCategory,
   setStartCategory,
@@ -98,6 +128,8 @@ export const HeaderControls = ({
   limit,
   setLimit,
 }) => {
+  const [filterTooltip, setFilterTooltip] = useState();
+
   const { writeToHistory } = useContext(HistoryContext);
 
   const handleSetStartCategory = useCallback(
@@ -163,6 +195,24 @@ export const HeaderControls = ({
             className="hlp-3 right-60"
           />
           <AnimeCountFilter count={count} limit={limit} setLimit={setLimit} />
+          <FilterButton
+            aria-label="Filter by status"
+            onClick={(e) => {
+              let button = e.target;
+
+              while (button.nodeName !== "BUTTON")
+                button = button.parentElement;
+
+              const boundingRect = button.getBoundingClientRect();
+
+              setFilterTooltip({
+                x: boundingRect.left,
+                y: boundingRect.bottom + 10,
+              });
+            }}
+          >
+            <HiOutlineFilter viewBox="0 -1 24 24" />
+          </FilterButton>
           <Chord />
         </BoundWrap>
       </Bound>
@@ -183,6 +233,15 @@ export const HeaderControls = ({
           />
         </BoundWrap>
       </Bound>
+      {filterTooltip && (
+        <Tooltip
+          x={filterTooltip.x}
+          y={filterTooltip.y}
+          removeFn={() => setFilterTooltip(undefined)}
+        >
+          <FilterList />
+        </Tooltip>
+      )}
     </Header>
   );
 };
