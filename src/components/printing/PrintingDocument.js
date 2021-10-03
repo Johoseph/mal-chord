@@ -6,8 +6,6 @@ import Canvg from "canvg";
 
 import { Spinner } from "components";
 
-const TOP_MARGIN = 10;
-
 const Wrapper = styled.div`
   width: 70%;
   display: flex;
@@ -55,22 +53,28 @@ export const PrintingDocument = ({ chordSvg, pageState }) => {
     };
 
     let totalPageHeight = pageDimensions.height;
+    let topMargin = 10;
 
     // First page
     doc.setFillColor("#07070a");
     doc.rect(0, 0, pageDimensions.width, pageDimensions.height, "F");
 
+    // Header details
+    if (pageState.headerState === "On") {
+      topMargin += 15;
+    }
+
     doc.addImage(
       canvasCurrent,
       "JPEG",
       0,
-      TOP_MARGIN,
+      topMargin,
       pageDimensions.width,
       relativeImgHeight
     );
 
     // Additional pages (if required)
-    while (TOP_MARGIN + relativeImgHeight > totalPageHeight) {
+    while (topMargin + relativeImgHeight > totalPageHeight) {
       doc.addPage();
 
       doc.setFillColor("#07070a");
@@ -80,7 +84,7 @@ export const PrintingDocument = ({ chordSvg, pageState }) => {
         canvasCurrent,
         "JPEG",
         0,
-        -totalPageHeight + TOP_MARGIN,
+        -totalPageHeight + topMargin,
         pageDimensions.width,
         relativeImgHeight
       );
@@ -90,7 +94,7 @@ export const PrintingDocument = ({ chordSvg, pageState }) => {
     }
 
     newPDFDocument(doc);
-  }, [pageState.pageSize, pageState.pageOrientation]);
+  }, [pageState.pageSize, pageState.pageOrientation, pageState.headerState]);
 
   const generateCanvas = useCallback(
     async (canvgInstance) => {
