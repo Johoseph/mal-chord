@@ -6,7 +6,7 @@ import { HiOutlineFilter } from "react-icons/hi";
 import {
   Dropdown,
   AnimeCountFilter,
-  SankeyStateTraversal,
+  HeaderSubControls,
   Tooltip,
   FilterList,
 } from "components";
@@ -219,7 +219,7 @@ export const HeaderControls = ({
           <Chord />
         </BoundWrap>
       </Bound>
-      <SankeyStateTraversal setIsPrinting={setIsPrinting} />
+      <HeaderSubControls setIsPrinting={setIsPrinting} />
       <Bound>
         <BoundWrap bound="end">
           <Chord />

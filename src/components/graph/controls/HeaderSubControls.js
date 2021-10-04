@@ -40,7 +40,7 @@ const Icon = styled.button`
   }
 `;
 
-export const SankeyStateTraversal = ({ setIsPrinting }) => {
+export const HeaderSubControls = ({ setIsPrinting }) => {
   const { currentIndex, setCurrentIndex, sankeyHistory, setHelpRequired } =
     useContext(HistoryContext);
 

@@ -20,13 +20,13 @@ export * from "./graph/Graph";
 export * from "./graph/MoreData";
 export * from "./graph/Sankey";
 export * from "./graph/SankeyControls";
-export * from "./graph/SankeyStateTraversal";
 
 export * from "./graph/cards/ContextMenu";
 export * from "./graph/cards/NodeCard";
 
 export * from "./graph/controls/FilterList";
 export * from "./graph/controls/HeaderControls";
+export * from "./graph/controls/HeaderSubControls";
 export * from "./graph/controls/SortControls";
 
 export * from "./graph/loading/GraphLoading";
