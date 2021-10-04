@@ -55,7 +55,7 @@ export const Sankey = ({
   const confirmColour = useCallback(
     (colour) => {
       setNodeColours((prev) => [
-        ...prev.filter((col) => col.name !== colourPicker.title),
+        ...prev.filter((col) => col.name !== colourPicker.name),
         { name: colourPicker.name, colour },
       ]);
 
