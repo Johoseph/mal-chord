@@ -110,12 +110,22 @@ const FilterButton = styled.button`
 
   & svg {
     font-size: 1.1rem;
+    fill: transparent;
+    transition: fill 300ms;
   }
 
   &:hover,
   :focus-visible {
     background: #252525;
   }
+
+  ${(props) =>
+    props.filterCount > 0 &&
+    `
+      & svg {
+        fill: rgba(255, 255, 255, ${props.filterCount * 0.25});
+      }
+  `}
 `;
 
 export const HeaderControls = ({
@@ -213,6 +223,9 @@ export const HeaderControls = ({
               });
             }}
             className="hlp-4"
+            filterCount={
+              nodeFilter.filter((category) => category.active === false).length
+            }
           >
             <HiOutlineFilter viewBox="0 -2 24 24" />
           </FilterButton>
