@@ -124,6 +124,8 @@ export const HeaderControls = ({
   endCategory,
   setEndCategory,
   setIsPrinting,
+  nodeFilter,
+  setNodeFilter,
   count,
   limit,
   setLimit,
@@ -210,8 +212,9 @@ export const HeaderControls = ({
                 y: boundingRect.bottom + 10,
               });
             }}
+            className="hlp-4"
           >
-            <HiOutlineFilter viewBox="0 -1 24 24" />
+            <HiOutlineFilter viewBox="0 -2 24 24" />
           </FilterButton>
           <Chord />
         </BoundWrap>
@@ -238,8 +241,9 @@ export const HeaderControls = ({
           x={filterTooltip.x}
           y={filterTooltip.y}
           removeFn={() => setFilterTooltip(undefined)}
+          pd={15}
         >
-          <FilterList />
+          <FilterList nodeFilter={nodeFilter} setNodeFilter={setNodeFilter} />
         </Tooltip>
       )}
     </Header>

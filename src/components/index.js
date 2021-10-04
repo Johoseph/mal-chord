@@ -4,6 +4,7 @@ export * from "./error/NoData";
 export * from "./error/UserDetailsError";
 
 // general
+export * from "./general/Checkbox";
 export * from "./general/Dropdown";
 export * from "./general/Help";
 export * from "./general/MALChord";

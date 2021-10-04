@@ -21,6 +21,8 @@ export const SankeyControls = ({
   startSort,
   endSort,
   endCategory,
+  nodeFilter,
+  setNodeFilter,
   setIsPrinting,
   count,
   limit,
@@ -34,6 +36,8 @@ export const SankeyControls = ({
         endCategory={endCategory}
         setEndCategory={setEndCategory}
         setIsPrinting={setIsPrinting}
+        nodeFilter={nodeFilter}
+        setNodeFilter={setNodeFilter}
         count={count}
         limit={limit}
         setLimit={setLimit}

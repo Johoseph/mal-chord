@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import styled from "styled-components";
-import helpContent from "./helpContent.json";
+import helpContent from "config/helpContent.json";
 
 import { BsArrowRightShort, BsCheck, BsX } from "react-icons/bs";
 
