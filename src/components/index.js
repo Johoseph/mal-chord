@@ -21,6 +21,7 @@ export * from "./graph/MoreData";
 export * from "./graph/Sankey";
 export * from "./graph/SankeyControls";
 
+export * from "./graph/cards/ColourPicker";
 export * from "./graph/cards/ContextMenu";
 export * from "./graph/cards/NodeCard";
 

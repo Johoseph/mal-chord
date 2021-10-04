@@ -173,6 +173,13 @@ const scale = scaleOrdinal(schemeCategory10);
 
 export const getNodeColour = (name) => scale(name.replace(/ .*/, ""));
 
+export const checkCustomColour = (name, nodeList) => {
+  const node = nodeList.find((node) => name === node.name);
+
+  if (node) return node.colour;
+  return getNodeColour(name);
+};
+
 export const handleSankeySvg = ({
   element,
   width,
@@ -188,6 +195,7 @@ export const handleSankeySvg = ({
   hiddenLinks,
   nodeDifference,
   nodeCount,
+  nodeColours,
   useThumbnails = true,
 }) => {
   let svg;
@@ -320,12 +328,15 @@ export const handleSankeySvg = ({
           // linearGradient
           //   .append("stop")
           //   .attr("offset", `${(100 / (linkCount - 1)) * i}%`)
-          //   .attr("stop-color", getNodeColour(link.target.name))
+          //   .attr("stop-color", checkCustomColour(link.target.name, nodeColours))
 
           radialGradient
             .append("stop")
             .attr("offset", `${99.1 + (0.8 / (linkCount - 1)) * i}%`)
-            .attr("stop-color", getNodeColour(link.target.name))
+            .attr(
+              "stop-color",
+              checkCustomColour(link.target.name, nodeColours)
+            )
         );
       }
     }
@@ -339,7 +350,7 @@ export const handleSankeySvg = ({
       .attr("height", nodeSide)
       .style("fill", (d) => {
         if (d.linker.length > 1) return `url('#gradient-${d.id}')`;
-        return getNodeColour(d.linker[0]);
+        return checkCustomColour(d.linker[0], nodeColours);
       });
   }
 
@@ -356,7 +367,7 @@ export const handleSankeySvg = ({
     .attr("x", (d) => d.x0)
     .attr("y", (d) => d.y0)
     .attr("class", "listener-ignore")
-    .style("fill", (d) => getNodeColour(d.name))
+    .style("fill", (d) => checkCustomColour(d.name, nodeColours))
     .style("cursor", "pointer")
     .on("contextmenu", handleNodeRightClick)
     .on("click", handleNodeClick);
@@ -380,7 +391,7 @@ export const handleSankeySvg = ({
   link
     .append("path")
     .attr("d", (d) => customLinkHorizontal(d, startNodes.length))
-    .attr("fill", (d) => getNodeColour(d.target.name))
+    .attr("fill", (d) => checkCustomColour(d.target.name, nodeColours))
     .attr("opacity", 0.5)
     .attr("id", (d) => d.index)
     .on("mouseover", (e) => {
@@ -416,7 +427,7 @@ export const handleSankeySvg = ({
   highlightedLink
     .append("path")
     .attr("d", (d) => customLinkHorizontal(d, startNodes.length))
-    .attr("fill", (d) => getNodeColour(d.target.name))
+    .attr("fill", (d) => checkCustomColour(d.target.name, nodeColours))
     .attr("opacity", 1)
     .attr("id", (d) => d.index);
 

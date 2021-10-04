@@ -1,7 +1,7 @@
 import { h } from "preact";
 import styled, { css } from "styled-components";
 import { HiOutlineExternalLink } from "react-icons/hi";
-import { getNodeColour } from "helpers";
+import { checkCustomColour } from "helpers";
 
 const Wrapper = styled.div`
   display: flex;
@@ -67,7 +67,7 @@ const LinkIcon = styled(HiOutlineExternalLink)`
   color: #dadada;
 `;
 
-export const NodeCard = ({ node, startCategory }) => {
+export const NodeCard = ({ node, startCategory, nodeColours }) => {
   return (
     <Wrapper>
       {node.photo && <Photo src={node.photo} alt={`${node.title} cover art`} />}
@@ -94,7 +94,12 @@ export const NodeCard = ({ node, startCategory }) => {
             <LinksScroll>
               {node.sourceLinks.map((source) => (
                 <NodeItem key={source.target.node}>
-                  <Color nodeColour={getNodeColour(source.target.name)} />
+                  <Color
+                    nodeColour={checkCustomColour(
+                      source.target.name,
+                      nodeColours
+                    )}
+                  />
                   {source.target.name}
                 </NodeItem>
               ))}

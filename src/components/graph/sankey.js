@@ -7,8 +7,14 @@ import {
   useState,
 } from "preact/hooks";
 
-import { Tooltip, NodeCard, ContextMenu, PrintingModal } from "components";
-import { handleSankeySvg } from "helpers";
+import {
+  Tooltip,
+  NodeCard,
+  ContextMenu,
+  PrintingModal,
+  ColourPicker,
+} from "components";
+import { handleSankeySvg, checkCustomColour } from "helpers";
 
 export const Sankey = ({
   startCategory,
@@ -27,13 +33,40 @@ export const Sankey = ({
 
   const [highlightedLinks, setHighlightedLinks] = useState([]);
   const [hiddenLinks, setHiddenLinks] = useState([]);
+  const [nodeColours, setNodeColours] = useState([]);
 
   const [animeTooltip, setAnimeTooltip] = useState();
   const [contextTooltip, setContextTooltip] = useState();
+  const [colourPicker, setColourPicker] = useState();
   const widthModifier = useMemo(() => width / 20, [width]);
+
+  const openColourPicker = useCallback(() => {
+    const toSet = contextTooltip;
+
+    setContextTooltip();
+    setColourPicker({
+      x: toSet.x,
+      y: toSet.y,
+      name: toSet.title,
+      colour: checkCustomColour(toSet.title, nodeColours),
+    });
+  }, [contextTooltip, nodeColours]);
+
+  const confirmColour = useCallback(
+    (colour) => {
+      setNodeColours((prev) => [
+        ...prev.filter((col) => col.name !== colourPicker.title),
+        { name: colourPicker.name, colour },
+      ]);
+
+      setColourPicker();
+    },
+    [colourPicker]
+  );
 
   const handleNodeClick = useCallback((e, node) => {
     setContextTooltip(undefined);
+    setColourPicker(undefined);
 
     setAnimeTooltip({
       data: {
@@ -51,6 +84,7 @@ export const Sankey = ({
   const handleNodeRightClick = useCallback((e, node) => {
     e.preventDefault();
     setAnimeTooltip(undefined);
+    setColourPicker(undefined);
 
     setContextTooltip({
       links: [
@@ -61,6 +95,7 @@ export const Sankey = ({
           (link) => `${link.source.name}|${link.target.name}`
         ),
       ],
+      title: node.name,
       x: e.clientX,
       y: e.clientY,
     });
@@ -69,6 +104,7 @@ export const Sankey = ({
   useEffect(() => {
     setHighlightedLinks([]);
     setHiddenLinks([]);
+    setNodeColours([]);
   }, [startCategory, endCategory]);
 
   useEffect(
@@ -88,6 +124,7 @@ export const Sankey = ({
         handleNodeRightClick,
         highlightedLinks,
         hiddenLinks,
+        nodeColours,
       }),
     [
       width,
@@ -103,6 +140,7 @@ export const Sankey = ({
       hiddenLinks,
       nodeCount,
       nodeDifference,
+      nodeColours,
     ]
   );
 
@@ -115,7 +153,11 @@ export const Sankey = ({
           y={animeTooltip.y}
           removeFn={() => setAnimeTooltip(undefined)}
         >
-          <NodeCard node={animeTooltip.data} startCategory={startCategory} />
+          <NodeCard
+            node={animeTooltip.data}
+            startCategory={startCategory}
+            nodeColours={nodeColours}
+          />
         </Tooltip>
       )}
       {contextTooltip && (
@@ -131,7 +173,20 @@ export const Sankey = ({
             setHighlightedLinks={setHighlightedLinks}
             hiddenLinks={hiddenLinks}
             setHiddenLinks={setHiddenLinks}
+            openColourPicker={openColourPicker}
             removeMenu={() => setContextTooltip(undefined)}
+          />
+        </Tooltip>
+      )}
+      {colourPicker && (
+        <Tooltip
+          x={colourPicker.x}
+          y={colourPicker.y}
+          removeFn={() => setColourPicker(undefined)}
+        >
+          <ColourPicker
+            colour={colourPicker.colour}
+            confirmColour={confirmColour}
           />
         </Tooltip>
       )}
