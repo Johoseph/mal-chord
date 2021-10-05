@@ -56,10 +56,10 @@
     ]
   },
   {
-    "header": "Hide and Highlight 🙈 🙉",
+    "header": "Hide, Highlight and Colour 🎨",
     "body": [
-      "Links between nodes can be highlighted or hidden to help you read your chart more effectively.",
-      "Try right clicking on the node to bring up the hide/highlight menu."
+      "Links between nodes can be highlighted or hidden to help you read your chart more effectively. You can also play with node colours - this can help with printing!",
+      "Try right clicking on the node to bring up the hide/highlight/colour menu."
     ]
   },
   {
