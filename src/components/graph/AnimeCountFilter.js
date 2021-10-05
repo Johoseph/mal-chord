@@ -5,10 +5,8 @@ import {
   useRef,
   useEffect,
   useMemo,
-  useContext,
 } from "preact/hooks";
 import styled from "styled-components";
-import { HistoryContext } from "contexts";
 import { mathClamp } from "helpers";
 
 const Wrapper = styled.div`
@@ -53,10 +51,13 @@ const Input = styled.input`
   bottom: 1px;
 `;
 
-export const AnimeCountFilter = ({ count, limit, setLimit }) => {
-  const { writeToHistory } = useContext(HistoryContext);
-
+export const AnimeCountFilter = ({ sankeyState, updateSankey }) => {
   const [isEditing, setIsEditing] = useState(false);
+
+  const count = useMemo(
+    () => sankeyState.filteredData.length,
+    [sankeyState.filteredData.length]
+  );
 
   const incrementChange = useMemo(
     () => Math.round(mathClamp(count / 20, 1, 20)),
@@ -69,46 +70,24 @@ export const AnimeCountFilter = ({ count, limit, setLimit }) => {
     const submittedValue = parseInt(inputRef.current?.value, 10);
 
     if (submittedValue && 0 < submittedValue && submittedValue <= count)
-      setLimit((prev) => {
-        if (submittedValue !== prev)
-          writeToHistory([
-            {
-              fn: setLimit,
-              undo: prev,
-              redo: submittedValue,
-            },
-          ]);
-
-        return submittedValue;
-      });
+      updateSankey({ type: "updateNodeLimit", limit: submittedValue });
     setIsEditing(false);
-  }, [count, setLimit, writeToHistory]);
+  }, [count, updateSankey]);
 
   const handleWheel = useCallback(
     (e) => {
       e.preventDefault();
       const numberOfScrolls = Math.ceil((-1 * e.deltaY) / 100);
 
-      setLimit((prev) => {
-        const newLimit = mathClamp(
-          prev + numberOfScrolls * incrementChange,
-          1,
-          count
-        );
+      const newLimit = mathClamp(
+        sankeyState.nodeLimit + numberOfScrolls * incrementChange,
+        1,
+        count
+      );
 
-        if (newLimit !== prev)
-          writeToHistory([
-            {
-              fn: setLimit,
-              undo: prev,
-              redo: newLimit,
-            },
-          ]);
-
-        return newLimit;
-      });
+      updateSankey({ type: "updateNodeLimit", limit: newLimit });
     },
-    [setLimit, incrementChange, count, writeToHistory]
+    [sankeyState.nodeLimit, count, incrementChange, updateSankey]
   );
 
   const handleKeyDown = useCallback(
@@ -117,43 +96,31 @@ export const AnimeCountFilter = ({ count, limit, setLimit }) => {
         case "Enter":
           setIsEditing(true);
           break;
-        case "ArrowUp":
+        case "ArrowUp": {
           e.preventDefault();
-          setLimit((prev) => {
-            const newLimit = mathClamp(prev + incrementChange, 1, count);
+          const newLimit = mathClamp(
+            sankeyState.nodeLimit + incrementChange,
+            1,
+            count
+          );
 
-            if (newLimit !== prev)
-              writeToHistory([
-                {
-                  fn: setLimit,
-                  undo: prev,
-                  redo: newLimit,
-                },
-              ]);
-
-            return newLimit;
-          });
+          updateSankey({ type: "updateNodeLimit", limit: newLimit });
           break;
-        case "ArrowDown":
+        }
+        case "ArrowDown": {
           e.preventDefault();
-          setLimit((prev) => {
-            const newLimit = mathClamp(prev - incrementChange, 1, count);
+          const newLimit = mathClamp(
+            sankeyState.nodeLimit - incrementChange,
+            1,
+            count
+          );
 
-            if (newLimit !== prev)
-              writeToHistory([
-                {
-                  fn: setLimit,
-                  undo: prev,
-                  redo: newLimit,
-                },
-              ]);
-
-            return newLimit;
-          });
+          updateSankey({ type: "updateNodeLimit", limit: newLimit });
           break;
+        }
       }
     },
-    [setLimit, incrementChange, count, writeToHistory]
+    [sankeyState.nodeLimit, count, incrementChange, updateSankey]
   );
 
   useEffect(() => {
@@ -171,14 +138,14 @@ export const AnimeCountFilter = ({ count, limit, setLimit }) => {
     >
       {!isEditing ? (
         <Viewing onClick={() => setIsEditing(true)}>
-          {limit} of {count}
+          {sankeyState.nodeLimit} of {count}
         </Viewing>
       ) : (
         <Flex>
           <Input
             ref={inputRef}
             name="update-limit"
-            value={limit}
+            value={sankeyState.nodeLimit}
             maxLength={4}
             autoComplete="off"
             onBlur={handleSetLimit}

@@ -1,8 +1,7 @@
-import { useCallback, useContext } from "preact/hooks";
+import { useCallback } from "preact/hooks";
 import styled from "styled-components";
 
 import { Checkbox } from "components";
-import { HistoryContext } from "contexts";
 
 const Wrapper = styled.div`
   font-size: 1rem;
@@ -14,33 +13,20 @@ const ListItem = styled.div`
   }
 `;
 
-export const FilterList = ({ nodeFilter, setNodeFilter }) => {
-  const { writeToHistory } = useContext(HistoryContext);
+export const FilterList = ({ nodeFilter, updateSankey }) => {
+  const handleCheck = (category) => {
+    const newFilter = [...nodeFilter];
+    const indexToChange = nodeFilter.findIndex(
+      (item) => item.name === category
+    );
 
-  const handleCheck = useCallback(
-    (category) => {
-      setNodeFilter((prev) => {
-        const newFilter = [...prev];
-        const indexToChange = prev.findIndex((item) => item.name === category);
+    newFilter[indexToChange] = {
+      name: category,
+      active: !nodeFilter[indexToChange].active,
+    };
 
-        newFilter[indexToChange] = {
-          name: category,
-          active: !prev[indexToChange].active,
-        };
-
-        writeToHistory([
-          {
-            fn: setNodeFilter,
-            undo: prev,
-            redo: newFilter,
-          },
-        ]);
-
-        return newFilter;
-      });
-    },
-    [setNodeFilter, writeToHistory]
-  );
+    updateSankey({ type: "updateNodeFilter", nodeFilter: newFilter });
+  };
 
   // Prevent users from de-selecting all options
   const handleDisabled = useCallback(

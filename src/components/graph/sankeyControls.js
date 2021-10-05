@@ -13,41 +13,20 @@ const Wrapper = styled.div`
 `;
 
 export const SankeyControls = ({
-  startCategory,
-  setStartCategory,
-  setStartSort,
-  setEndSort,
-  setEndCategory,
-  startSort,
-  endSort,
-  endCategory,
-  nodeFilter,
-  setNodeFilter,
+  sankeyState,
+  updateSankey,
   setIsPrinting,
-  count,
-  limit,
-  setLimit,
+  setHelpRequired,
 }) => {
   return (
     <Wrapper>
       <HeaderControls
-        startCategory={startCategory}
-        setStartCategory={setStartCategory}
-        endCategory={endCategory}
-        setEndCategory={setEndCategory}
+        sankeyState={sankeyState}
+        updateSankey={updateSankey}
         setIsPrinting={setIsPrinting}
-        nodeFilter={nodeFilter}
-        setNodeFilter={setNodeFilter}
-        count={count}
-        limit={limit}
-        setLimit={setLimit}
+        setHelpRequired={setHelpRequired}
       />
-      <SortControls
-        startSort={startSort}
-        setStartSort={setStartSort}
-        endSort={endSort}
-        setEndSort={setEndSort}
-      />
+      <SortControls sankeyState={sankeyState} updateSankey={updateSankey} />
     </Wrapper>
   );
 };

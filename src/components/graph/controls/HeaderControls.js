@@ -1,6 +1,6 @@
 import { h } from "preact";
 import styled from "styled-components";
-import { useCallback, useContext, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 import { HiOutlineFilter } from "react-icons/hi";
 
 import {
@@ -10,7 +10,6 @@ import {
   Tooltip,
   FilterList,
 } from "components";
-import { HistoryContext } from "contexts";
 
 const startCategoryOptions = [
   {
@@ -129,84 +128,32 @@ const FilterButton = styled.button`
 `;
 
 export const HeaderControls = ({
-  startCategory,
-  setStartCategory,
-  endCategory,
-  setEndCategory,
+  sankeyState,
+  updateSankey,
   setIsPrinting,
-  nodeFilter,
-  setNodeFilter,
-  count,
-  limit,
-  setLimit,
+  setHelpRequired,
 }) => {
   const [filterTooltip, setFilterTooltip] = useState();
-
-  const { writeToHistory } = useContext(HistoryContext);
-
-  const handleSetStartCategory = useCallback(
-    (val) => {
-      if (startCategory !== val) {
-        let toWrite = [];
-
-        setEndCategory((prev) => {
-          toWrite.push({
-            fn: setEndCategory,
-            undo: prev,
-            redo: "score",
-          });
-
-          return "score";
-        });
-
-        setStartCategory((prev) => {
-          toWrite.push({
-            fn: setStartCategory,
-            undo: prev,
-            redo: val,
-          });
-
-          return val;
-        });
-
-        writeToHistory(toWrite);
-      }
-    },
-    [startCategory, setEndCategory, setStartCategory, writeToHistory]
-  );
-
-  const handleSetEndCategory = useCallback(
-    (val) => {
-      setEndCategory((prev) => {
-        if (val !== prev)
-          writeToHistory([
-            {
-              fn: setEndCategory,
-              undo: prev,
-              redo: val,
-            },
-          ]);
-
-        return val;
-      });
-    },
-    [setEndCategory, writeToHistory]
-  );
 
   return (
     <Header>
       <Bound>
         <BoundWrap bound="start">
           <Dropdown
-            value={startCategory}
-            setValue={handleSetStartCategory}
+            value={sankeyState.startCategory}
+            setValue={(val) =>
+              updateSankey({ type: "updateStartCategory", startCategory: val })
+            }
             options={startCategoryOptions}
             minWidth={150}
             alignment="left"
             optionFontSize={1}
             className="hlp-3 right-60"
           />
-          <AnimeCountFilter count={count} limit={limit} setLimit={setLimit} />
+          <AnimeCountFilter
+            sankeyState={sankeyState}
+            updateSankey={updateSankey}
+          />
           <FilterButton
             aria-label="Filter by status"
             onClick={(e) => {
@@ -224,7 +171,9 @@ export const HeaderControls = ({
             }}
             className="hlp-4"
             filterCount={
-              nodeFilter.filter((category) => category.active === false).length
+              sankeyState.nodeFilter.filter(
+                (category) => category.active === false
+              ).length
             }
           >
             <HiOutlineFilter viewBox="0 -2 24 24" />
@@ -232,15 +181,22 @@ export const HeaderControls = ({
           <Chord />
         </BoundWrap>
       </Bound>
-      <HeaderSubControls setIsPrinting={setIsPrinting} />
+      <HeaderSubControls
+        sankeyState={sankeyState}
+        updateSankey={updateSankey}
+        setIsPrinting={setIsPrinting}
+        setHelpRequired={setHelpRequired}
+      />
       <Bound>
         <BoundWrap bound="end">
           <Chord />
           <Dropdown
-            value={endCategory}
-            setValue={handleSetEndCategory}
+            value={sankeyState.endCategory}
+            setValue={(val) =>
+              updateSankey({ type: "updateEndCategory", endCategory: val })
+            }
             options={endCategoryOptions.filter(
-              (option) => option[startCategory]
+              (option) => option[sankeyState.startCategory]
             )}
             minWidth={150}
             alignment="right"
@@ -256,7 +212,10 @@ export const HeaderControls = ({
           removeFn={() => setFilterTooltip(undefined)}
           pd={15}
         >
-          <FilterList nodeFilter={nodeFilter} setNodeFilter={setNodeFilter} />
+          <FilterList
+            nodeFilter={sankeyState.nodeFilter}
+            updateSankey={updateSankey}
+          />
         </Tooltip>
       )}
     </Header>

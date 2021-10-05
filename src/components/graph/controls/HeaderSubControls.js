@@ -4,8 +4,7 @@ import styled from "styled-components";
 import { AiOutlinePrinter } from "react-icons/ai";
 import { FaUndo, FaRedo } from "react-icons/fa";
 import { IoMdHelp } from "react-icons/io";
-import { useCallback, useContext, useEffect } from "preact/hooks";
-import { HistoryContext } from "contexts";
+import { useCallback, useEffect } from "preact/hooks";
 
 const Wrapper = styled.div`
   display: flex;
@@ -40,31 +39,16 @@ const Icon = styled.button`
   }
 `;
 
-export const HeaderSubControls = ({ setIsPrinting }) => {
-  const { currentIndex, setCurrentIndex, sankeyHistory, setHelpRequired } =
-    useContext(HistoryContext);
-
-  const canUndo = !(currentIndex === 0);
-  const canRedo = !(currentIndex + 1 > sankeyHistory.length);
-
-  const handleUndo = useCallback(
-    (curIndex) => {
-      const currentHistory = sankeyHistory[curIndex - 1];
-
-      currentHistory.forEach((item) => item.fn(item.undo));
-      setCurrentIndex((prev) => prev - 1);
-    },
-    [sankeyHistory, setCurrentIndex]
-  );
-
-  const handleRedo = useCallback(
-    (curIndex) => {
-      const currentHistory = sankeyHistory[curIndex];
-
-      currentHistory.forEach((item) => item.fn(item.redo));
-      setCurrentIndex((prev) => prev + 1);
-    },
-    [sankeyHistory, setCurrentIndex]
+export const HeaderSubControls = ({
+  sankeyState,
+  updateSankey,
+  setIsPrinting,
+  setHelpRequired,
+}) => {
+  const canUndo = !(sankeyState.historyIndex === 0);
+  const canRedo = !(
+    sankeyState.historyIndex + 1 >=
+    sankeyState.sankeyHistory.length
   );
 
   const keyListener = useCallback(
@@ -72,16 +56,24 @@ export const HeaderSubControls = ({ setIsPrinting }) => {
       if (e.ctrlKey) {
         switch (e.key) {
           case "z":
-            if (canUndo) handleUndo(currentIndex);
+            if (canUndo)
+              updateSankey({
+                type: "undoAction",
+                index: sankeyState.historyIndex,
+              });
             break;
           case "y":
-            if (canRedo) handleRedo(currentIndex);
+            if (canRedo)
+              updateSankey({
+                type: "redoAction",
+                index: sankeyState.historyIndex,
+              });
             break;
           default:
         }
       }
     },
-    [canRedo, canUndo, currentIndex, handleRedo, handleUndo]
+    [canRedo, canUndo, sankeyState.historyIndex, updateSankey]
   );
 
   useEffect(() => {
@@ -92,7 +84,12 @@ export const HeaderSubControls = ({ setIsPrinting }) => {
   return (
     <Wrapper>
       <Icon
-        onClick={() => handleUndo(currentIndex)}
+        onClick={() =>
+          updateSankey({
+            type: "undoAction",
+            index: sankeyState.historyIndex,
+          })
+        }
         disabled={!canUndo}
         className="hlp-5"
         aria-label="Undo last action"
@@ -114,7 +111,12 @@ export const HeaderSubControls = ({ setIsPrinting }) => {
         <IoMdHelp />
       </Icon>
       <Icon
-        onClick={() => handleRedo(currentIndex)}
+        onClick={() =>
+          updateSankey({
+            type: "redoAction",
+            index: sankeyState.historyIndex,
+          })
+        }
         disabled={!canRedo}
         className="hlp-5"
         aria-label="Redo last action"

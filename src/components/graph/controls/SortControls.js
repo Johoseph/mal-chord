@@ -1,10 +1,8 @@
 import { h } from "preact";
-import { useCallback, useContext } from "preact/hooks";
 import styled from "styled-components";
 import { HiArrowNarrowDown, HiArrowNarrowUp } from "react-icons/hi";
 
 import { Dropdown } from "components";
-import { HistoryContext } from "contexts";
 
 const sortOptions = [
   {
@@ -67,81 +65,16 @@ const SortButton = styled.button`
   }
 `;
 
-export const SortControls = ({
-  startSort,
-  setStartSort,
-  endSort,
-  setEndSort,
-}) => {
-  const { writeToHistory } = useContext(HistoryContext);
-
-  const handleStartSortDirection = useCallback(() => {
-    setStartSort((prev) => {
-      const newSort = {
-        type: prev.type,
-        direction: prev.direction === "ASC" ? "DESC" : "ASC",
-      };
-
-      writeToHistory([
-        {
-          fn: setStartSort,
-          undo: prev,
-          redo: newSort,
-        },
-      ]);
-
-      return newSort;
-    });
-  }, [setStartSort, writeToHistory]);
-
-  const handleStartSortType = useCallback(
-    (val) => {
-      setStartSort((prev) => {
-        const newSort = { type: val, direction: prev.direction };
-
-        if (val !== prev.type)
-          writeToHistory([
-            {
-              fn: setStartSort,
-              undo: prev,
-              redo: newSort,
-            },
-          ]);
-
-        return newSort;
-      });
-    },
-    [setStartSort, writeToHistory]
-  );
-
-  const handleEndSortDirection = useCallback(() => {
-    setEndSort((prev) => {
-      const newSort = {
-        type: prev.type,
-        direction: prev.direction === "ASC" ? "DESC" : "ASC",
-      };
-
-      writeToHistory([
-        {
-          fn: setEndSort,
-          undo: prev,
-          redo: newSort,
-        },
-      ]);
-
-      return newSort;
-    });
-  }, [setEndSort, writeToHistory]);
-
+export const SortControls = ({ sankeyState, updateSankey }) => {
   return (
     <Sort>
       <Flex className="hlp-7 right-25">
         <SortButtonWrapper>
           <SortButton
-            onClick={handleStartSortDirection}
+            onClick={() => updateSankey({ type: "updateStartSortDirection" })}
             aria-label="Toggle anime sort direction"
           >
-            {startSort.direction === "ASC" ? (
+            {sankeyState.startSort.direction === "ASC" ? (
               <HiArrowNarrowUp />
             ) : (
               <HiArrowNarrowDown />
@@ -149,8 +82,10 @@ export const SortControls = ({
           </SortButton>
         </SortButtonWrapper>
         <Dropdown
-          value={startSort.type}
-          setValue={handleStartSortType}
+          value={sankeyState.startSort.type}
+          setValue={(val) =>
+            updateSankey({ type: "updateStartSortType", sortType: val })
+          }
           options={sortOptions}
           minWidth={120}
         />
@@ -158,17 +93,17 @@ export const SortControls = ({
       <Flex className="hlp-7">
         <SortButtonWrapper>
           <SortButton
-            onClick={handleEndSortDirection}
+            onClick={() => updateSankey({ type: "updateEndSortDirection" })}
             aria-label="Toggle end category sort direction"
           >
-            {endSort.direction === "ASC" ? (
+            {sankeyState.endSort.direction === "ASC" ? (
               <HiArrowNarrowUp />
             ) : (
               <HiArrowNarrowDown />
             )}
           </SortButton>
         </SortButtonWrapper>
-        {endSort.type}
+        {sankeyState.endSort.type}
       </Flex>
     </Sort>
   );

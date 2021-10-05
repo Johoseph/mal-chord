@@ -1,9 +1,16 @@
-import { h } from "preact";
 import styled, { keyframes } from "styled-components";
 
-import { useMemo, useState } from "preact/hooks";
+import { useMemo, useReducer, useEffect } from "preact/hooks";
 import { useHelp, useQuery } from "hooks";
 import { Graph, Overview, Help, Tooltip } from "components";
+
+const DEFAULT_LIMIT = 25;
+const MAX_HISTORY = 50;
+
+const LIST_STATUS = {
+  anime: ["Completed", "Watching", "On Hold", "Dropped", "Plan To Watch"],
+  manga: ["Completed", "Reading", "On Hold", "Dropped", "Plan To Read"],
+};
 
 const fadeIn = keyframes`
   from {
@@ -38,15 +45,194 @@ const HelpSvg = styled.svg`
   `}
 `;
 
+const writeSankeyHistory = (state) => {
+  let sankeyHistory = [...state.sankeyHistory];
+  let historyIndex = state.historyIndex;
+
+  if (state.sankeyHistory.length >= MAX_HISTORY) sankeyHistory.shift();
+
+  sankeyHistory = [
+    ...sankeyHistory.filter((_e, i) => i <= historyIndex),
+    state,
+  ];
+  historyIndex = Math.min(historyIndex + 1, MAX_HISTORY);
+
+  return { historyIndex, sankeyHistory };
+};
+
+const sankeyReducer = (state, action) => {
+  switch (action.type) {
+    case "setData": {
+      const newState = {
+        ...state,
+        data: action.payload,
+        filteredData: action.payload,
+        queryStatus: action.queryStatus,
+        nodeLimit: Math.min(action.payload.length, DEFAULT_LIMIT),
+      };
+
+      return {
+        ...newState,
+        sankeyHistory: [newState],
+      };
+    }
+
+    case "updateStartCategory": {
+      const newState = {
+        ...state,
+        nodeFilter: LIST_STATUS[action.startCategory].map((status) => ({
+          name: status,
+          active: true,
+        })),
+        startCategory: action.startCategory,
+      };
+
+      return {
+        ...newState,
+        ...writeSankeyHistory(newState),
+      };
+    }
+    case "updateEndCategory": {
+      const newState = {
+        ...state,
+        endCategory: action.endCategory,
+      };
+
+      return {
+        ...newState,
+        ...writeSankeyHistory(newState),
+      };
+    }
+    case "updateNodeLimit": {
+      const newState = {
+        ...state,
+        nodeLimit: action.limit,
+      };
+
+      return {
+        ...newState,
+        ...writeSankeyHistory(newState),
+      };
+    }
+    case "updateNodeFilter": {
+      const newData = state.data.filter(
+        (item) =>
+          action.nodeFilter.find((filter) => filter.name === item.status).active
+      );
+
+      const newState = {
+        ...state,
+        filteredData: newData,
+        nodeFilter: action.nodeFilter,
+        nodeLimit: Math.min(newData.length, DEFAULT_LIMIT),
+      };
+
+      return {
+        ...newState,
+        ...writeSankeyHistory(newState),
+      };
+    }
+    case "updateStartSortDirection": {
+      const newState = {
+        ...state,
+        startSort: {
+          type: state.startSort.type,
+          direction: state.startSort.direction === "ASC" ? "DESC" : "ASC",
+        },
+      };
+
+      return {
+        ...newState,
+        ...writeSankeyHistory(newState),
+      };
+    }
+    case "updateStartSortType": {
+      const newState = {
+        ...state,
+        startSort: {
+          type: action.sortType,
+          direction: state.startSort.direction,
+        },
+      };
+
+      return {
+        ...newState,
+        ...writeSankeyHistory(newState),
+      };
+    }
+    case "updateEndSortDirection": {
+      const newState = {
+        ...state,
+        endSort: {
+          type: state.endSort.type,
+          direction: state.endSort.direction === "ASC" ? "DESC" : "ASC",
+        },
+      };
+
+      return {
+        ...newState,
+        ...writeSankeyHistory(newState),
+      };
+    }
+    case "undoAction": {
+      return {
+        ...state.sankeyHistory[action.index - 1],
+        sankeyHistory: state.sankeyHistory,
+        historyIndex: action.index - 1,
+      };
+    }
+    case "redoAction": {
+      return {
+        ...state.sankeyHistory[action.index + 1],
+        sankeyHistory: state.sankeyHistory,
+        historyIndex: action.index + 1,
+      };
+    }
+    default:
+      return state;
+  }
+};
+
 export const LoggedIn = ({ useMock }) => {
-  const [startCategory, setStartCategory] = useState("anime");
+  const [sankeyState, updateSankey] = useReducer(sankeyReducer, {
+    data: [],
+    filteredData: [],
+    queryStatus: "loading",
+    startCategory: "anime",
+    endCategory: "score",
+    startSort: {
+      type: "date",
+      direction: "DESC",
+    },
+    endSort: {
+      type: "alphabetical",
+      direction: "DESC",
+    },
+    nodeFilter: LIST_STATUS["anime"].map((status) => ({
+      name: status,
+      active: true,
+    })),
+    nodeLimit: DEFAULT_LIMIT,
+    sankeyHistory: [],
+    historyIndex: 0,
+  });
 
   const { data, status, refetch } = useQuery(
-    `${useMock ? "mock" : "user"}_${startCategory}_list`
+    `${useMock ? "mock" : "user"}_${sankeyState.startCategory}_list`
   );
 
-  const pathToData = useMemo(() => data?.data, [data]);
+  const pathToData = useMemo(() => data?.data ?? [], [data]);
   const hasNextPage = useMemo(() => data?.hasNextPage, [data]);
+
+  useEffect(
+    () =>
+      updateSankey({
+        type: "setData",
+        payload: pathToData,
+        queryStatus: status,
+      }),
+    [pathToData, status]
+  );
 
   const {
     readyToRun,
@@ -91,17 +277,16 @@ export const LoggedIn = ({ useMock }) => {
         data={pathToData}
         status={status}
         useMock={useMock}
-        startCategory={startCategory}
+        startCategory={sankeyState.startCategory}
       />
       <Graph
-        data={pathToData}
+        sankeyState={sankeyState}
+        updateSankey={updateSankey}
         hasNextPage={hasNextPage}
-        status={status}
+        status={sankeyState.queryStatus}
         refetch={refetch}
         helpActive={readyToRun}
         setHelpRequired={setHelpRequired}
-        startCategory={startCategory}
-        setStartCategory={setStartCategory}
       />
     </main>
   );

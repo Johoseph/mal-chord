@@ -2,9 +2,7 @@ import { h } from "preact";
 import { useEffect, useState, useMemo } from "preact/hooks";
 import useResizeObserver from "use-resize-observer";
 
-import { HistoryContext } from "contexts";
 import { mathClamp, getSankeyFormat } from "helpers";
-import { useSankeyHistory } from "hooks";
 import {
   Sankey,
   SankeyControls,
@@ -14,78 +12,26 @@ import {
   MoreData,
 } from "components";
 
-const DEFAULT_LIMIT = 25;
-
-const LIST_STATUS = {
-  anime: ["Completed", "Watching", "On Hold", "Dropped", "Plan To Watch"],
-  manga: ["Completed", "Reading", "On Hold", "Dropped", "Plan To Read"],
-};
-
 export const Graph = ({
-  data,
+  sankeyState,
+  updateSankey,
   status,
   refetch,
   hasNextPage,
   helpActive,
   setHelpRequired,
-  startCategory,
-  setStartCategory,
 }) => {
-  const { currentIndex, setCurrentIndex, sankeyHistory, writeToHistory } =
-    useSankeyHistory();
-
-  const historyContext = useMemo(
-    () => ({
-      currentIndex,
-      setCurrentIndex,
-      sankeyHistory,
-      writeToHistory,
-      setHelpRequired,
-    }),
-    [
-      currentIndex,
-      setCurrentIndex,
-      sankeyHistory,
-      writeToHistory,
-      setHelpRequired,
-    ]
-  );
-
   const { ref, width } = useResizeObserver();
   const [height, setHeight] = useState(100);
 
-  const [startSort, setStartSort] = useState({
-    type: "date",
-    direction: "DESC",
-  });
-  const [endSort, setEndSort] = useState({
-    type: "alphabetical",
-    direction: "DESC",
-  });
-  const [endCategory, setEndCategory] = useState("score");
   const [isPrinting, setIsPrinting] = useState(false);
-  const [limit, setLimit] = useState(DEFAULT_LIMIT);
-  const [nodeFilter, setNodeFilter] = useState(
-    LIST_STATUS[startCategory].map((status) => ({ name: status, active: true }))
-  );
-
-  const filteredData = useMemo(
-    () =>
-      data
-        ? data.filter(
-            (item) =>
-              nodeFilter.find((filter) => filter.name === item.status).active
-          )
-        : undefined,
-    [data, nodeFilter]
-  );
 
   const { dataNodes, dataLinks, nodeCount, nodeDifference } = getSankeyFormat(
-    filteredData || [],
-    startSort,
-    endSort,
-    endCategory,
-    limit
+    sankeyState.filteredData,
+    sankeyState.startSort,
+    sankeyState.endSort,
+    sankeyState.endCategory,
+    sankeyState.nodeLimit
   );
 
   const nodeSide = useMemo(
@@ -99,57 +45,31 @@ export const Graph = ({
   );
 
   useEffect(() => {
-    if (filteredData) setLimit(Math.min(filteredData.length, DEFAULT_LIMIT));
-  }, [filteredData]);
-
-  useEffect(() => {
     setHeight(
       Math.max(0, (nodeCount || 0) * (nodeSide + nodePadding) - nodePadding)
     );
   }, [nodeCount, nodePadding, nodeSide]);
 
-  // Reinitialise nodeFilter when startCategory changes
-  useEffect(
-    () =>
-      setNodeFilter(
-        LIST_STATUS[startCategory].map((status) => ({
-          name: status,
-          active: true,
-        }))
-      ),
-    [startCategory]
-  );
-
   return (
     <div ref={ref}>
       {status === "success" && (
-        <HistoryContext.Provider value={historyContext}>
+        <>
           {hasNextPage && !helpActive && (
             <MoreData
-              startCategory={startCategory}
+              startCategory={sankeyState.startCategory}
               fetchMore={() => refetch({ getNextPage: true })}
             />
           )}
           <SankeyControls
-            startCategory={startCategory}
-            setStartCategory={setStartCategory}
-            setStartSort={setStartSort}
-            setEndSort={setEndSort}
-            setEndCategory={setEndCategory}
-            startSort={startSort}
-            endSort={endSort}
-            endCategory={endCategory}
-            nodeFilter={nodeFilter}
-            setNodeFilter={setNodeFilter}
+            sankeyState={sankeyState}
+            updateSankey={updateSankey}
             setIsPrinting={setIsPrinting}
-            count={filteredData.length}
-            limit={limit}
-            setLimit={setLimit}
+            setHelpRequired={setHelpRequired}
           />
-          {filteredData.length > 0 ? (
+          {sankeyState.filteredData.length > 0 ? (
             <Sankey
-              startCategory={startCategory}
-              endCategory={endCategory}
+              startCategory={sankeyState.startCategory}
+              endCategory={sankeyState.endCategory}
               dataNodes={dataNodes}
               dataLinks={dataLinks}
               dimensions={{ width, height }}
@@ -161,9 +81,9 @@ export const Graph = ({
               setIsPrinting={setIsPrinting}
             />
           ) : (
-            <NoData startCategory={startCategory} />
+            <NoData startCategory={sankeyState.startCategory} />
           )}
-        </HistoryContext.Provider>
+        </>
       )}
       {status === "loading" && <GraphLoading />}
       {status === "error" && <GraphError refetch={refetch} />}
