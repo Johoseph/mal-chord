@@ -48,18 +48,6 @@ export const Sankey = ({
     });
   }, [contextTooltip, sankeyState.nodeColours]);
 
-  const confirmColour = useCallback(
-    (colour) => {
-      setNodeColours((prev) => [
-        ...prev.filter((col) => col.name !== colourPicker.name),
-        { name: colourPicker.name, colour },
-      ]);
-
-      setColourPicker();
-    },
-    [colourPicker]
-  );
-
   const handleNodeClick = useCallback((e, node) => {
     setContextTooltip(undefined);
     setColourPicker(undefined);
@@ -173,8 +161,9 @@ export const Sankey = ({
           removeFn={() => setColourPicker(undefined)}
         >
           <ColourPicker
-            colour={colourPicker.colour}
-            confirmColour={confirmColour}
+            colour={colourPicker}
+            updateSankey={updateSankey}
+            removeMenu={() => setColourPicker(undefined)}
           />
         </Tooltip>
       )}

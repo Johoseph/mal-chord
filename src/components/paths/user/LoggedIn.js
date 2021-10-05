@@ -234,6 +234,25 @@ const sankeyReducer = (state, action) => {
         ...writeSankeyHistory(newState),
       };
     }
+    case "updateColours": {
+      const newState = {
+        ...state,
+        nodeColours: [
+          ...state.nodeColours.filter((col) => col.name !== action.colour.name),
+          { name: action.colour.name, colour: action.colour.colour },
+        ],
+      };
+
+      return {
+        ...newState,
+        ...(action.isTest ? {} : writeSankeyHistory(newState)),
+      };
+    }
+    case "revertColour": {
+      return {
+        ...state.sankeyHistory[state.sankeyHistory.length - 1],
+      };
+    }
     case "undoAction": {
       return {
         ...state.sankeyHistory[action.index - 1],
