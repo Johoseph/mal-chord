@@ -251,6 +251,8 @@ const sankeyReducer = (state, action) => {
     case "revertColour": {
       return {
         ...state.sankeyHistory[state.sankeyHistory.length - 1],
+        sankeyHistory: state.sankeyHistory,
+        historyIndex: state.historyIndex,
       };
     }
     case "undoAction": {

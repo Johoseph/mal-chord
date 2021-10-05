@@ -158,7 +158,10 @@ export const Sankey = ({
         <Tooltip
           x={colourPicker.x}
           y={colourPicker.y}
-          removeFn={() => setColourPicker(undefined)}
+          removeFn={() => {
+            updateSankey({ type: "revertColour" });
+            setColourPicker(undefined);
+          }}
         >
           <ColourPicker
             colour={colourPicker}

@@ -1,14 +1,19 @@
 import styled from "styled-components";
 import { useState, useEffect } from "preact/hooks";
-import { HexColorPicker } from "react-colorful";
+import { HexColorPicker, HexColorInput } from "react-colorful";
 import { BsCheck, BsX } from "react-icons/bs";
 
 import { useDebounce } from "hooks";
 
+const ControlsWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+`;
+
 const Controls = styled.div`
   display: flex;
-  justify-content: flex-end;
-  margin-top: 15px;
 `;
 
 const Button = styled.button`
@@ -34,6 +39,27 @@ const Button = styled.button`
   }
 `;
 
+const ColourInput = styled(HexColorInput)`
+  width: 100px;
+  margin-right: 5px;
+  outline: none;
+  background: #1f1f1f;
+  border: 1px solid #6d6d6d;
+  height: 32px;
+  border-radius: 10px;
+  font-family: Roboto;
+  font-size: 1.1rem;
+  font-weight: 300;
+  text-transform: uppercase;
+  text-align: center;
+  transition: border 300ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover,
+  :focus-visible {
+    border: 1px solid #979797;
+  }
+`;
+
 export const ColourPicker = ({
   colour: { colour, name },
   updateSankey,
@@ -54,29 +80,36 @@ export const ColourPicker = ({
   return (
     <div>
       <HexColorPicker color={debounceColour} onChange={setLocalColour} />
-      <Controls>
-        <Button
-          onClick={() => {
-            updateSankey({ type: "revertColour" });
-            removeMenu();
-          }}
-          aria-label="Revert colour selection"
-        >
-          <BsX />
-        </Button>
-        <Button
-          onClick={() => {
-            updateSankey({
-              type: "updateColours",
-              colour: { name, colour: debounceColour },
-            });
-            removeMenu();
-          }}
-          aria-label="Confirm colour selection"
-        >
-          <BsCheck />
-        </Button>
-      </Controls>
+      <ControlsWrap>
+        <ColourInput
+          color={debounceColour}
+          onChange={setLocalColour}
+          maxLength={6}
+        />
+        <Controls>
+          <Button
+            onClick={() => {
+              updateSankey({ type: "revertColour" });
+              removeMenu();
+            }}
+            aria-label="Revert colour selection"
+          >
+            <BsX />
+          </Button>
+          <Button
+            onClick={() => {
+              updateSankey({
+                type: "updateColours",
+                colour: { name, colour: debounceColour },
+              });
+              removeMenu();
+            }}
+            aria-label="Confirm colour selection"
+          >
+            <BsCheck />
+          </Button>
+        </Controls>
+      </ControlsWrap>
     </div>
   );
 };
