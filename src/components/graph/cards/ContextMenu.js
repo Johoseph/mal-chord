@@ -4,8 +4,7 @@ import styled from "styled-components";
 import { AiOutlineHighlight } from "react-icons/ai";
 import { CgErase, CgColorPicker } from "react-icons/cg";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { useCallback, useContext } from "preact/hooks";
-import { HistoryContext } from "contexts";
+import { useCallback } from "preact/hooks";
 
 const Wrapper = styled.div`
   display: flex;
@@ -49,119 +48,39 @@ const getLinkStates = (links, highlightedLinks, hiddenLinks) => {
 
 export const ContextMenu = ({
   links,
-  highlightedLinks,
-  setHighlightedLinks,
-  hiddenLinks,
-  setHiddenLinks,
+  sankeyState,
+  updateSankey,
   removeMenu,
   openColourPicker,
 }) => {
-  const { writeToHistory } = useContext(HistoryContext);
-
   const { isHidden, isHighlighted } = getLinkStates(
     links,
-    highlightedLinks,
-    hiddenLinks
+    sankeyState.highlightedLinks,
+    sankeyState.hiddenLinks
   );
 
   const handleHighlight = useCallback(
     (highLightState) => {
       if (highLightState) {
-        setHighlightedLinks((prev) => {
-          const newLinks = prev.filter((item) => !links.includes(item));
-
-          writeToHistory([
-            {
-              fn: setHighlightedLinks,
-              undo: prev,
-              redo: newLinks,
-            },
-          ]);
-
-          return newLinks;
-        });
+        updateSankey({ type: "unhighlightLinks", links });
       } else {
-        let toWrite = [];
-
-        setHighlightedLinks((prev) => {
-          const newLinks = [...prev, ...links];
-
-          toWrite.push({
-            fn: setHighlightedLinks,
-            undo: prev,
-            redo: newLinks,
-          });
-
-          return newLinks;
-        });
-
-        setHiddenLinks((prev) => {
-          const newLinks = prev.filter((item) => !links.includes(item));
-
-          toWrite.push({
-            fn: setHiddenLinks,
-            undo: prev,
-            redo: newLinks,
-          });
-
-          return newLinks;
-        });
-
-        writeToHistory(toWrite);
+        updateSankey({ type: "highlightLinks", links });
       }
       removeMenu();
     },
-    [links, removeMenu, setHiddenLinks, setHighlightedLinks, writeToHistory]
+    [links, removeMenu, updateSankey]
   );
 
   const handleHide = useCallback(
     (hiddenState) => {
       if (hiddenState) {
-        setHiddenLinks((prev) => {
-          const newLinks = prev.filter((item) => !links.includes(item));
-
-          writeToHistory([
-            {
-              fn: setHiddenLinks,
-              undo: prev,
-              redo: newLinks,
-            },
-          ]);
-
-          return newLinks;
-        });
+        updateSankey({ type: "unhideLinks", links });
       } else {
-        let toWrite = [];
-
-        setHiddenLinks((prev) => {
-          const newLinks = [...prev, ...links];
-
-          toWrite.push({
-            fn: setHiddenLinks,
-            undo: prev,
-            redo: newLinks,
-          });
-
-          return newLinks;
-        });
-
-        setHighlightedLinks((prev) => {
-          const newLinks = prev.filter((item) => !links.includes(item));
-
-          toWrite.push({
-            fn: setHighlightedLinks,
-            undo: prev,
-            redo: newLinks,
-          });
-
-          return newLinks;
-        });
-
-        writeToHistory(toWrite);
+        updateSankey({ type: "hideLinks", links });
       }
       removeMenu();
     },
-    [links, removeMenu, setHiddenLinks, setHighlightedLinks, writeToHistory]
+    [links, removeMenu, updateSankey]
   );
 
   return (

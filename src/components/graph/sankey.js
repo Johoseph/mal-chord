@@ -17,8 +17,8 @@ import {
 import { handleSankeySvg, checkCustomColour } from "helpers";
 
 export const Sankey = ({
-  startCategory,
-  endCategory,
+  sankeyState,
+  updateSankey,
   dataNodes,
   dataLinks,
   dimensions: { width, height },
@@ -30,10 +30,6 @@ export const Sankey = ({
   setIsPrinting,
 }) => {
   let sankeyRef = useRef();
-
-  const [highlightedLinks, setHighlightedLinks] = useState([]);
-  const [hiddenLinks, setHiddenLinks] = useState([]);
-  const [nodeColours, setNodeColours] = useState([]);
 
   const [animeTooltip, setAnimeTooltip] = useState();
   const [contextTooltip, setContextTooltip] = useState();
@@ -48,9 +44,9 @@ export const Sankey = ({
       x: toSet.x,
       y: toSet.y,
       name: toSet.title,
-      colour: checkCustomColour(toSet.title, nodeColours),
+      colour: checkCustomColour(toSet.title, sankeyState.nodeColours),
     });
-  }, [contextTooltip, nodeColours]);
+  }, [contextTooltip, sankeyState.nodeColours]);
 
   const confirmColour = useCallback(
     (colour) => {
@@ -101,12 +97,6 @@ export const Sankey = ({
     });
   }, []);
 
-  useEffect(() => {
-    setHighlightedLinks([]);
-    setHiddenLinks([]);
-    setNodeColours([]);
-  }, [startCategory, endCategory]);
-
   useEffect(
     () =>
       handleSankeySvg({
@@ -122,9 +112,9 @@ export const Sankey = ({
         nodeDifference,
         handleNodeClick,
         handleNodeRightClick,
-        highlightedLinks,
-        hiddenLinks,
-        nodeColours,
+        highlightedLinks: sankeyState.highlightedLinks,
+        hiddenLinks: sankeyState.hiddenLinks,
+        nodeColours: sankeyState.nodeColours,
       }),
     [
       width,
@@ -136,11 +126,11 @@ export const Sankey = ({
       widthModifier,
       handleNodeClick,
       handleNodeRightClick,
-      highlightedLinks,
-      hiddenLinks,
+      sankeyState.highlightedLinks,
+      sankeyState.hiddenLinks,
       nodeCount,
       nodeDifference,
-      nodeColours,
+      sankeyState.nodeColours,
     ]
   );
 
@@ -155,8 +145,8 @@ export const Sankey = ({
         >
           <NodeCard
             node={animeTooltip.data}
-            startCategory={startCategory}
-            nodeColours={nodeColours}
+            startCategory={sankeyState.startCategory}
+            nodeColours={sankeyState.nodeColours}
           />
         </Tooltip>
       )}
@@ -169,10 +159,8 @@ export const Sankey = ({
         >
           <ContextMenu
             links={contextTooltip.links}
-            highlightedLinks={highlightedLinks}
-            setHighlightedLinks={setHighlightedLinks}
-            hiddenLinks={hiddenLinks}
-            setHiddenLinks={setHiddenLinks}
+            sankeyState={sankeyState}
+            updateSankey={updateSankey}
             openColourPicker={openColourPicker}
             removeMenu={() => setContextTooltip(undefined)}
           />
@@ -193,13 +181,12 @@ export const Sankey = ({
       <PrintingModal
         isPrinting={isPrinting}
         setIsPrinting={setIsPrinting}
+        sankeyState={sankeyState}
         defaultNode={{ nodeSide, nodePadding }}
         dataNodes={dataNodes}
         dataLinks={dataLinks}
         nodeCount={nodeCount}
         nodeDifference={nodeDifference}
-        highlightedLinks={highlightedLinks}
-        hiddenLinks={hiddenLinks}
       />
     </>
   );

@@ -85,6 +85,9 @@ const sankeyReducer = (state, action) => {
           active: true,
         })),
         startCategory: action.startCategory,
+        hiddenLinks: [],
+        highlightedLinks: [],
+        nodeColours: [],
       };
 
       return {
@@ -96,6 +99,9 @@ const sankeyReducer = (state, action) => {
       const newState = {
         ...state,
         endCategory: action.endCategory,
+        hiddenLinks: [],
+        highlightedLinks: [],
+        nodeColours: [],
       };
 
       return {
@@ -174,6 +180,60 @@ const sankeyReducer = (state, action) => {
         ...writeSankeyHistory(newState),
       };
     }
+    case "unhighlightLinks": {
+      const newState = {
+        ...state,
+        highlightedLinks: state.highlightedLinks.filter(
+          (link) => !action.links.includes(link)
+        ),
+      };
+
+      return {
+        ...newState,
+        ...writeSankeyHistory(newState),
+      };
+    }
+    case "highlightLinks": {
+      const newState = {
+        ...state,
+        highlightedLinks: [...state.highlightedLinks, ...action.links],
+        hiddenLinks: state.hiddenLinks.filter(
+          (link) => !action.links.includes(link)
+        ),
+      };
+
+      return {
+        ...newState,
+        ...writeSankeyHistory(newState),
+      };
+    }
+    case "unhideLinks": {
+      const newState = {
+        ...state,
+        hiddenLinks: state.hiddenLinks.filter(
+          (link) => !action.links.includes(link)
+        ),
+      };
+
+      return {
+        ...newState,
+        ...writeSankeyHistory(newState),
+      };
+    }
+    case "hideLinks": {
+      const newState = {
+        ...state,
+        hiddenLinks: [...state.hiddenLinks, ...action.links],
+        highlightedLinks: state.highlightedLinks.filter(
+          (link) => !action.links.includes(link)
+        ),
+      };
+
+      return {
+        ...newState,
+        ...writeSankeyHistory(newState),
+      };
+    }
     case "undoAction": {
       return {
         ...state.sankeyHistory[action.index - 1],
@@ -195,9 +255,12 @@ const sankeyReducer = (state, action) => {
 
 export const LoggedIn = ({ useMock }) => {
   const [sankeyState, updateSankey] = useReducer(sankeyReducer, {
+    // Data
     data: [],
     filteredData: [],
     queryStatus: "loading",
+
+    // Sorts
     startCategory: "anime",
     endCategory: "score",
     startSort: {
@@ -208,13 +271,22 @@ export const LoggedIn = ({ useMock }) => {
       type: "alphabetical",
       direction: "DESC",
     },
+
+    // Filter
     nodeFilter: LIST_STATUS["anime"].map((status) => ({
       name: status,
       active: true,
     })),
     nodeLimit: DEFAULT_LIMIT,
+
+    // History Management
     sankeyHistory: [],
     historyIndex: 0,
+
+    // Link effects
+    hiddenLinks: [],
+    highlightedLinks: [],
+    nodeColours: [],
   });
 
   const { data, status, refetch } = useQuery(

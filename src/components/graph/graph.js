@@ -68,8 +68,8 @@ export const Graph = ({
           />
           {sankeyState.filteredData.length > 0 ? (
             <Sankey
-              startCategory={sankeyState.startCategory}
-              endCategory={sankeyState.endCategory}
+              sankeyState={sankeyState}
+              updateSankey={updateSankey}
               dataNodes={dataNodes}
               dataLinks={dataLinks}
               dimensions={{ width, height }}
