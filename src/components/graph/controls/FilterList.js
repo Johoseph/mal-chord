@@ -7,6 +7,12 @@ const Wrapper = styled.div`
   font-size: 1rem;
 `;
 
+const Header = styled.div`
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  white-space: nowrap;
+`;
+
 const ListItem = styled.div`
   &:not(:last-of-type) {
     margin-bottom: 10px;
@@ -46,6 +52,7 @@ export const FilterList = ({ nodeFilter, updateSankey }) => {
 
   return (
     <Wrapper>
+      <Header>Filter by List Status</Header>
       {nodeFilter.map((category, i) => {
         const disabled = handleDisabled(category.name);
 
