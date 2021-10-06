@@ -142,6 +142,7 @@ export const HeaderControls = ({
           <Dropdown
             value={sankeyState.startCategory}
             setValue={(val) =>
+              val !== sankeyState.startCategory &&
               updateSankey({ type: "updateStartCategory", startCategory: val })
             }
             options={startCategoryOptions}
