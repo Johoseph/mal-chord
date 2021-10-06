@@ -138,7 +138,7 @@ const sankeyReducer = (state, action) => {
         ...state,
         filteredData: newData,
         nodeFilter: action.nodeFilter,
-        nodeLimit: Math.min(newData.length, DEFAULT_LIMIT),
+        nodeLimit: Math.min(newData.length, state.nodeLimit),
       };
 
       return {
