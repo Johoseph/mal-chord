@@ -65,21 +65,29 @@ const sankeyReducer = (state, action) => {
     case "setData": {
       const newState = {
         ...state,
-        data: action.payload,
-        filteredData: action.payload,
+        data: action.payload ?? state.data,
+        filteredData: action.payload ?? state.filteredData,
         queryStatus: action.queryStatus,
-        nodeLimit: Math.min(action.payload.length, DEFAULT_LIMIT),
+        nodeLimit: Math.min(action.payload?.length, DEFAULT_LIMIT),
       };
 
       return {
         ...newState,
-        sankeyHistory: [newState],
+        sankeyHistory: state.data
+          ? action.queryStatus === "success"
+            ? state.sankeyHistory.map((history) => ({
+                ...history,
+                queryStatus: "success",
+              }))
+            : state.sankeyHistory
+          : [newState],
       };
     }
 
     case "updateStartCategory": {
       const newState = {
         ...state,
+        queryStatus: "loading",
         nodeFilter: LIST_STATUS[action.startCategory].map((status) => ({
           name: status,
           active: true,
@@ -277,7 +285,7 @@ const sankeyReducer = (state, action) => {
 export const LoggedIn = ({ useMock }) => {
   const [sankeyState, updateSankey] = useReducer(sankeyReducer, {
     // Data
-    data: [],
+    data: undefined,
     filteredData: [],
     queryStatus: "loading",
 
@@ -314,7 +322,7 @@ export const LoggedIn = ({ useMock }) => {
     `${useMock ? "mock" : "user"}_${sankeyState.startCategory}_list`
   );
 
-  const pathToData = useMemo(() => data?.data ?? [], [data]);
+  const pathToData = useMemo(() => data?.data, [data]);
   const hasNextPage = useMemo(() => data?.hasNextPage, [data]);
 
   useEffect(
