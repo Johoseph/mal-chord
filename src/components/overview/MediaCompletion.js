@@ -1,9 +1,9 @@
-import { h } from "preact";
 import styled from "styled-components";
 import { useState, useEffect } from "preact/hooks";
 import { decode } from "he";
 
-import { titleCase, radixFormat } from "helpers";
+import { titleCase } from "helpers";
+import { Countup } from "components";
 
 const Wrapper = styled.div`
   display: flex;
@@ -21,11 +21,6 @@ const TimeWrapper = styled.div`
 const Unit = styled.span`
   font-size: 0.9rem;
   font-weight: 300;
-  text-align: end;
-`;
-
-const Value = styled.span`
-  font-size: 2.1rem;
   text-align: end;
 `;
 
@@ -101,7 +96,7 @@ export const MangaCompletion = ({ data, status }) => {
             {status === "loading" ? (
               <Shimmer className="shimmer" />
             ) : (
-              <Value>{radixFormat(completion[unit])}</Value>
+              <Countup value={completion[unit]} />
             )}
           </TimeWrapper>
         ))}
@@ -148,10 +143,10 @@ export const TimeWatched = ({ data, status }) => {
           .map((unit, i) => (
             <TimeWrapper key={i}>
               <Unit>{titleCase(unit)}</Unit>
-              {status === "loading" ? (
+              {status === "loading" || !time[unit] ? (
                 <Shimmer className="shimmer" />
               ) : (
-                <Value>{time[unit]}</Value>
+                <Countup value={time[unit]} />
               )}
             </TimeWrapper>
           ))}
