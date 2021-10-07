@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useState } from "preact/hooks";
 import { HiOutlineFilter } from "react-icons/hi";
 
+import { startCategoryOptions, endCategoryOptions } from "config";
+
 import {
   Dropdown,
   AnimeCountFilter,
@@ -10,56 +12,6 @@ import {
   Tooltip,
   FilterList,
 } from "components";
-
-const startCategoryOptions = [
-  {
-    value: "anime",
-    label: "anime",
-  },
-  {
-    value: "manga",
-    label: "manga",
-  },
-];
-
-const endCategoryOptions = [
-  {
-    value: "author",
-    label: "author",
-    anime: false,
-    manga: true,
-  },
-  {
-    value: "rating",
-    label: "anime rating",
-    anime: true,
-    manga: false,
-  },
-  {
-    value: "genre",
-    label: "genre",
-    anime: true,
-    manga: true,
-  },
-  {
-    value: "studio",
-    label: "studio",
-    anime: true,
-    manga: false,
-  },
-  {
-    value: "status",
-    label: "your list status",
-    anime: true,
-    manga: true,
-  },
-  {
-    value: "score",
-    label: "your score",
-    anime: true,
-    manga: true,
-  },
-];
 
 const Header = styled.div`
   display: flex;

@@ -28,6 +28,7 @@ export const Sankey = ({
   nodeCount,
   isPrinting,
   setIsPrinting,
+  userName,
 }) => {
   let sankeyRef = useRef();
 
@@ -179,6 +180,7 @@ export const Sankey = ({
         dataLinks={dataLinks}
         nodeCount={nodeCount}
         nodeDifference={nodeDifference}
+        userName={userName}
       />
     </>
   );

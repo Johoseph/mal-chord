@@ -6,6 +6,8 @@ import Canvg from "canvg";
 
 import { Spinner } from "components";
 
+import MALLogo from "assets/branding/mal-chord-pdf.jpg";
+
 const Wrapper = styled.div`
   width: 70%;
   display: flex;
@@ -24,7 +26,35 @@ const Canvas = styled.canvas`
   width: 100%;
 `;
 
-export const PrintingDocument = ({ chordSvg, pageState }) => {
+const scalePixels = (value, pageSize) => {
+  switch (pageSize) {
+    case "A4":
+      return value * 1;
+    case "A3":
+      return value * 1.2;
+    case "A2":
+      return value * 1.4;
+  }
+};
+
+const getCatLength = (endCategory) => {
+  switch (endCategory) {
+    case "genre":
+      return endCategory.length + 1;
+    case "your list status":
+      return endCategory.length - 2;
+    default:
+      return endCategory.length;
+  }
+};
+
+export const PrintingDocument = ({
+  chordSvg,
+  pageState,
+  userName,
+  startCategory,
+  endCategory,
+}) => {
   const [PDFDocument, newPDFDocument] = useState();
 
   let canvasRef = useRef();
@@ -52,8 +82,9 @@ export const PrintingDocument = ({ chordSvg, pageState }) => {
       height: doc.internal.pageSize.getHeight(),
     };
 
+    const pageMargin = pageDimensions.width / 20;
     let totalPageHeight = pageDimensions.height;
-    let topMargin = 10;
+    let topMargin = pageMargin;
 
     // First page
     doc.setFillColor("#07070a");
@@ -61,7 +92,65 @@ export const PrintingDocument = ({ chordSvg, pageState }) => {
 
     // Header details
     if (pageState.headerState === "On") {
-      topMargin += 15;
+      const sz = pageState.pageSize;
+
+      doc.setTextColor("#ffffff");
+
+      const logoDimRatio = 2.8333;
+      const logoHeight = scalePixels(15, sz);
+      const logoWidth = logoDimRatio * logoHeight;
+
+      doc.addImage(
+        MALLogo,
+        "PNG",
+        pageMargin,
+        topMargin,
+        logoWidth,
+        logoHeight
+      );
+
+      doc.setFontSize(scalePixels(20, sz));
+      doc.text(
+        `${userName}'s ${startCategory} list`,
+        logoWidth + pageMargin + scalePixels(5, sz),
+        pageMargin + scalePixels(10, sz)
+      );
+
+      doc.setFontSize(scalePixels(16, sz));
+      doc.text(
+        "mal-chord.com",
+        pageDimensions.width - pageMargin,
+        pageMargin + scalePixels(10, sz),
+        {
+          align: "right",
+        }
+      );
+
+      // Category Detail
+      doc.setFillColor("#2e51a2");
+      doc.rect(
+        pageMargin + scalePixels(16, sz),
+        pageMargin + scalePixels(23, sz),
+        pageDimensions.width -
+          (2 * pageMargin +
+            scalePixels(16, sz) +
+            scalePixels(2.6, sz) * getCatLength(endCategory)),
+        scalePixels(1, sz),
+        "F"
+      );
+
+      doc.setFontSize(scalePixels(14, sz));
+      doc.text(startCategory, 0 + pageMargin, pageMargin + scalePixels(25, sz));
+
+      doc.text(
+        endCategory,
+        pageDimensions.width - pageMargin,
+        pageMargin + scalePixels(25, sz),
+        {
+          align: "right",
+        }
+      );
+      topMargin += scalePixels(35, sz);
     }
 
     doc.addImage(
@@ -94,7 +183,14 @@ export const PrintingDocument = ({ chordSvg, pageState }) => {
     }
 
     newPDFDocument(doc);
-  }, [pageState.pageSize, pageState.pageOrientation, pageState.headerState]);
+  }, [
+    pageState.pageSize,
+    pageState.pageOrientation,
+    pageState.headerState,
+    userName,
+    startCategory,
+    endCategory,
+  ]);
 
   const generateCanvas = useCallback(
     async (canvgInstance) => {

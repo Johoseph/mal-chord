@@ -322,6 +322,12 @@ export const LoggedIn = ({ useMock }) => {
     `${useMock ? "mock" : "user"}_${sankeyState.startCategory}_list`
   );
 
+  const {
+    data: userData,
+    status: userStatus,
+    refetch: userRefetch,
+  } = useQuery(useMock ? "mock_details" : "user_details");
+
   const pathToData = useMemo(() => data?.data, [data]);
   const hasNextPage = useMemo(() => data?.hasNextPage, [data]);
 
@@ -378,6 +384,9 @@ export const LoggedIn = ({ useMock }) => {
         data={pathToData}
         status={status}
         useMock={useMock}
+        userData={userData}
+        userStatus={userStatus}
+        userRefetch={userRefetch}
         startCategory={sankeyState.startCategory}
       />
       <Graph
@@ -388,6 +397,7 @@ export const LoggedIn = ({ useMock }) => {
         refetch={refetch}
         helpActive={readyToRun}
         setHelpRequired={setHelpRequired}
+        userName={userData?.name}
       />
     </main>
   );

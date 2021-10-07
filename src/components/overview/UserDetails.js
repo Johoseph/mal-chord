@@ -1,6 +1,5 @@
 import { h } from "preact";
 import styled from "styled-components";
-import { useQuery } from "../../hooks";
 import dayjs from "dayjs";
 
 import { HiOutlineExternalLink } from "react-icons/hi";
@@ -88,11 +87,13 @@ const ImgShimmer = styled.div`
   margin-left: 10px;
 `;
 
-export const UserDetails = ({ compressed = false, useMock }) => {
-  const { data, status, refetch } = useQuery(
-    useMock ? "mock_details" : "user_details"
-  );
-
+export const UserDetails = ({
+  compressed = false,
+  data,
+  status,
+  refetch,
+  useMock,
+}) => {
   return (
     <>
       {status !== "error" ? (

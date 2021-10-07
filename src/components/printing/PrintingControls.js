@@ -74,7 +74,6 @@ export const PrintingControls = ({ pageState, dispatch }) => {
                 dispatch({ type: "updateHeader", payload: state });
             }}
             ariaLabel={`Toggle header ${state}`}
-            disabled={true} // Disabled until header detail is added to PDF
           />
         ))}
       </FieldWrap>

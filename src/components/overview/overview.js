@@ -27,15 +27,33 @@ const RightWrapper = styled.div`
   justify-content: space-between;
 `;
 
-export const Overview = ({ data, status, useMock = false, startCategory }) => {
+export const Overview = ({
+  data,
+  status,
+  startCategory,
+  useMock,
+  userData,
+  userStatus,
+  userRefetch,
+}) => {
   const noData = status === "success" && data.length === 0;
 
   return (
     <Wrapper>
-      <ScrollOverview useMock={useMock} />
+      <ScrollOverview
+        data={userData}
+        status={userStatus}
+        refetch={userRefetch}
+        useMock={useMock}
+      />
       <MALChord isLink={true} />
       <RightWrapper className="hlp-2">
-        <UserDetails useMock={useMock} />
+        <UserDetails
+          data={userData}
+          status={userStatus}
+          refetch={userRefetch}
+          useMock={useMock}
+        />
         {!noData && startCategory === "anime" && (
           <TimeWatched data={data} status={status} />
         )}

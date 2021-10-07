@@ -9,6 +9,8 @@ import { useLockBodyScroll } from "hooks";
 import { PrintingDocument, PrintingControls } from "components";
 import { handleSankeySvg } from "helpers";
 
+import { endCategoryOptions } from "config";
+
 const StyledModal = styled((props) => <Modal {...props} />)`
   position: absolute;
   left: 50%;
@@ -113,6 +115,7 @@ export const PrintingModal = ({
   dataLinks,
   nodeDifference,
   nodeCount,
+  userName,
 }) => {
   const [printingSvg, setPrintingSvg] = useState();
 
@@ -121,7 +124,7 @@ export const PrintingModal = ({
   const [pageState, dispatchPageState] = useReducer(pageReducer, {
     pageSize: "A4",
     pageOrientation: "Portrait",
-    headerState: "Off",
+    headerState: "On",
     thumbnailState: "Off",
     nodeSize: defaultNode.nodeSide,
     nodePadding: defaultNode.nodePadding,
@@ -195,7 +198,17 @@ export const PrintingModal = ({
             pageState={pageState}
             dispatch={dispatchPageState}
           />
-          <PrintingDocument chordSvg={printingSvg} pageState={pageState} />
+          <PrintingDocument
+            chordSvg={printingSvg}
+            pageState={pageState}
+            userName={userName}
+            startCategory={sankeyState.startCategory}
+            endCategory={
+              endCategoryOptions.find(
+                (option) => option.value === sankeyState.endCategory
+              ).label
+            }
+          />
         </Body>
       </Wrapper>
     </StyledModal>

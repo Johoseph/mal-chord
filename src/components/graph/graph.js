@@ -20,6 +20,7 @@ export const Graph = ({
   hasNextPage,
   helpActive,
   setHelpRequired,
+  userName,
 }) => {
   const { ref, width } = useResizeObserver();
   const [height, setHeight] = useState(100);
@@ -79,6 +80,7 @@ export const Graph = ({
               nodeCount={nodeCount}
               isPrinting={isPrinting}
               setIsPrinting={setIsPrinting}
+              userName={userName}
             />
           ) : (
             <NoData startCategory={sankeyState.startCategory} />

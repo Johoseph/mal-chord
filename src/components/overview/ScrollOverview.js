@@ -66,7 +66,7 @@ const MALLogoImg = styled.img`
   margin-right: 15px;
 `;
 
-export const ScrollOverview = ({ useMock }) => {
+export const ScrollOverview = ({ data, status, refetch, useMock }) => {
   let overviewRef = useRef();
 
   const { setLoginType } = useContext(UserContext);
@@ -106,7 +106,13 @@ export const ScrollOverview = ({ useMock }) => {
               />
             </Logo>
           </Button>
-          <UserDetails compressed={true} useMock={useMock} />
+          <UserDetails
+            compressed={true}
+            useMock={useMock}
+            data={data}
+            status={status}
+            refetch={refetch}
+          />
         </Overview>
       </Wrapper>
     );
