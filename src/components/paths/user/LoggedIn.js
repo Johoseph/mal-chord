@@ -1,8 +1,8 @@
 import styled, { keyframes } from "styled-components";
 
-import { useMemo, useReducer, useEffect } from "preact/hooks";
+import { useMemo, useReducer, useEffect, useErrorBoundary } from "preact/hooks";
 import { useHelp, useQuery } from "hooks";
-import { Graph, Overview, Help, Tooltip } from "components";
+import { Graph, Overview, Help, Tooltip, GraphError } from "components";
 
 const DEFAULT_LIMIT = 25;
 const MAX_HISTORY = 50;
@@ -283,6 +283,8 @@ const sankeyReducer = (state, action) => {
 };
 
 export const LoggedIn = ({ useMock }) => {
+  const [error, resetError] = useErrorBoundary();
+
   const [sankeyState, updateSankey] = useReducer(sankeyReducer, {
     // Data
     data: undefined,
@@ -389,16 +391,20 @@ export const LoggedIn = ({ useMock }) => {
         userRefetch={userRefetch}
         startCategory={sankeyState.startCategory}
       />
-      <Graph
-        sankeyState={sankeyState}
-        updateSankey={updateSankey}
-        hasNextPage={hasNextPage}
-        status={sankeyState.queryStatus}
-        refetch={refetch}
-        helpActive={readyToRun}
-        setHelpRequired={setHelpRequired}
-        userName={userData?.name}
-      />
+      {!error ? (
+        <Graph
+          sankeyState={sankeyState}
+          updateSankey={updateSankey}
+          hasNextPage={hasNextPage}
+          status={sankeyState.queryStatus}
+          refetch={refetch}
+          helpActive={readyToRun}
+          setHelpRequired={setHelpRequired}
+          userName={userData?.name}
+        />
+      ) : (
+        <GraphError refetch={resetError} />
+      )}
     </main>
   );
 };
