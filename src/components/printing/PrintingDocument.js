@@ -2,7 +2,7 @@ import { h } from "preact";
 import { useEffect, useState, useRef, useCallback } from "preact/hooks";
 import styled from "styled-components";
 import { jsPDF } from "jspdf";
-import Canvg from "canvg";
+import { Canvg } from "canvg";
 
 import { Spinner } from "components";
 
