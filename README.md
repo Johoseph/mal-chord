@@ -4,9 +4,7 @@ MAL Chord is an interactive web-app that allows users to visualise their [MyAnim
 
 ![image](https://user-images.githubusercontent.com/49534136/185727853-aba00599-fa1c-4fc6-9b8f-834f64f5e131.png)
 
-The application has been built as a single-page [Preact](https://preactjs.com/) project which communicates with a [Node.js](https://nodejs.org/en/), [Express](https://expressjs.com/) middleware service.
-
-This repository is responsible for managing all of the Preact (client-side) code.
+The application has been built as a single-page [Preact](https://preactjs.com/) project which communicates with a [Node.js](https://nodejs.org/en/), [Express](https://expressjs.com/) API.
 
 ## Running locally
 
@@ -21,13 +19,9 @@ To run the project locally, you will need to obtain your own client credentials 
 
 You will also need to setup and be running the [MAL Chord middleware](https://github.com/Johoseph/mal-chord-middleware) project which handles requests to the MyAnimeList API service.
 
-### Install and Configure
+### App Setup
 
-Once you have cloned the repository you will need to install the associated dependencies the project uses:
-
-```
-yarn install
-```
+cd into the `app` directory and run `yarn` to install.
 
 The following commands can be run in the project:
 
@@ -35,7 +29,18 @@ The following commands can be run in the project:
 - `yarn build` - Builds the application for production to the `build` folder
 - `yarn serve` - Serves the production build locally (on port 4173)
 
-Environment configuration can be specified by adding a `.env` file to the root of your local repository. See the `.example` file for more information.
+Environment configuration can be specified by adding a `.env` file to the root of this directory. See the `.example` file for more information.
+
+### API Setup
+
+cd into the `api` directory and run `yarn` to install.
+
+The following commands can be run in the project:
+
+- `yarn start` - Runs the application in development mode
+- `yarn dev` - Utilises [nodemon](https://nodemon.io/) to run the application in watch mode
+
+Environment configuration can be specified by adding a `.env` file to the root of this directory. See the `.example` file for more information.
 
 ## What happened to `mal-chord.com`?
 
