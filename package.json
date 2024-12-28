@@ -5,19 +5,23 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "watch": "nodemon index.js"
+    "dev": "nodemon index.js"
   },
   "type": "module",
   "author": "Joseph Moroney",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.2",
+    "axios": "^1.7.9",
     "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "memory-cache": "^0.2.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.9"
+    "nodemon": "^3.1.9"
+  },
+  "packageManager": "yarn@4.5.3",
+  "engines": {
+    "node": "22"
   }
 }
