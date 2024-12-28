@@ -1,0 +1,27 @@
+{
+  "name": "mal-chord-middleware",
+  "version": "1.0.0",
+  "description": "Middleware for MAL-Chord that handles sending requests to MyAnimeList",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "type": "module",
+  "author": "Joseph Moroney",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "memory-cache": "^0.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "packageManager": "yarn@4.5.3",
+  "engines": {
+    "node": "22"
+  }
+}
