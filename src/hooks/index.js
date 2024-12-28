@@ -87,7 +87,7 @@ export const useQuery = (route) => {
     setError(undefined);
 
     axios
-      .post(`${process.env.PREACT_APP_API_URL}/${route}`, {
+      .post(`${import.meta.env.VITE_APP_API_URL}/${route}`, {
         userToken,
         page,
       })

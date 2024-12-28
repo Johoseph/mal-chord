@@ -1,4 +1,5 @@
-import "./style";
-import App from "./components/App";
+import { render } from "preact";
+import "./style/index.css";
+import App from "./app";
 
-export default App;
+render(<App />, document.getElementById("app"));

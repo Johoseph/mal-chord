@@ -30,7 +30,7 @@ export const loginUser = async (setLoggedIn) => {
     localStorage.setItem("CODE_VERIFIER", newCodeVerifier);
 
     window.location.href = `https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id=${
-      process.env.PREACT_APP_CLIENT_ID
+      import.meta.env.VITE_APP_CLIENT_ID
     }&code_challenge=${newCodeVerifier}&redirect_uri=${encodeURIComponent(
       baseURL
     )}`;
@@ -39,7 +39,7 @@ export const loginUser = async (setLoggedIn) => {
       const codeVerifier = localStorage.getItem("CODE_VERIFIER");
 
       const response = await axios.post(
-        `${process.env.PREACT_APP_API_URL}/access_token`,
+        `${import.meta.env.VITE_APP_API_URL}/access_token`,
         {
           code: authorisationCode,
           codeVerifier,
@@ -63,7 +63,7 @@ export const refreshTokens = async (setLoggedIn) => {
     const refreshToken = localStorage.getItem("USER_TOKEN_REFRESH");
 
     const response = await axios.post(
-      `${process.env.PREACT_APP_API_URL}/refresh_token`,
+      `${import.meta.env.VITE_APP_API_URL}/refresh_token`,
       {
         refreshToken,
         redirectUri: localStorage.getItem("BASE_URL"),
