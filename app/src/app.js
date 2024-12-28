@@ -31,13 +31,11 @@ const App = () => {
   });
 
   return (
-    <div id="app">
-      <UserContext.Provider value={userContext}>
-        {loginType === "user" && <UserPath />}
-        {loginType === "guest" && <GuestPath />}
-        {loginType === "home" && <HomePath />}
-      </UserContext.Provider>
-    </div>
+    <UserContext.Provider value={userContext}>
+      {loginType === "user" && <UserPath />}
+      {loginType === "guest" && <GuestPath />}
+      {loginType === "home" && <HomePath />}
+    </UserContext.Provider>
   );
 };
 
