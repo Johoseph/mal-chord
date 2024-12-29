@@ -1,4 +1,3 @@
-import { h } from "preact";
 import styled from "styled-components";
 import { useState } from "preact/hooks";
 import { HiOutlineFilter } from "react-icons/hi";

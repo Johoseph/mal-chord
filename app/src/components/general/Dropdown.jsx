@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useCallback, useState, useRef, useEffect } from "preact/hooks";
 import { FiChevronDown } from "react-icons/fi";
 import styled from "styled-components";

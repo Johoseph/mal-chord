@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useTabVisible } from "hooks";
 import { SankeyLoading, SankeyControlsLoading } from "components";
 

@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useEffect, useMemo, useRef } from "preact/hooks";
 import styled from "styled-components";
 import { select, interpolateNumber } from "d3";

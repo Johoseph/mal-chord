@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useEffect, useMemo } from "preact/hooks";
 
 import { UserPath, GuestPath, HomePath } from "components";

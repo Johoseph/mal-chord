@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { LoggedIn } from "components";
 
 export const GuestPath = () => {

@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useEffect, useCallback, useRef } from "preact/hooks";
 import styled from "styled-components";
 

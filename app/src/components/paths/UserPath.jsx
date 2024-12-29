@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useUser } from "hooks";
 import { LoggedIn, LoggingIn } from "components";
 

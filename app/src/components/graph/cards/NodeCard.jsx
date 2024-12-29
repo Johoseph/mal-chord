@@ -1,4 +1,3 @@
-import { h } from "preact";
 import styled, { css } from "styled-components";
 import { HiOutlineExternalLink } from "react-icons/hi";
 import { checkCustomColour } from "helpers";

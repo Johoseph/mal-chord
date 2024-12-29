@@ -1,4 +1,3 @@
-import { h } from "preact";
 import styled from "styled-components";
 
 import MALLogo from "assets/branding/mal.svg";

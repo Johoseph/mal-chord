@@ -1,4 +1,3 @@
-import { h } from "preact";
 import styled from "styled-components";
 
 import MALChordLogo from "assets/branding/mal-chord-small.svg";

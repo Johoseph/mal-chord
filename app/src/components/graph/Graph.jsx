@@ -1,4 +1,3 @@
-import { h } from "preact";
 import { useEffect, useState, useMemo } from "preact/hooks";
 import useResizeObserver from "use-resize-observer";
 
