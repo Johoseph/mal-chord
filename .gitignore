@@ -7,6 +7,10 @@ size-plugin.json
 .env.development
 .env.production
 
+# yarn
+.yarn
+!.yarn/releases
+
 # Elastic Beanstalk Files
 .ebextensions/*
 .elasticbeanstalk/*

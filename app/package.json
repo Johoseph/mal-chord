@@ -6,7 +6,8 @@
   "scripts": {
     "build": "vite build",
     "preview": "vite preview",
-    "dev": "vite"
+    "dev": "vite",
+    "start": "vite --host 0.0.0.0"
   },
   "eslintConfig": {
     "extends": "preact",

@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_APP_CLIENT_ID: ${MAL_CLIENT_ID}
+      VITE_APP_API_URL: http://localhost:8080
+    volumes:
+      - ./app/:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      CLIENT_ID: ${MAL_CLIENT_ID}
+      CLIENT_SECRET: ${MAL_CLIENT_SECRET}
+    volumes:
+      - ./api/:/usr/src/api
+      - node_modules:/usr/src/api/node_modules
+
+volumes:
+  node_modules:
